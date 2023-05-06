@@ -1,18 +1,38 @@
 {
-    "private": true,
-    "scripts": {
-        "dev": "npm run development",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production"
-    },
-    "devDependencies": {
-        "axios": "^0.25",
-        "laravel-mix": "^6.0.6",
-        "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
-    }
+  "private": true,
+  "scripts": {
+    "dev": "npm run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "mix --production"
+  },
+  "devDependencies": {
+    "axios": "^0.25",
+    "laravel-mix": "^6.0.6",
+    "lodash": "^4.17.19",
+    "postcss": "^8.1.14"
+  },
+  "name": "siiku-2-banug",
+  "description": "",
+  "version": "1.0.0",
+  "main": "webpack.mix.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MBNug/siiku.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MBNug/siiku/issues"
+  },
+  "homepage": "https://github.com/MBNug/siiku#readme",
+  "dependencies": {
+    "bootstrap": "^5.2.3"
+  }
 }
