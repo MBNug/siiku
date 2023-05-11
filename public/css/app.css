@@ -8,6 +8,9 @@
     padding-top: 10px;
     padding-bottom: 10px;
 }
+#responsive-logo {
+    display: none;
+}
 #text-login {
     color: #17356d;
     font-weight: 600;
@@ -191,5 +194,32 @@ hr.h-color {
 
     #side_nav.active {
         margin-left: 0;
+    }
+
+    .login-page {
+        background: white;
+        height: 100vh;
+    }
+    #login-img {
+        display: none;
+    }
+    #login-container {
+        max-width: 100%;
+        margin-bottom: 80px;
+    }
+    #text-login {
+        text-align: center;
+        margin-top: 20px;
+    }
+    #login-side {
+        background-color: #fff;
+        height: 100vh;
+        width: 100vw;
+        border-radius: 0%;
+    }
+    #responsive-logo {
+        display: block;
+        max-width: 200px;
+        margin: auto;
     }
 }

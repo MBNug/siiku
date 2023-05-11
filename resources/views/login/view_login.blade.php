@@ -20,6 +20,7 @@
             </div>
             <div class="col" id="login-side">
                 <div class="container" id="login-container">
+                    <img src="https://pelajarinfo.id/wp-content/uploads/2021/06/Universitas-Diponegoro-Semarang-Logo.png" alt="Logo Undip" id="responsive-logo">
                     <h2 id="text-login">LOGIN</h2>
                     <form action="{{ url('login/proses') }}" method="post">
                         @csrf
