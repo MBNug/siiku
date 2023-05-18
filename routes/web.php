@@ -1,14 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< Updated upstream
-=======
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\RenstraController;
 use App\Http\Controllers\TargetController;
 use App\Models\Target;
->>>>>>> Stashed changes
 
 /*
 |--------------------------------------------------------------------------
@@ -21,11 +18,6 @@ use App\Models\Target;
 |
 */
 
-<<<<<<< Updated upstream
-Route::get('/', function () {
-    return view('welcome');
-});
-=======
 Route::get('/',[RenstraController::class, 'index'])->middleware('auth');
 Route::get('/renstra/dashboard/',[RenstraController::class, 'index'])->middleware('auth')->name('renstra.dashboard');
 
@@ -58,4 +50,3 @@ Route::group(['middleware' => ['auth']], function(){
 //         Route::resource('kasir',Kasir::class);
 //     });
 // });
->>>>>>> Stashed changes
