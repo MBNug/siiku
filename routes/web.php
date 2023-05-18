@@ -18,6 +18,7 @@ use App\Models\Target;
 |
 */
 
+
 Route::get('/',[RenstraController::class, 'index'])->middleware('auth');
 Route::get('/renstra/dashboard/',[RenstraController::class, 'index'])->middleware('auth')->name('renstra.dashboard');
 
@@ -26,8 +27,6 @@ Route::controller(LoginController::class)->group(function(){
     Route::post('login/proses','proses');
     Route::get('logout','logout');
 });
-
-
 
 
 Route::group(['middleware' => ['auth']], function(){
@@ -41,6 +40,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/create/target/', [TargetController::class, 'create'])->name('renstra.target.create');
     Route::get('/renstra/indikators/{kode}', [TargetController::class, 'getIndikator'])->name('renstra.getdindikator');
 });
+
 // Route::group(['middleware'=> ['auth']], function(){
 //     Route::group(['middleware' => ['cekUserLogin:1']], function(){
 //         Route::resource('beranda',Beranda::class);

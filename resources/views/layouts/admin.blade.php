@@ -106,7 +106,7 @@
 
       <ul class="btn-toggle-nav list-unstyled fw-normal" style="margin-left: -10px;">
         <li>
-          <a href="#" class="text-decoration-none link-dark rounded"><i class="fa-solid fa-right-from-bracket px-2"></i>Logout</a>
+          <a href="{{ url('logout') }}" class="text-decoration-none link-dark rounded"><i class="fa-solid fa-right-from-bracket px-2"></i>Logout</a>
         </li>
       </ul>
 
@@ -129,7 +129,7 @@
                   {{-- <img class="img-profile rounded-circle" src="@auth https://ui-avatars.com/api/?name={{ Auth::user()->name }} @endauth">
                   <span class="ml-2 d-none d-lg-inline text-gray-600 small">@auth {{ Auth::user()->name }}@endauth</span>           --}}
                   <img class="img-profile rounded-circle" height="30" src="https://ui-avatars.com/api/?name=Fakultas">
-                  <span class="ml-2 d-none d-lg-inline text-gray-600 small">Fakultas</span>
+                  <span class="ml-2 d-none d-lg-inline text-gray-600 small">{{ $user->name }}</span>
                 </a>
               </li>
             </ul>

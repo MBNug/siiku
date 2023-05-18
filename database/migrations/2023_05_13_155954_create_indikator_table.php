@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('username',50)->unique;
-            $table->string('level',5);
-            $table->rememberToken();
+        Schema::create('indikator', function (Blueprint $table) {
+            $table->string('kode', 4)->primary();
+            $table->string('indikator_kinerja');
+            $table->string('satuan');
+            $table->enum('keterangan', ['Komulatif', 'Nominal', 'Rasio'])->nullable();
+            $table->text('definisi');
+            $table->text('cara_perhitungan');
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('indikator');
     }
 };
