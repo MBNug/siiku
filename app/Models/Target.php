@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Target extends Model
 {
     use HasFactory;
-    protected $fillable =['kode', 'indikator_kinerja', 'satuan', 'keterangan', 'definisi', 'cara_perhitungan', 'target'];
+    protected $fillable =['kode','strategi', 'indikator_kinerja', 'satuan', 'keterangan', 'definisi', 'cara_perhitungan', 'target'];
 }

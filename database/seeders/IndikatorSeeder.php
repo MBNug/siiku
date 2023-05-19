@@ -78,7 +78,7 @@ class IndikatorSeeder extends Seeder
                 'satuan' => "prestasi per tahun",
                 'keterangan' => "Nominal", 
                 'definisi' => "Prestasi mahasiswa juara pertama tingkat internasional pada tahun berjalan, kategori lomba tingkat internasional sesuai dengan ketentuan bidang kemahasiswaan. ", 
-                'cara_perhitungan' => "11 	Jumlah prestasi mahasiswa juara pertama tingkat internasional 	prestasi per tahun 	nominal 	Prestasi mahasiswa juara pertama tingkat internasional pada tahun berjalan, kategori lomba tingkat internasional sesuai dengan ketentuan bidang kemahasiswaan. 	Jumlah mahasiswa juara pertama tingkat internasional yang sudah terverifikasi, data terekam dalam aplikasi prestasi mahasiswa Undip. ",
+                'cara_perhitungan' => "Jumlah prestasi mahasiswa juara pertama tingkat internasional 	prestasi per tahun 	nominal 	Prestasi mahasiswa juara pertama tingkat internasional pada tahun berjalan, kategori lomba tingkat internasional sesuai dengan ketentuan bidang kemahasiswaan. 	Jumlah mahasiswa juara pertama tingkat internasional yang sudah terverifikasi, data terekam dalam aplikasi prestasi mahasiswa Undip. ",
             ],
             
         ];

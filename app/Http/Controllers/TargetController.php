@@ -20,11 +20,15 @@ class TargetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index($renstradept)
     {
-        $targets = DB::table('targets') -> where('kode', 'like', $id.'%') -> get();
+        $targets = DB::table('targets') -> where('kode', 'like', $renstradept.'%') -> get();
+        $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
+        $title = 'Target Departemen '.$namadept->nama;
+        // dd($title);
+        // dd($namadept);
         $departemens = Departemen::all();
-        return view('renstra.target.index', compact('targets', 'departemens')) ->with([
+        return view('renstra.target.index', compact('targets', 'departemens', 'title', 'renstradept')) ->with([
             'user'=> Auth::user()
         ]);
     }
@@ -34,13 +38,13 @@ class TargetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($renstradept)
     {
         //
         $strategis = Strategi::all();
-        $indikators = Indikator::all();
         $departemens = Departemen::all();
-        return view('renstra.target.create', compact('indikators', 'departemens', 'strategis'))->with([
+        $dept = Departemen::where('kode', '=', $renstradept)->pluck('nama');
+        return view('renstra.target.create', compact('departemens', 'strategis', 'renstradept', 'dept'))->with([
             'user'=> Auth::user()
         ]);
     }
@@ -51,9 +55,31 @@ class TargetController extends Controller
      * @param  \App\Http\Requests\StoreTargetRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTargetRequest $request)
+    public function store($renstradept, StoreTargetRequest $request)
     {
-        //
+        $strategi = Strategi::where('kode', '=', $request->strategi)->first();
+        if($request->strategi === "0" | $request->indikator_kinerja === "0"){
+            //Butuh alert disini
+            return redirect(route('borrow'));
+        }
+        else{
+            $request->validate([
+                'indikator_kinerja' => 'required',
+                'strategi' => 'required',
+                'tahun' => 'required',
+                'departemen' => 'required',
+                'target' => 'required',
+                'satuan' => 'required',
+                'cara_perhitungan' => 'required',
+            ]);
+            $request->request->add(['kode' => ''.$request->departemen.$request->indikator_kinerja.$request->tahun]);
+            $request->merge(['strategi' => ''.$strategi->nama]);
+            Target::create($request->all());
+            // Butuh alert disini
+            
+            return redirect(route('renstra.target.index', $renstradept));
+
+        }
     }
 
     /**
@@ -112,6 +138,12 @@ class TargetController extends Controller
         $satuan = DB::table('indikators')->where('kode', $kode)->pluck('satuan');
         $keterangan = DB::table('indikators')->where('kode', $kode)->pluck('keterangan');
         return Response::json(['success'=>true, 'definisi'=>$definisi, 'cara_perhitungan'=>$cara_perhitungan, 'satuan'=>$satuan, 'keterangan'=>$keterangan]);
+    }
+    public function getStrategi($kode='s')
+    {
+        $indikator['data'] = DB::table('indikators')->where('kode', 'like', $kode.'%')->select('kode', 'indikator_kinerja')->get();
+        // return Response::json(['success'=>true]);
+        return response()->json($indikator);
 
     }
 }

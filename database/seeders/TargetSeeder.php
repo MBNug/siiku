@@ -18,7 +18,7 @@ class TargetSeeder extends Seeder
         //
         $targets = [
             [
-                'kode' => "010101", 
+                'kode' => "0101012023", 
                 'strategi' => "Meningkatkan Siklus dan Kualitas Penjaminan Mutu Akademik",
                 'indikator_kinerja' => "Akreditasi Institusi", 
                 'satuan' => "Unggul (nilai)",
@@ -28,7 +28,7 @@ class TargetSeeder extends Seeder
                 'target' => '0'
             ],
             [
-                'kode' => "060101", 
+                'kode' => "0601012023", 
                 'strategi' => "Meningkatkan Siklus dan Kualitas Penjaminan Mutu Akademik",
                 'indikator_kinerja' => "Akreditasi Institusi", 
                 'satuan' => "Unggul (nilai)",
@@ -38,7 +38,7 @@ class TargetSeeder extends Seeder
                 'target' => '0'
             ],
             [
-                'kode' => "010102", 
+                'kode' => "0101022023", 
                 'strategi' => "Meningkatkan Siklus dan Kualitas Penjaminan Mutu Akademik",
                 'indikator_kinerja' => "Jumlah prodi terakreditasi Unggul", 
                 'satuan' => "Persentase",
@@ -48,7 +48,7 @@ class TargetSeeder extends Seeder
                 'target' => '100'
             ],
             [
-                'kode' => "060102", 
+                'kode' => "0601022023", 
                 'strategi' => "Meningkatkan Siklus dan Kualitas Penjaminan Mutu Akademik",
                 'indikator_kinerja' => "Jumlah prodi terakreditasi Unggul", 
                 'satuan' => "Persentase",
@@ -58,7 +58,7 @@ class TargetSeeder extends Seeder
                 'target' => '100'
             ],
             [
-                'kode' => "020103", 
+                'kode' => "0201032023", 
                 'strategi' => "Meningkatkan Siklus dan Kualitas Penjaminan Mutu Akademik",
                 'indikator_kinerja' => "Jumlah prodi terakreditasi internasional", 
                 'satuan' => "Persentase",
@@ -68,7 +68,7 @@ class TargetSeeder extends Seeder
                 'target' => "0"
             ],
             [
-                'kode' => "040104", 
+                'kode' => "0401042023", 
                 'strategi' => "Meningkatkan Siklus dan Kualitas Penjaminan Mutu Akademik",
                 'indikator_kinerja' => "Jumlah Prodi yang menawarkan program internasional", 
                 'satuan' => "Persentase",
@@ -78,7 +78,7 @@ class TargetSeeder extends Seeder
                 'target' => "0"
             ],
             [
-                'kode' => "050205", 
+                'kode' => "0502052023", 
                 'strategi' => "Meningkatkan Kompetensi Mahasiswa yang Relevan dengan Revolusi Industri 4.0", 
                 'indikator_kinerja' => "Jumlah Mahasiswa berwirausaha", 
                 'satuan' => "Persentase",
@@ -88,7 +88,7 @@ class TargetSeeder extends Seeder
                 'target' => '30'
             ],
             [
-                'kode' => "060205", 
+                'kode' => "0602052023", 
                 'strategi' => "Meningkatkan Kompetensi Mahasiswa yang Relevan dengan Revolusi Industri 4.0", 
                 'indikator_kinerja' => "Jumlah Mahasiswa berwirausaha", 
                 'satuan' => "Persentase",
@@ -98,7 +98,7 @@ class TargetSeeder extends Seeder
                 'target' => '30'
             ],
             [
-                'kode' => "060310", 
+                'kode' => "0603102023", 
                 'strategi' => "Meningkatkan Reputasi Undip Skala Nasional dan Internasional", 
                 'indikator_kinerja' => "Jumlah prestasi mahasiswa juara pertama tingkat nasional ", 
                 'satuan' => "prestasi per tahun ",
@@ -108,7 +108,7 @@ class TargetSeeder extends Seeder
                 'target' => "5"
             ],
             [
-                'kode' => "010311", 
+                'kode' => "0103112023", 
                 'strategi' => "Meningkatkan Reputasi Undip Skala Nasional dan Internasional", 
                 'indikator_kinerja' => "Jumlah prestasi mahasiswa juara pertama tingkat internasional ", 
                 'satuan' => "prestasi per tahun",

@@ -30,15 +30,13 @@ Route::controller(LoginController::class)->group(function(){
 
 
 Route::group(['middleware' => ['auth']], function(){
-    // Route::resource('/renstra/target/{id}', TargetController::class. [
-    //     'names' => [
-    //         'index' => 'renstra.target.index',
-    //         'create' => 'renstra.target.create'
-    //     ]
-    // ]);
-    Route::get('/renstra/target/{id}', [TargetController::class, 'index'])->name('renstra.target.index');
-    Route::get('/renstra/create/target/', [TargetController::class, 'create'])->name('renstra.target.create');
-    Route::get('/renstra/indikators/{kode}', [TargetController::class, 'getIndikator'])->name('renstra.getdindikator');
+    // Route::resource('/renstra/target/{id}', TargetController::class)->only(['store']);
+    // Route::post('/renstra/dasboard/', [TargetController::class, 'store'])->name('renstra.target.store');
+    // Route::get('/renstra/target/{id}', [TargetController::class, 'index'])->name('renstra.target.index');
+    // Route::get('/renstra/create/target/', [TargetController::class, 'create'])->name('renstra.target.create');
+    Route::resource('renstra.target', TargetController::class)->shallow();
+    Route::get('/renstra/indikators/{kode}', [TargetController::class, 'getIndikator'])->name('renstra.getindikator');
+    Route::get('/renstra/strategis/{kode}', [TargetController::class, 'getStrategi'])->name('renstra.getstrategi');
 });
 
 // Route::group(['middleware'=> ['auth']], function(){
