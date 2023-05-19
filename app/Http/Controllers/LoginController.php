@@ -31,7 +31,7 @@ class LoginController extends Controller
             $user = Auth::user();
 
             if($user){
-                return redirect()->intended('home');
+                return redirect()->intended('/renstra/dashboard');
             }
             return redirect()->intended('/');
         }

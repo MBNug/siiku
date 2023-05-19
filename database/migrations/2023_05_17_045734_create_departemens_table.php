@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('strategi', function (Blueprint $table) {
+        Schema::create('departemens', function (Blueprint $table) {
             $table->string('kode', 2)->primary();
             $table->string('nama');
             $table->timestamps();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('strategi');
+        Schema::dropIfExists('departemens');
     }
 };

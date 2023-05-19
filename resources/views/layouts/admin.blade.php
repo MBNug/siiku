@@ -13,6 +13,8 @@
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css">
     
+    @yield('csslocal')
+    
     
 
 </head>
@@ -35,17 +37,14 @@
           </button>
           <div class="collapse show" id="renstra-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="#" class="link-dark rounded">Dashboard</a></li>
+              <li><a href="{{ route('renstra.dashboard') }}" class="link-dark rounded">Dashboard</a></li>
               <li class="mb-1">
                 <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstratarget-collapse" aria-expanded="false">Target</a>
                 <div class="collapse" id="renstratarget-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal px-3 pb-1 small">
-                    <li><a href="#" class="link-dark rounded">Matematika</a></li>
-                    <li><a href="#" class="link-dark rounded">Biologi</a></li>
-                    <li><a href="#" class="link-dark rounded">Kimia</a></li>
-                    <li><a href="#" class="link-dark rounded">Fisika</a></li>
-                    <li><a href="#" class="link-dark rounded">Statistika</a></li>
-                    <li><a href="#" class="link-dark rounded">Informatika</a></li>
+                    @foreach ($departemens as $departemen)
+                      <li><a href="{{ route('renstra.target.index', $departemen->kode) }}" class="link-dark rounded">{{ $departemen->nama }}</a></li>
+                    @endforeach
                   </ul>
                 </div>
               </li>
@@ -161,6 +160,7 @@
     });
   </script>
 
+  @yield('scriptlocal')
     
 </body>
 
