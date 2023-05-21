@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('definisi');
             $table->text('cara_perhitungan');
             $table->string('target');
+            $table->string('status', 1)->default('0');
             $table->timestamps();
         });
     }
