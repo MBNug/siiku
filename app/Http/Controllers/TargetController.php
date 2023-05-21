@@ -170,4 +170,8 @@ class TargetController extends Controller
         DB::statement("UPDATE targets SET status = '0' where kode='$kode'");
         return redirect()->back();
     }
+    public function setujui($renstradept){
+        DB::statement("UPDATE targets set status = '1' where kode like '$renstradept%' and status != '2'");
+        return redirect()->back();
+    }
 }

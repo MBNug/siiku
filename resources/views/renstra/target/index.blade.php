@@ -88,7 +88,7 @@
                         </tbody>
                     </table>
                     @if ($user->level == 0 && $status===2)
-                        <a href="#" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Setujui Target</a>
+                        <a href="{{ route('renstra.setujui', $renstradept) }}" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Setujui Target</a>
                     @endif
                 </div>
             </div>
