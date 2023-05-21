@@ -37,6 +37,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('renstra.target', TargetController::class)->shallow();
     Route::get('/renstra/indikators/{kode}', [TargetController::class, 'getIndikator'])->name('renstra.getindikator');
     Route::get('/renstra/strategis/{kode}', [TargetController::class, 'getStrategi'])->name('renstra.getstrategi');
+    Route::get('/renstra/tolak/{kode}', [TargetController::class, 'tolak'])->name('renstra.tolak');
+    Route::get('/renstra/urungkan/{kode}', [TargetController::class, 'urungkan'])->name('renstra.urungkan');
 });
 
 // Route::group(['middleware'=> ['auth']], function(){

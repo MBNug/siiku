@@ -23,12 +23,20 @@ class TargetController extends Controller
     public function index($renstradept)
     {
         $targets = DB::table('targets') -> where('kode', 'like', $renstradept.'%') -> get();
+        $s = DB::table('targets') -> where('kode', 'like', $renstradept.'%') -> where('status', '!=', "1")-> count();
+        // dd($status);
         $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
         $title = 'Target Departemen '.$namadept->nama;
+        $status=0;
+        if($s>0){
+            $status=2;
+        }else{
+            $status=1;
+        }
         // dd($title);
         // dd($namadept);
         $departemens = Departemen::all();
-        return view('renstra.target.index', compact('targets', 'departemens', 'title', 'renstradept')) ->with([
+        return view('renstra.target.index', compact('targets', 'departemens', 'title', 'renstradept',"status")) ->with([
             'user'=> Auth::user()
         ]);
     }
@@ -145,5 +153,21 @@ class TargetController extends Controller
         // return Response::json(['success'=>true]);
         return response()->json($indikator);
 
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateTargetRequest  $request
+     * @param  \App\Models\Target  $target
+     * @return \Illuminate\Http\Response
+     */
+    public function tolak($kode){
+        DB::statement("UPDATE targets SET status = '2' where kode='$kode'");
+        return redirect()->back();
+    }
+    public function urungkan($kode){
+        DB::statement("UPDATE targets SET status = '0' where kode='$kode'");
+        return redirect()->back();
     }
 }
