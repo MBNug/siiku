@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/strategis/{kode}', [TargetController::class, 'getStrategi'])->name('renstra.getstrategi');
     Route::get('/renstra/tolak/{kode}', [TargetController::class, 'tolak'])->name('renstra.tolak');
     Route::get('/renstra/urungkan/{kode}', [TargetController::class, 'urungkan'])->name('renstra.urungkan');
+    Route::get('/renstra/setujui/{renstradept}', [TargetController::class, 'setujui'])->name('renstra.setujui');
 });
 
 // Route::group(['middleware'=> ['auth']], function(){
