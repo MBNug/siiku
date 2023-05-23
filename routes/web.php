@@ -42,6 +42,31 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/setujui/{renstradept}', [TargetController::class, 'setujui'])->name('renstra.setujui');
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Route::group(['middleware'=> ['auth']], function(){
 //     Route::group(['middleware' => ['cekUserLogin:1']], function(){
 //         Route::resource('beranda',Beranda::class);

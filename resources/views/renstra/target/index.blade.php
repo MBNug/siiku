@@ -79,7 +79,7 @@
                                 @if ($user->level==1 && $status===2)
                                 <td>
                                     @if ($target->status=="2")
-                                        <a class="btn btn-warning" href="#">Edit</a>
+                                        <a class="btn btn-warning" href="{{ route('target.edit', $target->kode) }}">Edit</a>
                                     @endif
                                 </td>
                                 @endif
