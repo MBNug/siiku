@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreTargetRequest;
 use App\Http\Requests\UpdateTargetRequest;
-use alert;
 
 
 class TargetController extends Controller
@@ -87,20 +87,13 @@ class TargetController extends Controller
         // dd($request);
         if($target==null){
             Target::create($request->all());
-            // alert()->success('Berhasil!', 'Target baru berhasil ditambahkan');
-            // Alert::success('Berhasil!', 'Target baru berhasil ditambahkan');
+            Alert::success('Berhasil!', 'Target baru berhasil ditambahkan');
             return redirect(route('renstra.target.index', $renstradept));
         }
         else{
-            // Alert::error('Gagal!', 'Target untuk indikator ini telah diatur.');
+            Alert::error('Gagal!', 'Target untuk indikator ini telah diatur.');
             return redirect(route('renstra.target.index', $renstradept));
         }
-        
-        // Butuh alert disini
-    
-        
-
-        // }
     }
 
     /**
