@@ -20,8 +20,8 @@
                     <div class="form-group row">
                         <label class="col-lg-2 col-form-label py-3">Strategi*</label>
                         <div class="col-lg-10">
-                            <select name="strategi" id="strategi" class="form-control @error('strategi') is-invalid @enderror" placeholder="Strategi" value="{{ old('strategi') }}">
-                                <option value="0">-- Pilih Strategi --</option>
+                            <select name="strategi" id="strategi" class="form-control @error('strategi') is-invalid @enderror" placeholder="Strategi" value="{{ old('strategi') }}" required>
+                                <option value="">-- Pilih Strategi --</option>
                                 @foreach ($strategis as $strategi)
                                     <option value="{{ $strategi->kode }}">{{ $strategi->nama }}</option>
                                 @endforeach
@@ -36,8 +36,8 @@
                     <div class="form-group row">
                         <label class="col-lg-2 col-form-label py-3">Indikator Kinerja*</label>
                         <div class="col-lg-10">
-                            <select name="indikator_kinerja" id="indikator_kinerja" class="form-control @error('indikator_kinerja') is-invalid @enderror" placeholder="Indikator Kinerja" value="{{ old('indikator_kinerja') }}">
-                                <option value="0">-- Pilih Indikator --</option>
+                            <select name="indikator_kinerja" id="indikator_kinerja" class="form-control @error('indikator_kinerja') is-invalid @enderror" placeholder="Indikator Kinerja" value="{{ old('indikator_kinerja') }}" required>
+                                <option value="">-- Pilih Indikator --</option>
                             </select>
                             @error('indikator_kinerja')
                             <span class="invalid-feedback" role="alert">
@@ -73,13 +73,18 @@
                     <div class="form-group row">
                         <label class="col-lg-2 col-form-label py-3">Tahun*</label>
                         <div class="col-lg-10">
-                            <input type="text" class="form-control" name="tahun" id="date-tahun"placeholder="Tahun">
+                            <input type="text" class="form-control @error('indikator_kinerja') is-invalid @enderror" name="tahun" id="date-tahun"placeholder="Tahun" value="{{ old('tahun') }}" required>
                         </div>
+                        {{-- @error('tahun')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror --}}
                     </div>
                     <div class="form-group row">
                         <label class="col-lg-2 col-form-label py-3">Departemen*</label>
                         <div class="col-lg-10">
-                            <select name="departemen" id="departemen" class="form-control @error('departemen') is-invalid @enderror" placeholder="Departemen" value="{{ old('departemen') }}">
+                            <select name="departemen" id="departemen" class="form-control @error('departemen') is-invalid @enderror" placeholder="Departemen" value="{{ old('departemen') }}" required>
                                     <option value="{{ $renstradept }}">{{ $dept[0] }}</option>
                             </select>
                             
@@ -93,7 +98,7 @@
                     <div class="form-group row">
                         <label class="col-lg-2 col-form-label py-3">Target*</label>
                         <div class="col-lg-10">
-                            <input type="text" class="form-control" name="target" placeholder="Target">
+                            <input type="text" class="form-control" name="target" placeholder="Target" required>
                             @error('target')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
