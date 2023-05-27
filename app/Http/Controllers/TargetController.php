@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use App\Http\Requests\StoreTargetRequest;
 use App\Http\Requests\UpdateTargetRequest;
+use alert;
+
 
 class TargetController extends Controller
 {
@@ -66,28 +68,39 @@ class TargetController extends Controller
     public function store($renstradept, StoreTargetRequest $request)
     {
         $strategi = Strategi::where('kode', '=', $request->strategi)->first();
-        if($request->strategi === "0" | $request->indikator_kinerja === "0"){
-            //Butuh alert disini
-            return redirect(route('borrow'));
+        $indikator = Indikator::where('kode', '=', $request->indikator_kinerja)->pluck('indikator_kinerja');
+        $kode = ''.$request->departemen.$request->indikator_kinerja.$request->tahun;
+        $target = Target::where('kode', '=', $kode)->first();
+        // dd($target);
+
+        $request->validate([
+            'indikator_kinerja' => 'required',
+            'strategi' => 'required',
+            'tahun' => 'required',
+            'departemen' => 'required',
+            'target' => 'required',
+        ]);
+        $request->request->add(['kode' => ''.$kode]);
+        $request->merge(['strategi' => ''.$strategi->nama]);
+        $request->merge(['indikator_kinerja' => ''.$indikator[0]]);
+
+        // dd($request);
+        if($target==null){
+            Target::create($request->all());
+            // alert()->success('Berhasil!', 'Target baru berhasil ditambahkan');
+            // Alert::success('Berhasil!', 'Target baru berhasil ditambahkan');
+            return redirect(route('renstra.target.index', $renstradept));
         }
         else{
-            $request->validate([
-                'indikator_kinerja' => 'required',
-                'strategi' => 'required',
-                'tahun' => 'required',
-                'departemen' => 'required',
-                'target' => 'required',
-                'satuan' => 'required',
-                'cara_perhitungan' => 'required',
-            ]);
-            $request->request->add(['kode' => ''.$request->departemen.$request->indikator_kinerja.$request->tahun]);
-            $request->merge(['strategi' => ''.$strategi->nama]);
-            Target::create($request->all());
-            // Butuh alert disini
-            
+            // Alert::error('Gagal!', 'Target untuk indikator ini telah diatur.');
             return redirect(route('renstra.target.index', $renstradept));
-
         }
+        
+        // Butuh alert disini
+    
+        
+
+        // }
     }
 
     /**
