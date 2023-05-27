@@ -109,7 +109,12 @@ class TargetController extends Controller
      */
     public function edit(Target $target)
     {
-        //
+        // dd($target);
+        $departemens = Departemen::all();
+        // return view('renstra.target.edit', compact('departemens','target'));
+        return view('renstra.target.edit', compact('departemens', 'target'))->with([
+            'user'=> Auth::user()
+        ]);
     }
 
     /**
@@ -120,8 +125,20 @@ class TargetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTargetRequest $request, Target $target)
-    {
-        //
+    {   
+        // dd('hello');
+        $request->validate([
+            'target' => 'required',
+        ]);
+
+        $target->update([
+            'target'   => $request->target,
+            'status'   => '3'
+        ]);
+
+
+        $renstradept = substr($target->kode, 0,1);
+        return redirect(route('renstra.target.index', "0".$renstradept));
     }
 
     /**
