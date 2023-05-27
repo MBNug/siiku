@@ -145,6 +145,7 @@
   <script src="{{ asset('assets/jquery.js') }}"></script>
   <script src="{{ asset('assets/jquery-ui.js') }}"></script>
   <script src="{{ asset('assets/bootstrap.js') }}"></script>
+  @include('sweetalert::alert')
 
   <!-- JS Sidebar Navbar-->
   <script>
