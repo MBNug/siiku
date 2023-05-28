@@ -133,18 +133,23 @@ class TargetController extends Controller
     public function update(UpdateTargetRequest $request, Target $target)
     {   
         // dd('hello');
-        $request->validate([
-            'target' => 'required',
-        ]);
-
-        $target->update([
-            'target'   => $request->target,
-            'status'   => '3'
-        ]);
-
-
         $renstradept = substr($target->kode, 0,1);
-        return redirect(route('renstra.target.index', "0".$renstradept));
+
+        if($target->status != 1){
+            $request->validate([
+                'target' => 'required',
+            ]);
+
+            $target->update([
+                'target'   => $request->target,
+                'status'   => '3'
+            ]);
+            Alert::success('Berhasil!', 'Target berhasil diupdate');
+            return redirect(route('renstra.target.index', "0".$renstradept));
+        }else{
+            Alert::error('Gagal!', 'Target untuk indikator ini telah disetujui Dekan.');
+            return redirect(route('renstra.target.index', "0".$renstradept));
+        }
     }
 
     /**
