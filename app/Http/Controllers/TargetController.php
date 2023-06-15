@@ -135,7 +135,7 @@ class TargetController extends Controller
         // dd('hello');
         $renstradept = substr($target->kode, 0,1);
 
-        if($target->status != 1){
+        if($target->status == 2){
             $request->validate([
                 'target' => 'required',
             ]);
