@@ -23,8 +23,8 @@
   <div class="main-container d-flex">
     <div class="sidebar" id="side_nav">
       <div class="header-box d-flex justify-content-between">
-        <a href="#" class="d-flex align-items-center px-3 pt-3 pb-2 mb-3 text-decoration-none text-white">
-          {{-- <img class="bi me-2" width="30" height="24" src="img/undip.png"> --}}
+        <a href="{{ route('renstra.dashboard') }}" class="d-flex align-items-center px-3 pt-3 pb-2 mb-3 text-decoration-none text-white">
+          <img class="bi me-2" width="30" height="24" src="img/undip.png">
           <span class="fs-5 fw-semibold">SI-IKU</span>
           <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="fa-solid fa-bars-staggered"></i></button>
         </a>
@@ -38,7 +38,9 @@
           <div class="collapse show" id="renstra-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
               <li><a href="{{ route('renstra.dashboard') }}" class="link-dark rounded">Dashboard</a></li>
-              <li class="mb-1">
+              <li><a href="#" class="link-dark rounded">Target</a></li>
+              <li><a href="#" class="link-dark rounded">Realisasi</a></li>
+              {{-- <li class="mb-1">
                 <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstratarget-collapse" aria-expanded="false">Target</a>
                 <div class="collapse" id="renstratarget-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal px-3 pb-1 small">
@@ -60,7 +62,7 @@
                     <li><a href="#" class="link-dark rounded">Informatika</a></li>
                   </ul>
                 </div>
-              </li>
+              </li> --}}
             </ul>
           </div>
         </li>
@@ -71,7 +73,9 @@
           <div class="collapse" id="ptnbh-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
               <li><a href="#" class="link-dark rounded">Dashboard</a></li>
-              <li class="mb-1">
+              <li><a href="#" class="link-dark rounded">Target</a></li>
+              <li><a href="#" class="link-dark rounded">Realisasi</a></li>
+              {{-- <li class="mb-1">
                 <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ptnbhtarget-collapse" aria-expanded="false">Target</a>
                 <div class="collapse" id="ptnbhtarget-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal px-3 pb-1 small">
@@ -96,7 +100,19 @@
                     <li><a href="#" class="link-dark rounded">Informatika</a></li>
                   </ul>
                 </div>
-              </li>
+              </li> --}}
+            </ul>
+          </div>
+        </li>
+        <li class="mb-1">
+          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#config-collapse" aria-expanded="false">
+            Config
+          </button>
+          <div class="collapse" id="config-collapse">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li><a href="#" class="link-dark rounded">Tahun</a></li>
+              <li><a href="#" class="link-dark rounded">Pejabat</a></li>
+              <li><a href="#" class="link-dark rounded">Departemen</a></li>
             </ul>
           </div>
         </li>
@@ -116,7 +132,7 @@
       <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
           <div class="d-flex justify-content-between d-md-none d-block">
-            <a class="navbar-brand" href="#">SI-IKU</a>
+            <a class="navbar-brand" href="{{ route('renstra.dashboard') }}">SI-IKU</a>
             <button class="btn px-1 py-0 open-btn"><i class="fa-solid fa-bars-staggered"></i></button>
           </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,9 +142,7 @@
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">
-                  {{-- <img class="img-profile rounded-circle" src="@auth https://ui-avatars.com/api/?name={{ Auth::user()->name }} @endauth">
-                  <span class="ml-2 d-none d-lg-inline text-gray-600 small">@auth {{ Auth::user()->name }}@endauth</span>           --}}
-                  <img class="img-profile rounded-circle" height="30" src="https://ui-avatars.com/api/?name=Fakultas">
+                  <img class="img-profile rounded-circle" height="30" src="https://ui-avatars.com/api/?name={{ $user->name }}">
                   <span class="ml-2 d-none d-lg-inline text-gray-600 small">{{ $user->name }}</span>
                 </a>
               </li>
