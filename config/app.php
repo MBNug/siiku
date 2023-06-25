@@ -1,5 +1,6 @@
 <?php
 
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -169,6 +170,7 @@ return [
          */
 
          RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+         Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -195,6 +197,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // ...
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
+        'Excel' => Excel::class,
     ])->toArray(),
 
 ];
