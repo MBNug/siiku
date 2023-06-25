@@ -4,6 +4,7 @@ use App\Http\Controllers\ConfigController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LayoutController;
+use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\RenstraController;
 use App\Http\Controllers\TargetController;
 use App\Models\Target;
@@ -46,6 +47,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/config/tahun', [ConfigController::class, 'index'])->name('config.index');
     Route::match(['put', 'post'], '/config/settahun', [ConfigController::class, 'storeTahun'])->name('config.settahun');
     Route::post('/config/setindikator', [ConfigController::class, 'storeIndikator'])->name('config.setindikator');
+
+    //Pejabat
+    Route::resource('/config/pejabat', PejabatController::class);
+    
 });
 
 

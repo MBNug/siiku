@@ -32,14 +32,17 @@
 
       <ul class="list-unstyled ps-0">
         <li class="mb-1">
-          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstra-collapse" aria-expanded="true">
+          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstra-collapse" aria-expanded="{{ Request::is('renstra*') ? 'true' : 'false' }}">
             Renstra
           </button>
-          <div class="collapse show" id="renstra-collapse">
+          <div class="collapse {{ Request::is('renstra*') ? 'show' : '' }}" id="renstra-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="{{ route('renstra.dashboard') }}" class="link-dark rounded">Dashboard</a></li>
-              <li><a href="#" class="link-dark rounded">Target</a></li>
-              <li><a href="#" class="link-dark rounded">Realisasi</a></li>
+              <li><a href="{{ route('renstra.dashboard') }}" class="{{ Request::is('renstra/dashboard') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/dashboard') ? 
+                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
+              <li><a href="#" class="{{ Request::is('renstra/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/target') ? 
+                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
+              <li><a href="#" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
+                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
               {{-- <li class="mb-1">
                 <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstratarget-collapse" aria-expanded="false">Target</a>
                 <div class="collapse" id="renstratarget-collapse">
@@ -67,14 +70,17 @@
           </div>
         </li>
         <li class="mb-1">
-          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ptnbh-collapse" aria-expanded="false">
+          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ptnbh-collapse" aria-expanded="{{ Request::is('ptnbh/dashboard')||Request::is('ptnbh/target')||Request::is('ptnbh/realisasi') ? 'true' : 'false' }}">
             PTN-BH
           </button>
-          <div class="collapse" id="ptnbh-collapse">
+          <div class="collapse {{ Request::is('ptnbh*') ? 'show' : '' }}" id="ptnbh-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="#" class="link-dark rounded">Dashboard</a></li>
-              <li><a href="#" class="link-dark rounded">Target</a></li>
-              <li><a href="#" class="link-dark rounded">Realisasi</a></li>
+              <li><a href="{{ route('renstra.dashboard') }}" class="{{ Request::is('ptnbh/dashboard') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/dashboard') ? 
+                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
+              <li><a href="#" class="{{ Request::is('ptnbh/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/target') ? 
+                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
+              <li><a href="#" class="{{ Request::is('ptnbh/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/realisasi') ? 
+                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
               {{-- <li class="mb-1">
                 <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ptnbhtarget-collapse" aria-expanded="false">Target</a>
                 <div class="collapse" id="ptnbhtarget-collapse">
@@ -105,14 +111,17 @@
           </div>
         </li>
         <li class="mb-1">
-          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#config-collapse" aria-expanded="false">
+          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#config-collapse" aria-expanded="{{ Request::is('config/tahun') ? 'true' : 'false' }}">
             Config
           </button>
-          <div class="collapse" id="config-collapse">
+          <div class="collapse {{ Request::is('config*') ? 'show' : '' }}" id="config-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="{{ route('config.index') }}" class="link-dark rounded">Tahun</a></li>
-              <li><a href="#" class="link-dark rounded">Pejabat</a></li>
-              <li><a href="#" class="link-dark rounded">Departemen</a></li>
+              <li><a href="{{ route('config.index') }}" class="{{ Request::is('config/tahun') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/tahun') ? 
+              'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Tahun</a></li>
+              <li><a href="{{ route('pejabat.index') }}" class="{{ Request::is('config/pejabat') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/pejabat') ? 
+                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Pejabat</a></li>
+              <li><a href="#" class="{{ Request::is('config/departemen') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/departemen') ? 
+                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Departemen</a></li>
             </ul>
           </div>
         </li>
