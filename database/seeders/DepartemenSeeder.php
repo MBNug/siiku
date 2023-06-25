@@ -18,6 +18,10 @@ class DepartemenSeeder extends Seeder
         //
         $departemens = [
             [
+                'kode' => "00", 
+                'nama' => "Fakultas", 
+            ],
+            [
                 'kode' => "01", 
                 'nama' => "Matematika", 
             ],
