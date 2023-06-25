@@ -14,11 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('indikators', function (Blueprint $table) {
-            $table->string('kode', 4)->primary();
+            $table->string('kode', 6)->primary();
             $table->string('strategi');
             $table->string('indikator_kinerja');
             $table->string('satuan');
-            $table->enum('keterangan', ['Komulatif', 'Nominal', 'Rasio'])->nullable();
+            // $table->enum('keterangan', ['kumulatif', 'nominal', 'rasio'])->nullable();
+            $table->string('keterangan')->nullable();
             $table->text('definisi');
             $table->text('cara_perhitungan');
             $table->timestamps();

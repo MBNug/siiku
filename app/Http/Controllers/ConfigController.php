@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\config;
+use Illuminate\Http\Request;
+use App\Imports\IndikatorImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreconfigRequest;
 use App\Http\Requests\UpdateconfigRequest;
@@ -56,7 +59,6 @@ class ConfigController extends Controller
         // dd($config);
 
         $actConfig1 = Config::where('status', '=', '1')->first();
-        $actConfig2 =Config::find($actConfig1->tahun);
         // dd($actConfig===null);
         // dd($actConfig);
         $request->validate([
@@ -72,21 +74,50 @@ class ConfigController extends Controller
             return redirect(route('config.index'));
         }
         else{
-            $actConfig2->status = '0';
-            $actConfig2->save();
-            $config->status = '1';
-            $config->save();
-            Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
-            return redirect(route('config.index'));
+            if($actConfig2 =Config::find($actConfig1->tahun) == $config){
+                Alert::error('Gagal!', 'Pilih Tahun yang berbeda!');
+                return redirect(route('config.index'));
+            }
+            else{
+                $actConfig2 =Config::find($actConfig1->tahun);
+                $actConfig2->status = '0';
+                $actConfig2->save();
+                $config->status = '1';
+                $config->save();
+                Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
+                return redirect(route('config.index'));
+            }
+            
         }
         
 
         //
     }
 
-    public function storeIndikator(StoreconfigRequest $request)
+    public function storeIndikator(Request $request)
     {
         //
+        // validasi
+        // dd($request);
+		$this->validate($request, [
+			'indikator' => 'required'
+		]);
+        // dd($request);
+        // menangkap file excel
+		$file = $request->file('indikator');
+ 
+		// membuat nama file unik
+		$nama_file = rand().$file->getClientOriginalName();
+ 
+		// upload ke folder file_indikator di dalam folder public
+		$file->storeAs('file_indikator',$nama_file);
+        // dd($request);
+
+        // import data
+		Excel::import(new IndikatorImport, storage_path('app/file_indikator/'.$nama_file));
+
+        Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
+        return redirect(route('config.index'));
     }
 
     /**
