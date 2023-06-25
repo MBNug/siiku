@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ConfigController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LayoutController;
@@ -40,6 +41,11 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/tolak/{kode}', [TargetController::class, 'tolak'])->name('renstra.tolak');
     Route::get('/renstra/urungkan/{kode}', [TargetController::class, 'urungkan'])->name('renstra.urungkan');
     Route::get('/renstra/setujui/{renstradept}', [TargetController::class, 'setujui'])->name('renstra.setujui');
+
+    //Config
+    Route::get('/config/tahun', [ConfigController::class, 'index'])->name('config.index');
+    Route::match(['put', 'post'], '/config/settahun', [ConfigController::class, 'storeTahun'])->name('config.settahun');
+    Route::post('/config/setindikator', [ConfigController::class, 'storeIndikator'])->name('config.setindikator');
 });
 
 

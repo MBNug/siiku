@@ -110,7 +110,7 @@
           </button>
           <div class="collapse" id="config-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="#" class="link-dark rounded">Tahun</a></li>
+              <li><a href="{{ route('config.index') }}" class="link-dark rounded">Tahun</a></li>
               <li><a href="#" class="link-dark rounded">Pejabat</a></li>
               <li><a href="#" class="link-dark rounded">Departemen</a></li>
             </ul>
