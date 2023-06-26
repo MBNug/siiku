@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Departemen;
+use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreDepartemenRequest;
 use App\Http\Requests\UpdateDepartemenRequest;
 
@@ -16,6 +18,12 @@ class DepartemenController extends Controller
     public function index()
     {
         //
+        $departemens = Departemen::where('kode', '<>', '00')->get();
+        
+
+        return view('config.departemen.index', compact('departemens')) ->with([
+            'user'=> Auth::user()
+        ]);
     }
 
     /**
@@ -26,6 +34,9 @@ class DepartemenController extends Controller
     public function create()
     {
         //
+        return view('config.departemen.create') ->with([
+            'user'=> Auth::user()
+        ]);
     }
 
     /**
@@ -37,6 +48,21 @@ class DepartemenController extends Controller
     public function store(StoreDepartemenRequest $request)
     {
         //
+        $dep = Departemen::where('kode', '=', $request->kode)->first();
+        // dd($dep);
+        $request->validate([
+            'kode' => 'required',
+            'nama' => 'required',
+        ]);
+        if($dep === null){
+            Departemen::create($request->all());
+            Alert::success('Berhasil!', 'Departemen baru berhasil ditambahkan');
+            return redirect(route('departemen.index'));
+        }
+        else{
+            Alert::error('Gagal!', 'Kode untuk departemen ini sudah ada.');
+            return redirect(route('departemen.index'));
+        }
     }
 
     /**
@@ -56,9 +82,13 @@ class DepartemenController extends Controller
      * @param  \App\Models\Departemen  $departemen
      * @return \Illuminate\Http\Response
      */
-    public function edit(Departemen $departemen)
+    public function edit(Departemen $departeman)
     {
         //
+        // dd($departemen->kode);
+        return view('config.departemen.edit', compact('departeman'))->with([
+            'user'=> Auth::user()
+        ]);
     }
 
     /**
@@ -68,9 +98,16 @@ class DepartemenController extends Controller
      * @param  \App\Models\Departemen  $departemen
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateDepartemenRequest $request, Departemen $departemen)
+    public function update(UpdateDepartemenRequest $request, Departemen $departeman)
     {
         //
+        $request->validate([
+            'kode' => 'required',
+            'nama' => 'required',
+        ]);
+        $departeman->update($request->all());
+        Alert::success('Berhasil!', 'Departemen berhasil diupdate');
+        return redirect(route('departemen.index'));
     }
 
     /**
@@ -79,7 +116,7 @@ class DepartemenController extends Controller
      * @param  \App\Models\Departemen  $departemen
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Departemen $departemen)
+    public function destroy(Departemen $departeman)
     {
         //
     }
