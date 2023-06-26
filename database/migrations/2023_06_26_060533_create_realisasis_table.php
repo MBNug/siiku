@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('realisasis', function (Blueprint $table) {
-            $table->id();
+
             $table->string('kode', 10)->primary();
             $table->string('strategi');
             $table->string('indikator_kinerja');
@@ -23,6 +23,10 @@ return new class extends Migration
             $table->text('definisi');
             $table->text('cara_perhitungan');
             $table->string('target');
+            $table->string('departemen');
+            $table->float('nilai');
+            $table->enum('status', ['Tidak Tercapai', 'Tercapai', 'Melampaui Target']);
+            $table->float('nilaireal');
             $table->timestamps();
         });
     }
