@@ -18,7 +18,7 @@ class IndikatorImport implements ToModel
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
         return new Indikator([
             //
-            'kode' => $tahun->tahun.$row[0], 
+            'kode' => $row[0].$tahun->tahun, 
             'strategi' => $row[1], 
             'indikator_kinerja' => $row[2], 
             'satuan' => $row[3],

@@ -13,20 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('targets', function (Blueprint $table) {
+        Schema::create('realisasis', function (Blueprint $table) {
+            $table->id();
             $table->string('kode', 10)->primary();
             $table->string('strategi');
             $table->string('indikator_kinerja');
             $table->string('satuan');
-            // $table->enum('keterangan', ['Komulatif', 'Nominal', 'Rasio'])->nullable()->default(null);
-            $table->string('keterangan')->nullable();
+            $table->enum('keterangan', ['Komulatif', 'Nominal', 'Rasio'])->nullable()->default(null);
             $table->text('definisi');
             $table->text('cara_perhitungan');
             $table->string('target');
-            $table->string('departemen');
-            $table->float('nilai');
-            $table->enum('status', ['Tidak Tercapai', 'Tercapai', 'Melampaui Target']);
-            $table->float('nilaireal');
             $table->timestamps();
         });
     }
@@ -38,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('targets');
+        Schema::dropIfExists('realisasis');
     }
 };

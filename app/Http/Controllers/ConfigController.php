@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\config;
+use App\Models\Indikator;
 use Illuminate\Http\Request;
 use App\Imports\IndikatorImport;
 use Illuminate\Support\Facades\DB;
@@ -112,6 +113,16 @@ class ConfigController extends Controller
 		// upload ke folder file_indikator di dalam folder public
 		$file->storeAs('file_indikator',$nama_file);
         // dd($request);
+
+        $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
+        $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        // dd($indikatorlama);
+        $jmlindikatorlama = count($indikatorlama);
+        if($jmlindikatorlama!=0){
+            for ($i = 0; $i < $jmlindikatorlama; $i++){
+                Indikator::destroy($indikatorlama[$i]->kode);
+            }
+        }
 
         // import data
 		Excel::import(new IndikatorImport, storage_path('app/file_indikator/'.$nama_file));

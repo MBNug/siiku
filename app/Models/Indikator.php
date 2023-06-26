@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Indikator extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'kode';
     protected $fillable =['kode', 'strategi', 'indikator_kinerja', 'satuan', 'keterangan', 'definisi', 'cara_perhitungan'];
 }
