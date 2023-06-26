@@ -9,5 +9,6 @@ class Indikator extends Model
 {
     use HasFactory;
     protected $primaryKey = 'kode';
+    public $incrementing = false;
     protected $fillable =['kode', 'strategi', 'indikator_kinerja', 'satuan', 'keterangan', 'definisi', 'cara_perhitungan'];
 }

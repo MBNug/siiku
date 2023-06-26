@@ -8,5 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Departemen extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'kode';
+    public $incrementing = false;
     protected $fillable =['kode', 'nama'];
 }

@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Target')
+@section('title', 'Tambah Pejabat')
 
 {{-- @dd($renstradept); --}}
 
 @section('csslocal')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
 @endsection
 
 @section('content')
@@ -92,15 +92,7 @@
 @endsection
 
 @section('scriptlocal')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <script>
-    $('#date-tahun').datepicker({
-        minViewMode: "years",
-        format: "yyyy",
-        viewMode: "years",
-        autoclose: true
-    });
-
 
     $('#departemen').change(function(){
         // Empty the dropdown

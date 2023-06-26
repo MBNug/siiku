@@ -16,6 +16,13 @@ class IndikatorImport implements ToModel
     public function model(array $row)
     {
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
+        $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $jmlindikatorlama = count($indikatorlama);
+        for ($i = 0; $i < $jmlindikatorlama; $i++){
+            Indikator::destroy($indikatorlama[$i]->kode);
+        }
+        // $indikatorlama = DB::table('indikators') -> where('kode', 'like', $tahun->tahun.'%') -> get();
+        // dd($indikatorlama);
         return new Indikator([
             //
             'kode' => $row[0].$tahun->tahun, 

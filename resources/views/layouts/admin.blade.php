@@ -120,7 +120,7 @@
               'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Tahun</a></li>
               <li><a href="{{ route('pejabat.index') }}" class="{{ Request::is('config/pejabat') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/pejabat') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Pejabat</a></li>
-              <li><a href="#" class="{{ Request::is('config/departemen') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/departemen') ? 
+              <li><a href="{{ route('departemen.index') }}" class="{{ Request::is('config/departemen') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/departemen') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Departemen</a></li>
             </ul>
           </div>

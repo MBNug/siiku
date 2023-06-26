@@ -130,6 +130,7 @@ class PejabatController extends Controller
     public function edit(Pejabat $pejabat)
     {
         //
+        // dd($pejabat);
         $departemens = Departemen::all();
         return view('config.pejabat.edit', compact('pejabat', 'departemens'))->with([
             'user'=> Auth::user()
@@ -146,8 +147,6 @@ class PejabatController extends Controller
     public function update(UpdatePejabatRequest $request, Pejabat $pejabat)
     {
         //
-        $kode =$pejabat->kode;
-        // dd($kode);
         $request->validate([
             'departemen' => 'required',
             'jabatan' => 'required',
