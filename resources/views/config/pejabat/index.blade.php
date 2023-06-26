@@ -36,7 +36,7 @@
                         </thead>
                         <tbody>
                             @foreach ($pejabats as $pejabat)
-                            {{-- @dd($pejabat->kode) --}}
+                            {{-- @dd($pejabat) --}}
                             <tr>
                                 <th scope="row">{{ $pejabat->kode }} </th>
                                 <td>{{ $pejabat->departemen}}</td>

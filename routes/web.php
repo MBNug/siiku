@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\DepartemenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LayoutController;
@@ -50,6 +51,9 @@ Route::group(['middleware' => ['auth']], function(){
 
     //Pejabat
     Route::resource('/config/pejabat', PejabatController::class);
+
+    //Departemen
+    Route::resource('/config/departemen', DepartemenController::class);
     
 });
 
