@@ -37,12 +37,17 @@ Route::group(['middleware' => ['auth']], function(){
     // Route::post('/renstra/dasboard/', [TargetController::class, 'store'])->name('renstra.target.store');
     // Route::get('/renstra/target/{id}', [TargetController::class, 'index'])->name('renstra.target.index');
     // Route::get('/renstra/create/target/', [TargetController::class, 'create'])->name('renstra.target.create');
-    Route::resource('renstra.target', TargetController::class)->shallow();
+    // Route::resource('renstra.target', TargetController::class)->shallow();
+    Route::get('/renstra/target/', [TargetController::class, 'index'])->name('renstra.target.index');
+    Route::get('/renstra/target/departemen/{kode}', [TargetController::class, 'getTarget'])->name('renstra.targetdepartemen');
+    Route::get('/renstra/target/departemen/store/{kode}', [TargetController::class, 'store'])->name('renstra.target.store');
+    Route::get('/renstra/target/departemen/edit/{kode}', [TargetController::class, 'edit'])->name('renstra.target.edit');
+    Route::put('/renstra/target/departemen/update/{kode}', [TargetController::class, 'update'])->name('renstra.target.kirim');
+    Route::get('/renstra/target/departemen/setujui/{kode}', [TargetController::class, 'setujui'])->name('renstra.target.setujui');
+    Route::get('/renstra/target/departemen/urungkan/{kode}', [TargetController::class, 'urungkan'])->name('renstra.target.urungkan');
+    Route::get('/renstra/target/departemen/tolak/{kode}', [TargetController::class, 'tolak'])->name('renstra.target.tolak');
     Route::get('/renstra/indikators/{kode}', [TargetController::class, 'getIndikator'])->name('renstra.getindikator');
     Route::get('/renstra/strategis/{kode}', [TargetController::class, 'getStrategi'])->name('renstra.getstrategi');
-    Route::get('/renstra/tolak/{kode}', [TargetController::class, 'tolak'])->name('renstra.tolak');
-    Route::get('/renstra/urungkan/{kode}', [TargetController::class, 'urungkan'])->name('renstra.urungkan');
-    Route::get('/renstra/setujui/{renstradept}', [TargetController::class, 'setujui'])->name('renstra.setujui');
 
     //Config
     Route::get('/config/tahun', [ConfigController::class, 'index'])->name('config.index');

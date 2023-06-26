@@ -39,7 +39,7 @@
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
               <li><a href="{{ route('renstra.dashboard') }}" class="{{ Request::is('renstra/dashboard') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/dashboard') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
-              <li><a href="#" class="{{ Request::is('renstra/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/target') ? 
+              <li><a href="{{ route('renstra.target.index') }}" class="{{ Request::is('renstra/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/target') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
               <li><a href="#" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>

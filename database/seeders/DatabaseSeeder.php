@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DepartemenSeeder::class);
         $this->call(StrategiSeeder::class);
         // $this->call(IndikatorSeeder::class);
-        $this->call(TargetSeeder::class);
+        // $this->call(TargetSeeder::class);
         $this->call(ConfigSeeder::class);
     }
 }
