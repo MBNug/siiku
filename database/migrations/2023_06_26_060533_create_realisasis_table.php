@@ -23,7 +23,7 @@ return new class extends Migration
             $table->text('definisi');
             $table->text('cara_perhitungan');
             $table->string('target');
-            $table->string('departemen');
+            // $table->string('departemen');
             $table->float('nilai');
             $table->enum('status', ['Tidak Tercapai', 'Tercapai', 'Melampaui Target']);
             $table->float('nilaireal');

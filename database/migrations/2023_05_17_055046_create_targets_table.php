@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('keterangan')->nullable();
             $table->text('definisi');
             $table->text('cara_perhitungan');
-            $table->string('target');
+            $table->string('target')->nullable();
+            $table->string('status', 1)->default('0');
             $table->timestamps();
         });
     }
