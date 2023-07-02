@@ -8,6 +8,7 @@ use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\RenstraController;
 use App\Http\Controllers\TargetController;
+use App\Http\Controllers\RealisasiController;
 use App\Models\Target;
 
 /*
@@ -38,6 +39,8 @@ Route::group(['middleware' => ['auth']], function(){
     // Route::get('/renstra/target/{id}', [TargetController::class, 'index'])->name('renstra.target.index');
     // Route::get('/renstra/create/target/', [TargetController::class, 'create'])->name('renstra.target.create');
     // Route::resource('renstra.target', TargetController::class)->shallow();
+
+    //Target-renstra
     Route::get('/renstra/target/', [TargetController::class, 'index'])->name('renstra.target.index');
     Route::get('/renstra/target/departemen/{kode}', [TargetController::class, 'getTarget'])->name('renstra.targetdepartemen');
     Route::get('/renstra/target/departemen/store/{kode}', [TargetController::class, 'store'])->name('renstra.target.store');
@@ -49,15 +52,21 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/indikators/{kode}', [TargetController::class, 'getIndikator'])->name('renstra.getindikator');
     Route::get('/renstra/strategis/{kode}', [TargetController::class, 'getStrategi'])->name('renstra.getstrategi');
 
+
+    //realisasi-renstra 
+    Route::get('/renstra/realisasi/', [RealisasiController::class, 'index'])->name('renstra.realisasi.index');
+    Route::get('/renstra/realisasi/departemen/{kode}', [RealisasiController::class, 'getRealisasi'])->name('renstra.realisasidepartemen');
+    // Route::get('/renstra/realisasi/departemen/store/{kode}', [TargetController::class, 'store'])->name('renstra.target.store');
+
     //Config
     Route::get('/config/tahun', [ConfigController::class, 'index'])->name('config.index');
     Route::match(['put', 'post'], '/config/settahun', [ConfigController::class, 'storeTahun'])->name('config.settahun');
     Route::post('/config/setindikator', [ConfigController::class, 'storeIndikator'])->name('config.setindikator');
 
-    //Pejabat
+    //ConfigPejabat
     Route::resource('/config/pejabat', PejabatController::class);
 
-    //Departemen
+    //ConfigDepartemen
     Route::resource('/config/departemen', DepartemenController::class);
     
 });

@@ -41,7 +41,7 @@
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
               <li><a href="{{ route('renstra.target.index') }}" class="{{ Request::is('renstra/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/target') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
-              <li><a href="#" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
+              <li><a href="{{ route('renstra.realisasi.index') }}" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
               {{-- <li class="mb-1">
                 <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstratarget-collapse" aria-expanded="false">Target</a>
