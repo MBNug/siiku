@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('strategi');
             $table->string('indikator_kinerja');
             $table->string('satuan');
-            // $table->enum('keterangan', ['Komulatif', 'Nominal', 'Rasio'])->nullable()->default(null);
             $table->string('keterangan')->nullable();
             $table->text('definisi');
             $table->text('cara_perhitungan');

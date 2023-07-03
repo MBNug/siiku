@@ -56,7 +56,7 @@ Route::group(['middleware' => ['auth']], function(){
     //realisasi-renstra 
     Route::get('/renstra/realisasi/', [RealisasiController::class, 'index'])->name('renstra.realisasi.index');
     Route::get('/renstra/realisasi/departemen/{kode}', [RealisasiController::class, 'getRealisasi'])->name('renstra.realisasidepartemen');
-    // Route::get('/renstra/realisasi/departemen/store/{kode}', [TargetController::class, 'store'])->name('renstra.target.store');
+    Route::get('/renstra/realisasi/departemen/store/{kode}', [RealisasiController::class, 'store'])->name('renstra.realisasi.store');
 
     //Config
     Route::get('/config/tahun', [ConfigController::class, 'index'])->name('config.index');
