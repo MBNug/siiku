@@ -60,27 +60,19 @@ class RealisasiController extends Controller
                 return redirect()->back();
             }
             else{
-                $realisasi = DB::table('realisasis') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
-                if($realisasi->count()==0){
-                    $t= $namadept->nama." ".$actConfig->tahun;
-                    $title = 'Realisasi Departemen '.$t;
+                $realisasis = DB::table('realisasis') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
+                $t= $namadept->nama." ".$actConfig->tahun;
+                $title = 'Realisasi Departemen '.$t;
+                if($realisasis->count()==0){
                     return view('renstra.realisasi.uncreate', compact('title', 'renstradept')) ->with([
                         'user'=> Auth::user()
                     ]);
                 }
                 else{
-                    // $s = DB::table('targets') -> where('kode', 'like', $renstradept.'%') -> where('status', '!=', "1")-> count();
-                    // // dd($status);
-                    // $status=0;
-                    // if($s>0){
-                    //     $status=2;
-                    // }else{
-                    //     $status=1;
-                    // }
-                    // $departemens = Departemen::all();
-                    // return view('renstra.target.target', compact('targets', 'departemens', 'title', 'renstradept',"status")) ->with([
-                    //     'user'=> Auth::user()
-                    // ]);
+                    $departemens = Departemen::all();
+                    return view('renstra.realisasi.realisasi', compact('realisasis', 'departemens', 'title', 'renstradept')) ->with([
+                        'user'=> Auth::user()
+                    ]);
                 }
             }
         }
@@ -102,9 +94,28 @@ class RealisasiController extends Controller
      * @param  \App\Http\Requests\StoreRealisasiRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRealisasiRequest $request)
+    public function store($renstradept, StoreTargetRequest $request)
     {
-        //
+        $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
+        $targets = DB::table('targets') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
+        foreach($targets as $target){
+            // $kode = $renstradept.$indikator->kode;
+            DB::statement("INSERT INTO realisasis (kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan, target) SELECT kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan,target FROM targets where kode='$target->kode'");
+        }
+        $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
+        Alert::success('Berhasil!', 'Realisasi Berhasil dibuat');
+        return redirect()->back();
+        // $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
+        // $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        // // dd($indikatorlama);
+        // $jmlindikatorlama = count($indikatorlama);
+        // $errmsg = 'Config Indikator untuk tahun '.$tahun->tahun.' belum diatur.';
+        // if($jmlindikatorlama==0){
+        //     Alert::error('Gagal!', $errmsg);
+        //     return redirect()->back();
+        // }else{
+        // return redirect(route('renstra.target.index', $renstradept));
+    // }
     }
 
     /**

@@ -13,9 +13,11 @@
         <div class="card-body"style="height: 80vh;display: flex;
         flex-direction: column;justify-content:center;align-items:center;" >
             <h4 style="text-align:center;margin:30px;">@yield('title') belum tersedia, Silahkan buat data Realisasi dengan mengklik tombol dibawah.</h4>
-            <a href="#" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i> Buat @yield('title') </a>
+            <a href="{{ route('renstra.realisasi.store', $renstradept) }}" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i> Buat @yield('title') </a>
         </div>
     </div>
 </div>
 @endsection
+
+
 
