@@ -109,13 +109,9 @@
             $("#jabatan").append($(option));
             var option = new Option('Wakil Dekan 4', '95');
             $("#jabatan").append($(option));
-            var option = new Option('Admin Operator Fakultas', '94');
-            $("#jabatan").append($(option));
         }
         else{
             var option = new Option('Kepala Departemen', '01');
-            $("#jabatan").append($(option));
-            var option = new Option('Admin Operator Departemen', '99');
             $("#jabatan").append($(option));
         }
     });

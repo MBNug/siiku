@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Realisasi extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'kode';
+    public $incrementing = false;
+    protected $fillable =['kode','strategi', 'indikator_kinerja', 'satuan', 'keterangan', 'definisi', 'cara_perhitungan', 'target','nilai', 'bukti1', 'bukti2', 'bukti3', 'bukti4', 'bukti5', 'status', 'nilaireal'];
 }

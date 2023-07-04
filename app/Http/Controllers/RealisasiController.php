@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Realisasi;
+use App\Models\Config;
 use App\Models\Target;
-use App\Models\config;
-use App\Models\Strategi;
 use App\Models\Indikator;
+use App\Models\Realisasi;
 use App\Models\Departemen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Http\Requests\StoreTargetRequest;
-use App\Http\Requests\UpdateTargetRequest;
+use App\Http\Requests\StoreRealisasiRequest;
+use App\Http\Requests\UpdateRealisasiRequest;
 
 class RealisasiController extends Controller
 {
@@ -60,7 +60,8 @@ class RealisasiController extends Controller
                 return redirect()->back();
             }
             else{
-                $realisasis = DB::table('realisasis') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
+                $realisasis = Realisasi::where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) ->paginate(10);
+                // dd($realisasis);
                 $t= $namadept->nama." ".$actConfig->tahun;
                 $title = 'Realisasi Departemen '.$t;
                 if($realisasis->count()==0){
@@ -94,13 +95,13 @@ class RealisasiController extends Controller
      * @param  \App\Http\Requests\StoreRealisasiRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($renstradept, StoreTargetRequest $request)
+    public function store($renstradept, StoreRealisasiRequest $request)
     {
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         $targets = DB::table('targets') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
-        foreach($targets as $target){
+        foreach($targets as $t){
             // $kode = $renstradept.$indikator->kode;
-            DB::statement("INSERT INTO realisasis (kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan, target) SELECT kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan,target FROM targets where kode='$target->kode'");
+            DB::statement("INSERT INTO realisasis (kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan, target) SELECT kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan, target FROM targets where kode='$t->kode'");
         }
         $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
         Alert::success('Berhasil!', 'Realisasi Berhasil dibuat');
@@ -147,9 +148,83 @@ class RealisasiController extends Controller
      * @param  \App\Models\Realisasi  $realisasi
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRealisasiRequest $request, Realisasi $realisasi)
+    public function update(UpdateRealisasiRequest $request, Departemen $departemen, Realisasi $realisasi)
     {
         //
+        $request->validate([
+            'nilai' => 'required',
+            'files.*' => 'required' // Limit to PDF and Excel files, maximum file size of 5MB
+        ]);
+        $datarealisasi = 
+        [
+            'kode' => ''.$realisasi->kode,
+            'strategi' => ''.$realisasi->strategi,
+            'indikator_kinerja' => ''.$realisasi->indikator_kinerja,
+            'satuan' => ''.$realisasi->satuan,
+            'keterangan' => ''.$realisasi->keterangan,
+            'definisi' => ''.$realisasi->definisi,
+            'cara_perhitungan' => ''.$realisasi->cara_perhitungan,
+            'target' => ''.$realisasi->target,
+            'nilai' => $request->nilai,
+        ];
+        $realisasi->update($datarealisasi);
+
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+
+            if (count($files) <= 5) {
+                foreach ($files as $key => $file) {
+                    if ($file->getSize() > 5 * 1024 * 1024) {
+                        Alert::error('Error!', 'Ukuran File Maksimal 5MB');
+                        return redirect()->back();
+                    }
+                    $originalName = $file->getClientOriginalName();
+                    $path = $file->storeAs('uploads/'.$realisasi->kode, $originalName, 'public');
+                    $datarealisasi['bukti'.($key + 1)] = $path;
+                }
+            } else {
+                Alert::error('Error!', 'Hanya bisa mengunggah sampai dengan 5 file.');
+                return back();
+            }
+
+        }
+        $realisasi->update($datarealisasi);
+        Alert::success('Berhasil!', 'Data Realisasi berhasil disimpan');
+        return redirect(route('renstra.realisasidepartemen', $departemen->kode));
+    }
+
+    public function update2(UpdateRealisasiRequest $request, Departemen $departemen, Realisasi $realisasi)
+    {
+        //
+        $request->validate([
+            'status' => 'required',
+            'nilaireal' => 'required'
+        ]);
+        $datarealisasi = 
+        [
+            'kode' => ''.$realisasi->kode,
+            'strategi' => ''.$realisasi->strategi,
+            'indikator_kinerja' => ''.$realisasi->indikator_kinerja,
+            'satuan' => ''.$realisasi->satuan,
+            'keterangan' => ''.$realisasi->keterangan,
+            'definisi' => ''.$realisasi->definisi,
+            'cara_perhitungan' => ''.$realisasi->cara_perhitungan,
+            'target' => ''.$realisasi->target,
+            'nilai' => $realisasi->nilai,
+            'bukti1' => $realisasi->bukti1,
+            'bukti2' => $realisasi->bukti2,
+            'bukti3' => $realisasi->bukti3,
+            'bukti4' => $realisasi->bukti4,
+            'bukti5' => $realisasi->bukti5,
+            'status' => $request->status,
+            'nilaireal' => $request->nilaireal,
+        ];
+
+        // dd($datarealisasi);
+        $realisasi->update($datarealisasi);
+
+        Alert::success('Berhasil!', 'Data Realisasi berhasil disimpan');
+        return redirect(route('renstra.realisasidepartemen', $departemen->kode));
     }
 
     /**
@@ -161,5 +236,21 @@ class RealisasiController extends Controller
     public function destroy(Realisasi $realisasi)
     {
         //
+    }
+
+    public function form(Departemen $departemen, Realisasi $realisasi){
+        $files = 
+        [
+            'bukti1' => $realisasi->bukti1,
+            'bukti2' => $realisasi->bukti2,
+            'bukti3' => $realisasi->bukti3,
+            'bukti4' => $realisasi->bukti4,
+            'bukti5' => $realisasi->bukti5,
+        ];
+        // dd($files);
+        $title = "Realisasi Departemen ".$departemen->nama;
+        return view('renstra.realisasi.form', compact('departemen','realisasi', 'title', 'files'))->with([
+            'user'=> Auth::user()
+        ]);
     }
 }

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -39,9 +38,9 @@
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
               <li><a href="{{ route('renstra.dashboard') }}" class="{{ Request::is('renstra/dashboard') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/dashboard') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
-              <li><a href="{{ route('renstra.target.index') }}" class="{{ Request::is('renstra/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/target') ? 
+              <li><a href="{{ $user->level != 2 ? route('renstra.target.index') : route('renstra.targetdepartemen', substr($user->kode, 0, 2))  }}" class="{{ Request::is('renstra/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/target') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
-              <li><a href="{{ route('renstra.realisasi.index') }}" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
+              <li><a href="{{ $user->level != 2 ? route('renstra.realisasi.index') : route('renstra.realisasidepartemen', substr($user->kode, 0, 2)) }}" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
               {{-- <li class="mb-1">
                 <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstratarget-collapse" aria-expanded="false">Target</a>
@@ -110,21 +109,24 @@
             </ul>
           </div>
         </li>
-        <li class="mb-1">
-          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#config-collapse" aria-expanded="{{ Request::is('config/tahun') ? 'true' : 'false' }}">
-            Config
-          </button>
-          <div class="collapse {{ Request::is('config*') ? 'show' : '' }}" id="config-collapse">
-            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="{{ route('config.index') }}" class="{{ Request::is('config/tahun') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/tahun') ? 
-              'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Tahun</a></li>
-              <li><a href="{{ route('pejabat.index') }}" class="{{ Request::is('config/pejabat') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/pejabat') ? 
-                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Pejabat</a></li>
-              <li><a href="{{ route('departemen.index') }}" class="{{ Request::is('config/departemen') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/departemen') ? 
-                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Departemen</a></li>
-            </ul>
-          </div>
-        </li>
+        @if ($user->level == 1)
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#config-collapse" aria-expanded="{{ Request::is('config/tahun') ? 'true' : 'false' }}">
+              Config
+            </button>
+            <div class="collapse {{ Request::is('config*') ? 'show' : '' }}" id="config-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{{ route('config.index') }}" class="{{ Request::is('config/tahun') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/tahun') ? 
+                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Tahun</a></li>
+                <li><a href="{{ route('pejabat.index') }}" class="{{ Request::is('config/pejabat') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/pejabat') ? 
+                  'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Pejabat</a></li>
+                <li><a href="{{ route('departemen.index') }}" class="{{ Request::is('config/departemen') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/departemen') ? 
+                  'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Departemen</a></li>
+              </ul>
+            </div>
+          </li>
+        @endif
+        
       </ul>
 
       <hr class="h-color mx-2">

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('strategi');
             $table->string('indikator_kinerja');
             $table->string('satuan');
-            $table->string('keterangan')->nullable();
+            $table->string('keterangan')->nullable()->default(null);
             $table->text('definisi');
             $table->text('cara_perhitungan');
             $table->string('target');

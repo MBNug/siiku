@@ -57,7 +57,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/realisasi/', [RealisasiController::class, 'index'])->name('renstra.realisasi.index');
     Route::get('/renstra/realisasi/departemen/{kode}', [RealisasiController::class, 'getRealisasi'])->name('renstra.realisasidepartemen');
     Route::get('/renstra/realisasi/departemen/store/{kode}', [RealisasiController::class, 'store'])->name('renstra.realisasi.store');
-
+    Route::get('/renstra/departemen/{departemen}/realisasi/{realisasi}', [RealisasiController::class, 'form'])->name('renstra.realisasi.form');
+    Route::put('/renstra/departemen/{departemen}/realisasi/{realisasi}/simpan', [RealisasiController::class, 'update'])->name('renstra.realisasi.simpan');
+    Route::put('/renstra/departemen/{departemen}/realisasi/{realisasi}/simpan2', [RealisasiController::class, 'update2'])->name('renstra.realisasi.simpan2');
+    
     //Config
     Route::get('/config/tahun', [ConfigController::class, 'index'])->name('config.index');
     Route::match(['put', 'post'], '/config/settahun', [ConfigController::class, 'storeTahun'])->name('config.settahun');
