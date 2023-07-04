@@ -5,12 +5,15 @@
 @section('title', ''.$title)
 
 @section('content')
-<div class="container">
+<div class="container" style="margin-top:10px">
   <!-- Page Heading -->
   <section class="content-header">
     <div class="row">
-        <div class="col-lg-9">
+        <div class="col-lg-9" style="display: flex; flex-direction:row;justify-content:space-between;width:100%">
             <h1 class="h3 mb-4 text-primary">@yield('title')</h1>
+            @if ($user->level == 0 && $status===2)
+                <a href="{{ route('renstra.target.AllAprove', $renstradept )}}" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Setujui Target</a>
+            @endif
         </div>
     </div>
   </section>
@@ -41,11 +44,11 @@
                             @foreach ($targets as $target)
                             <tr style="background-color:
                                     @if($target->status=="3")
-                                        #D14646;color:white; 
+                                    #e06c6c;color:white; 
                                     @elseif($target->status=="4")
-                                        #FFC107;color:white;
+                                    #e0c36c;color:white;
                                     @elseif($target->status=="2")
-                                        #D9D9D9; 
+                                    #e6e6e6; 
                                     @endif
                             ">
                                 <th scope="row">{{ $target->kode }}</th>
@@ -74,7 +77,7 @@
                                         <td style="display:flex;flex-direction:column; justify-content:center ">
                                             <button type="submit" class="btn btn-primary mb-2" >kirim</button>
                                             @if($target->status == "4")
-                                                <a class="btn btn-primary" href="{{ route('renstra.target.setujui', $target->kode) }}">Setujui</a>
+                                                <a class="btn btn-secondary" href="{{ route('renstra.target.batal', $target->kode) }}">Batal</a>
                                             @endif
                                         </td>
                                     </form>
@@ -82,8 +85,7 @@
                                         <td>{{ $target->target }}</td>
                                         <td style="display:flex;flex-direction:column; justify-content:center ">
                                         @if($target->status == "1")
-                                                <a class="btn mb-2" href="{{ route('renstra.target.urungkan', $target->kode) }}" style="background-color: #2D7E18;color:white">Disetujui</a>
-                                            
+                                                <a class="btn mb-2" href="{{ route('renstra.target.batal', $target->kode) }}" style="background-color: #2D7E18;color:white">Disetujui</a>
                                         @elseif($target->status == "2")
                                                 <a class="btn btn-primary mb-2" href="{{ route('renstra.target.setujui', $target->kode) }}">Setujui</a>
                                                 <a class="btn btn-danger mb-2" href="{{ route('renstra.target.tolak', $target->kode) }}">Tolak</a>
@@ -125,37 +127,18 @@
                                     @endif
                                 @endif
                                 @if ($user->level == 2)
-                                @if ($target->target == null)
-                                    <td>Belum diatur</td>
-                                @else
-                                    <td>{{ $target->target }}</td>
-                                @endif
-                                @endif
-                                
-                                {{-- @if ($user->level==0 && $status===2)
-                                <td>
-                                    @if ($target->status=="0" || $target->status=="3")
-                                        <a class="btn btn-danger" href="{{ route('renstra.tolak', $target->kode) }}">tolak</a>
-                                    @elseif ($target->status=="2")
-                                        <a class="btn btn-warning" href="{{ route('renstra.urungkan', $target->kode) }}">urungkan</a>
+                                    @if ($target->target == null)
+                                        <td>Belum diatur</td>
+                                    @else
+                                        <td>{{ $target->target }}</td>
                                     @endif
-                                </td>
                                 @endif
-                                @if ($user->level==1 && $status===2)
-                                <td>
-                                    @if ($target->status=="2")
-                                        <a class="btn btn-warning" href="{{ route('target.edit', $target->kode) }}">Edit</a>
-                                    @endif
-                                </td>
-                                @endif --}}
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                     {{ $targets->links('pagination.custom') }}
-                    @if ($user->level == 0 && $status===2)
-                        <a href="" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Setujui Target</a>
-                    @endif
+                    
                 </div>
             </div>
         </div>

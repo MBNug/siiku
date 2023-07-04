@@ -47,8 +47,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/target/departemen/edit/{kode}', [TargetController::class, 'edit'])->name('renstra.target.edit');
     Route::put('/renstra/target/departemen/update/{kode}', [TargetController::class, 'update'])->name('renstra.target.kirim');
     Route::get('/renstra/target/departemen/setujui/{kode}', [TargetController::class, 'setujui'])->name('renstra.target.setujui');
-    Route::get('/renstra/target/departemen/urungkan/{kode}', [TargetController::class, 'urungkan'])->name('renstra.target.urungkan');
+    // Route::get('/renstra/target/departemen/urungkan/{kode}', [TargetController::class, 'urungkan'])->name('renstra.target.urungkan');
     Route::get('/renstra/target/departemen/tolak/{kode}', [TargetController::class, 'tolak'])->name('renstra.target.tolak');
+    Route::get('/renstra/target/departemen/batal/{kode}', [TargetController::class, 'batal'])->name('renstra.target.batal');
+    Route::get('/renstra/target/departemen/setujuisemua/{kode}', [TargetController::class, 'AllAprove'])->name('renstra.target.AllAprove');
     Route::get('/renstra/indikators/{kode}', [TargetController::class, 'getIndikator'])->name('renstra.getindikator');
     Route::get('/renstra/strategis/{kode}', [TargetController::class, 'getStrategi'])->name('renstra.getstrategi');
 

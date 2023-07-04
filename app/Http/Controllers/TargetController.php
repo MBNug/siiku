@@ -227,12 +227,12 @@ class TargetController extends Controller
         DB::statement("UPDATE targets SET status = '3' where kode='$kode'");
         return redirect()->back();
     }
-    public function urungkan($kode){
-        DB::statement("UPDATE targets SET status = '0' where kode='$kode'");
+    public function batal($kode){
+        DB::statement("UPDATE targets SET status = '2' where kode='$kode'");
         return redirect()->back();
     }
     public function AllAprove($renstradept){
-        DB::statement("UPDATE targets set status = '1' where kode like '$renstradept%' and status != '2'");
+        DB::statement("UPDATE targets set status = '1' where kode like '$renstradept%' and status = '2'");
         return redirect()->back();
     }
     
