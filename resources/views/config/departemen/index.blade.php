@@ -14,10 +14,12 @@
   </section>
   <div class="row">
     <div class="col-lg">
-        @if ($user->level == 1)
-            <a href="{{ route('departemen.create') }}" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Tambah Departemen Baru</a>
-        @endif
-        
+      <a href="{{ route('departemen.create') }}" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Tambah Departemen Baru</a>
+    </div>
+    <div>
+      @foreach ($departemens as $departemen)
+        <a href="{{ route('departemen.edit', $departemen->kode) }}" class="btn btn-secondary">{{ $departemen->nama }}</a>
+      @endforeach
     </div>
   </div>
 </div>

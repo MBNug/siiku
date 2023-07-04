@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="form-group py-3">
-                        <button type="submit" class="btn btn-success"><i class="fa fa-plus mr-2"></i> Simpan</button>
+                        <button type="submit" class="btn btn-success"><i class="fa fa-floppy-disk"></i> Simpan</button>
                         <a href="{{ route('departemen.index') }}" id="back" class="btn btn-light"><i class="fa fa-times mr-2"></i> Batal</a>
                     </div>
                 </form>

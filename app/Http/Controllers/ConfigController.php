@@ -97,38 +97,45 @@ class ConfigController extends Controller
 
     public function storeIndikator(Request $request)
     {
-        //
-        // validasi
-        // dd($request);
-		$this->validate($request, [
-			'indikator' => 'required'
-		]);
-        // dd($request);
-        // menangkap file excel
-		$file = $request->file('indikator');
- 
-		// membuat nama file unik
-		$nama_file = rand().$file->getClientOriginalName();
- 
-		// upload ke folder file_indikator di dalam folder public
-		$file->storeAs('file_indikator',$nama_file);
-        // dd($request);
-
-        $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
-        $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
-        // dd($indikatorlama);
-        $jmlindikatorlama = count($indikatorlama);
-        if($jmlindikatorlama!=0){
-            for ($i = 0; $i < $jmlindikatorlama; $i++){
-                Indikator::destroy($indikatorlama[$i]->kode);
+        $actConfig1 = Config::where('status', '=', '1')->first();
+        // dd($actConfig1);
+        if($actConfig1 != null)
+        {
+            $this->validate($request, [
+                'indikator' => 'required'
+            ]);
+    
+            $file = $request->file('indikator');
+     
+            // membuat nama file unik
+            $nama_file = rand().$file->getClientOriginalName();
+     
+            // upload ke folder file_indikator di dalam folder public
+            $file->storeAs('file_indikator',$nama_file);
+            // dd($request);
+    
+            $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
+            $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+            // dd($indikatorlama);
+            $jmlindikatorlama = count($indikatorlama);
+            if($jmlindikatorlama!=0){
+                for ($i = 0; $i < $jmlindikatorlama; $i++){
+                    Indikator::destroy($indikatorlama[$i]->kode);
+                }
             }
+    
+            // import data
+            Excel::import(new IndikatorImport, storage_path('app/file_indikator/'.$nama_file));
+    
+            Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
+            return redirect(route('config.index'));
+        } 
+        else
+        {
+            Alert::error('Gagal', 'Config Tahun belum diatur!');
+            return redirect(route('config.index'));
         }
-
-        // import data
-		Excel::import(new IndikatorImport, storage_path('app/file_indikator/'.$nama_file));
-
-        Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
-        return redirect(route('config.index'));
+		
     }
 
     /**

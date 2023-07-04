@@ -54,10 +54,21 @@
                                 @else
                                     <td>{{ $realisasi->status }}</td>
                                 @endif
-                                <td>button detail</td>
+                                <td>
+                                    @if ($user->level!=2 && ($realisasi->nilai != null || $realisasi->bukti1 != null))
+                                        <a class="btn mb-2" href="{{ route('renstra.realisasi.form', [$renstradept, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">
+                                            Check
+                                    @elseif($user->level == 2 && $realisasi->status === null)
+                                        <a class="btn mb-2" href="{{ route('renstra.realisasi.form', [$renstradept, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">    
+                                            Update Data
+                                    @endif
+                                    </a>
+                                </td>
+                                
                             </tr>
                             @endforeach
                     </table>
+                    {{ $realisasis->links('pagination.custom') }}
                 </div>
             </div>
         </div>

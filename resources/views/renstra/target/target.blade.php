@@ -30,7 +30,7 @@
                                 <th>Satuan</th>
                                 <th>Keterangan</th>
                                 <th>Target</th>
-                                @if ($status===2)
+                                @if ($status===2 && $user->level != 2)
                                     <th>Aksi</th>
                                 {{-- @else ()
                                 <th>Aksi1</th> --}}
@@ -124,6 +124,14 @@
                                         </td>
                                     @endif
                                 @endif
+                                @if ($user->level == 2)
+                                @if ($target->target == null)
+                                    <td>Belum diatur</td>
+                                @else
+                                    <td>{{ $target->target }}</td>
+                                @endif
+                                @endif
+                                
                                 {{-- @if ($user->level==0 && $status===2)
                                 <td>
                                     @if ($target->status=="0" || $target->status=="3")
@@ -144,6 +152,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $targets->links('pagination.custom') }}
                     @if ($user->level == 0 && $status===2)
                         <a href="" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Setujui Target</a>
                     @endif

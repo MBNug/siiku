@@ -9,7 +9,7 @@ class LoginController extends Controller
 {
     public function index(){
         if(Auth::user()){
-            return redirect()->intended('Dashboard');
+            return redirect()->intended('renstra/dashboard');
         }
 
         return view('login.view_login');

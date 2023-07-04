@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreDepartemenRequest;
 use App\Http\Requests\UpdateDepartemenRequest;
+use App\Models\User;
 
 class DepartemenController extends Controller
 {
@@ -55,6 +56,24 @@ class DepartemenController extends Controller
             'nama' => 'required',
         ]);
         if($dep === null){
+            $newuser1 = [
+                'kode' => $request->kode.'01',
+                'name' => "Kadep ".$request->nama, 
+                'username' => "kadep".$request->nama, 
+                'password' => bcrypt("123456"),
+                'level' => 2, 
+                'email' => "kadep".$request->nama."@gmail.com", 
+            ];
+            $newuser2 = [
+                'kode' => $request->kode.'00',
+                'name' => "Administrator ".$request->nama, 
+                'username' => "admin".$request->nama, 
+                'password' => bcrypt("123456"),
+                'level' => 2, 
+                'email' => "admin".$request->nama."@gmail.com", 
+            ];
+            User::create($newuser1);
+            User::create($newuser2);
             Departemen::create($request->all());
             Alert::success('Berhasil!', 'Departemen baru berhasil ditambahkan');
             return redirect(route('departemen.index'));
