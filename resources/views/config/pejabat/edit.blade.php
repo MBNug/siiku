@@ -84,23 +84,19 @@
         $('#jabatan').find('option').not(':first').remove();
         $dept = $(this).val();
         if($dept == '00'){
-            var option = new Option('Dekan', '00');
+            var option = new Option('Dekan', '99');
             $("#jabatan").append($(option));
-            var option = new Option('Wakil Dekan 1', '01');
+            var option = new Option('Wakil Dekan 1', '98');
             $("#jabatan").append($(option));
-            var option = new Option('Wakil Dekan 2', '02');
+            var option = new Option('Wakil Dekan 2', '97');
             $("#jabatan").append($(option));
-            var option = new Option('Wakil Dekan 3', '03');
+            var option = new Option('Wakil Dekan 3', '96');
             $("#jabatan").append($(option));
-            var option = new Option('Wakil Dekan 4', '04');
-            $("#jabatan").append($(option));
-            var option = new Option('Admin Operator Fakultas', '99');
+            var option = new Option('Wakil Dekan 4', '95');
             $("#jabatan").append($(option));
         }
         else{
-            var option = new Option('Kepala Departemen', '01');
-            $("#jabatan").append($(option));
-            var option = new Option('Admin Operator Departemen', '99');
+            var option = new Option('Ketua Departemen', '01');
             $("#jabatan").append($(option));
         }
     });

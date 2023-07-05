@@ -53,6 +53,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/target/departemen/setujuisemua/{kode}', [TargetController::class, 'AllAprove'])->name('renstra.target.AllAprove');
     Route::get('/renstra/indikators/{kode}', [TargetController::class, 'getIndikator'])->name('renstra.getindikator');
     Route::get('/renstra/strategis/{kode}', [TargetController::class, 'getStrategi'])->name('renstra.getstrategi');
+    Route::get('/renstra/target/departemen/{departemen}/download', [TargetController::class, 'downloadPDFTarget'])->name('renstra.target.download');
 
 
     //realisasi-renstra 

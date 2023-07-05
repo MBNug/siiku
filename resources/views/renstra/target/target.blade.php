@@ -14,6 +14,7 @@
             @if ($user->level == 0 && $status===2)
                 <a href="{{ route('renstra.target.AllAprove', $renstradept )}}" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Setujui Target</a>
             @endif
+            {{-- <a href="{{ route('renstra.target.download', $renstradept)}}" class="btn btn-primary">Download PDF Target</a> --}}
         </div>
     </div>
   </section>

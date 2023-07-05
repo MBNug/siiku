@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Target;
 use App\Models\config;
+use App\Models\Target;
+use App\Models\Pejabat;
 use App\Models\Strategi;
 use App\Models\Indikator;
 use App\Models\Departemen;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreTargetRequest;
 use App\Http\Requests\UpdateTargetRequest;
+use Barryvdh\DomPDF\PDF;
+
 
 
 class TargetController extends Controller
@@ -253,5 +256,43 @@ class TargetController extends Controller
         // return Response::json(['success'=>true]);
         return response()->json($indikator);
 
+    }
+
+    /*
+    Download PDF Target
+    */
+
+    public function downloadPDFTarget(Departemen $departemen)
+    {
+        $data = Target::where('kode', 'like', $departemen->kode.'%')->get();
+        //Gabung strategi 
+        $combinedData = $data->groupBy('strategi')->map(function($group){
+            $indikators = $group->pluck('indikator_kinerja')->toArray();
+            $satuans = $group->pluck('satuan')->toArray();
+            $targets = $group->pluck('target')->toArray();
+            $keterangans = $group->pluck('keterangan')->toArray();
+            return [
+                'strategi'=>$group->first()->strategi,
+                'indikators' => $indikators,
+                'satuans' => $satuans,
+                'targets' => $targets,
+                'keterangans' => $keterangans,
+
+            ];
+        });
+
+
+        $pdf = app(PDF::class);
+        $pejabatDep = Pejabat::where('kode', 'like', $departemen->kode.'%')->first();
+        $pejabatFak = Pejabat::where('kode', '=', '0099')->first();
+
+        $tahun = DB::table('configs') -> where('status', '=', '1') -> pluck('tahun');
+
+        $pdf->loadView('renstra.target.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'));
+
+        return $pdf->download('Target Renstra FSM '.$tahun.'_'.$departemen->nama.'.pdf');
+        // return view('renstra.target.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen')) ->with([
+        //     'user'=> Auth::user()
+        // ]);
     }
 }

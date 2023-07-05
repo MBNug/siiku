@@ -111,7 +111,7 @@
             $("#jabatan").append($(option));
         }
         else{
-            var option = new Option('Kepala Departemen', '01');
+            var option = new Option('Ketua Departemen', '01');
             $("#jabatan").append($(option));
         }
     });

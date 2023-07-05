@@ -171,6 +171,7 @@ return [
 
          RealRashid\SweetAlert\SweetAlertServiceProvider::class,
          Maatwebsite\Excel\ExcelServiceProvider::class,
+         Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...
