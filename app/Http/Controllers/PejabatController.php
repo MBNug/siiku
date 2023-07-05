@@ -54,36 +54,37 @@ class PejabatController extends Controller
         $kode = ''.$request->departemen.$request->jabatan;
         $departemen = Departemen::where('kode', '=', $request->departemen)->pluck('nama');
         $pejabat = Pejabat::where('kode', '=', $kode)-> first();
-        $jabatan = $request->jabatan;
-        if(strcmp($jabatan, '01')){
+        $jabatan = substr($request->jabatan, 0,2);
+        // dd(strcmp($jabatan, '99'));
+        if(strcmp($jabatan, '01') == 0){
             $jabatan = "Kepala Departemen ".$departemen[0];
         }
-        elseif(strcmp($jabatan, '02')){
+        elseif(strcmp($jabatan, '02') == 0){
             $jabatan = "Admin Operator Departemen ".$departemen[0];
         }
-        elseif(strcmp($jabatan, '99')){
+        elseif(strcmp($jabatan, '99') == 0){
             $jabatan = "Dekan";
         }
-        elseif(strcmp($jabatan, '98')){
+        elseif(strcmp($jabatan, '98') == 0){
             $jabatan = "Wakil Dekan 1";
         }
-        elseif(strcmp($jabatan, '97')){
+        elseif(strcmp($jabatan, '97') == 0){
             $jabatan = "Wakil Dekan 2";
         }
-        elseif(strcmp($jabatan, '96')){
+        elseif(strcmp($jabatan, '96') == 0){
             $jabatan = "Wakil Dekan 3";
         }
-        elseif(strcmp($jabatan, '95')){
+        elseif(strcmp($jabatan, '95') == 0){
             $jabatan = "Wakil Dekan 4";
         }
-        elseif(strcmp($jabatan, '94')){
+        elseif(strcmp($jabatan, '94') == 0){
             $jabatan = "Admin Operator Fakultas";
         }
         $request->validate([
             'departemen' => 'required',
             'jabatan' => 'required',
             'nama' => 'required',
-            'nip' => 'required',
+            'nip' => 'required|numeric',
             'tandatangan' => 'required|max:2048',
         ]);
 
