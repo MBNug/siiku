@@ -23,14 +23,14 @@ return new class extends Migration
             $table->text('definisi');
             $table->text('cara_perhitungan');
             $table->string('target');
-            $table->float('nilai')->nullable()->default(null);
+            $table->string('nilai')->nullable()->default(null);
             $table->string('bukti1')->nullable()->default(null);
             $table->string('bukti2')->nullable()->default(null);
             $table->string('bukti3')->nullable()->default(null);
             $table->string('bukti4')->nullable()->default(null);
             $table->string('bukti5')->nullable()->default(null);
             $table->enum('status', ['Tidak Tercapai', 'Tercapai', 'Melampaui Target'])->nullable()->default(null);
-            $table->float('nilaireal')->nullable()->default(null);
+            $table->string('nilaireal')->nullable()->default(null);
             $table->timestamps();
         });
     }

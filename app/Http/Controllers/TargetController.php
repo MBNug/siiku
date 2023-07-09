@@ -15,8 +15,7 @@ use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreTargetRequest;
 use App\Http\Requests\UpdateTargetRequest;
-use Barryvdh\DomPDF\PDF;
-
+use PDF;
 
 
 class TargetController extends Controller
@@ -282,17 +281,28 @@ class TargetController extends Controller
         });
 
 
-        $pdf = app(PDF::class);
+        // $view = view('renstra.target.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'));
+        // dd($pdf);
         $pejabatDep = Pejabat::where('kode', 'like', $departemen->kode.'%')->first();
         $pejabatFak = Pejabat::where('kode', '=', '0099')->first();
 
         $tahun = DB::table('configs') -> where('status', '=', '1') -> pluck('tahun');
+        $filename = 'Target Renstra FSM '.$tahun[0].'_'.$departemen->nama.'.pdf';
 
-        $pdf->loadView('renstra.target.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'));
 
-        return $pdf->download('Target Renstra FSM '.$tahun.'_'.$departemen->nama.'.pdf');
-        // return view('renstra.target.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen')) ->with([
-        //     'user'=> Auth::user()
-        // ]);
+        $view = view('renstra.target.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'))->render();
+
+
+        // $pdf = new PDF();
+        // $pdf->AddPage();
+        // $pdf->WriteHTML($view);
+        $pdf=PDF::loadView('renstra.target.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'));
+        $pdf->setOption('enable-local-file-access', true);
+
+        // dd($pejabatDep);
+        return $pdf->stream($filename.'.pdf');
+        return view('renstra.target.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen')) ->with([
+            'user'=> Auth::user()
+        ]);
     }
 }
