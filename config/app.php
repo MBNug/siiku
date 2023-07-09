@@ -171,7 +171,8 @@ return [
 
          RealRashid\SweetAlert\SweetAlertServiceProvider::class,
          Maatwebsite\Excel\ExcelServiceProvider::class,
-         Barryvdh\DomPDF\ServiceProvider::class,
+         Barryvdh\Snappy\ServiceProvider::class,
+         
 
         /*
          * Application Service Providers...
@@ -199,6 +200,10 @@ return [
         // ...
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
         'Excel' => Excel::class,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+
+
     ])->toArray(),
 
 ];

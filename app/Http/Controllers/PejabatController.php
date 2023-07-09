@@ -153,10 +153,28 @@ class PejabatController extends Controller
             'jabatan' => 'required',
             'nama' => 'required',
             'nip' => 'required',
-            'tandatangan' => 'required|max:2048',
+            'tandatangan' => 'required',
         ]);
+        if ($request->hasFile('tandatangan')){
+            // dd($request);
+            $pejabatnew = [
+                'kode' => ''.$pejabat->kode,
+                'departemen' => ''.$pejabat->departemen,
+                'jabatan' => ''.$pejabat->jabatan,
+                'nama' => ''.$request->nama,
+                'nip' => ''.$request->nip,
+            ];
 
-        $pejabat->update($request->all());
+            $request->file('tandatangan')->store('tandatangan', 'public');
+            $path = $request->file('tandatangan')->store('tandatangan', 'public');
+            $pejabatnew['tandatangan'] = $path;
+            // $pejabat->nama = $request->input('nama');
+            // $pejabat->nip = $request->input('nip');
+            // $pejabat->tandatangan = $request->file('tandatangan')->store('tandatangan', 'public');
+
+        }
+        // dd($request);
+        $pejabat->update($pejabatnew);
         Alert::success('Berhasil!', 'Pejabat berhasil diupdate');
         return redirect(route('pejabat.index'));
     }

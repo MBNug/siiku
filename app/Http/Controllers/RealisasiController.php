@@ -153,7 +153,7 @@ class RealisasiController extends Controller
         //
         $request->validate([
             'nilai' => 'required',
-            'files.*' => 'required' // Limit to PDF and Excel files, maximum file size of 5MB
+            'files.*' => 'required'
         ]);
         $datarealisasi = 
         [
@@ -165,7 +165,7 @@ class RealisasiController extends Controller
             'definisi' => ''.$realisasi->definisi,
             'cara_perhitungan' => ''.$realisasi->cara_perhitungan,
             'target' => ''.$realisasi->target,
-            'nilai' => $request->nilai,
+            'nilai' => ''.$request->nilai,
         ];
         $realisasi->update($datarealisasi);
 

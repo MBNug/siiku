@@ -123,7 +123,7 @@
                             @if ($file)
                                 <div class="col-8">
                                     <li class="list-group-item px-2">
-                                        <a href="{{ Storage::url($file) }}" download="{{ basename($file) }}"> {{ basename($file) }}</a>
+                                        <a href="{{ Storage::url($file) }}"> {{ basename($file) }}</a>
                                     </li>
                                 </div>
                                 
