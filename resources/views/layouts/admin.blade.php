@@ -152,7 +152,7 @@
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link active" aria-current="page" href="{{ route('user.gantipassword') }}">
                   <img class="img-profile rounded-circle" height="30" src="https://ui-avatars.com/api/?name={{ $user->name }}">
                   <span class="ml-2 d-none d-lg-inline text-gray-600 small">{{ $user->name }}</span>
                 </a>

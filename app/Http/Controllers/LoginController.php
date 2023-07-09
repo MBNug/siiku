@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\support\Facades\Auth;
 
 class LoginController extends Controller
@@ -21,6 +22,7 @@ class LoginController extends Controller
         ],
             [
                 'username.required' => 'username tidak boleh kosong',
+                'password.required' => 'password tidak boleh kosong',
             ]
         );
 
@@ -31,6 +33,9 @@ class LoginController extends Controller
             $user = Auth::user();
 
             if($user){
+                if(Hash::check('123456', $user->password)){
+                    return redirect()->intended('/user/gantiPassword');
+                }
                 return redirect()->intended('/renstra/dashboard');
             }
             return redirect()->intended('/');
