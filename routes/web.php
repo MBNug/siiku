@@ -8,6 +8,7 @@ use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\RenstraController;
 use App\Http\Controllers\TargetController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\RealisasiController;
 use App\Models\Target;
 
@@ -74,6 +75,11 @@ Route::group(['middleware' => ['auth']], function(){
 
     //ConfigDepartemen
     Route::resource('/config/departemen', DepartemenController::class);
+
+    //configUser
+    // Route::get('/renstra/departemen/{departemen}/realisasi/{realisasi}', [RealisasiController::class, 'form'])->name('renstra.realisasi.form');
+    Route::get('/user/gantiPassword', [UserController::class, 'index'])->name('user.gantipassword');
+    Route::put('/user/gantiPassword/update', [UserController::class, 'updatePassword'])->name('user.updatePassword');
     
 });
 
