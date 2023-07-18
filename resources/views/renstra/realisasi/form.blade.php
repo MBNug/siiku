@@ -2,6 +2,11 @@
 
 @section('title', $title)
 
+@section('csslocal')
+    <link href="https://unpkg.com/filepond/dist/filepond.min.css" rel="stylesheet">
+
+@endsection
+
 @section('content')
 
 <div class="container">
@@ -180,23 +185,27 @@
                                     <div class="col-7">
                                         <input type="text" class="form-control" name="nilai" placeholder="Nilai" required value="{{ old('nilai', $realisasi->nilai) }}">
                                         @error('nilai')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
                                         @enderror
                                     </div>
                                 </div>
+                        
+                                <!-- FilePond container -->
                                 <div class="form-group row">
-                                    <label class="col-3 col-form-label pt-3 px-5 text-white fw-bold" for="files">Pilih File</label>
+                                    <label class="col-3 col-form-label pt-3 px-5 text-white fw-bold">Pilih File</label>
                                     <div class="col-7">
-                                        <input type="file" name="files[]" id="files" class="form-control-file" multiple accept=".pdf,.xls,.xlsx">
+                                        <input type="file" class="filepond" name="files" multiple data-allow-reorder="true" data-max-file-size="5MB"
+                                            data-max-files="5" data-file-types=".pdf,.xls,.xlsx">
                                     </div>
-                                    <small class="px-5 form-text text-muted">(Maksimal 5 file, Tiap file maksimal 5MB,File yang diterima *.pdf, *.xls, *.xlsx)</small>
+                                    <small class="col-7 offset-3 form-text text-white">(Maksimal 5 file, Tiap file maksimal 5MB, File yang diterima
+                                        *.pdf, *.xls, *.xlsx)</small>
                                 </div>
-                                <div class="form-group row">
-                                    <small class="px-5 form-text">File dipilih:</small>
-                                    <ul id="fileDipilih" class="list-unstyled mt-2 mb-0 px-5 form-text"></ul>
-                                </div>
+                                {{-- <div class="form-group row">
+                                    <small class="px-5 form-text text-white">File dipilih:</small>
+                                    <ul id="fileDipilih" class="list-unstyled mt-2 mb-0 px-5 form-text text-white"></ul>
+                                </div> --}}
                                 <div class="form-group py-3 px-5">
                                     <button type="submit" class="btn btn-success"><i class="fa fa-floppy-disk mr-2"></i> Simpan</button>
                                     <a href="{{ url()->previous() }}" id="back" class="btn btn-light"><i class="fa fa-times mr-2"></i> Batal</a>
@@ -215,19 +224,28 @@
 @endsection
 
 @section('scriptlocal')
+
+<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+
 <script>
-    // Display selected file names
-    document.getElementById('files').addEventListener('change', function(e) {
-        var fileList = e.target.files;
-        var fileNamesList = document.getElementById('fileDipilih');
+    // Get a reference to the file input element
+    const inputElement = document.querySelector('input[type="file"]');
 
-        fileNamesList.innerHTML = '';
-
-        for (var i = 0; i < fileList.length; i++) {
-            var fileName = document.createElement('li');
-            fileName.textContent = fileList[i].name;
-            fileNamesList.appendChild(fileName);
-        }
+    // Create a FilePond instance
+    const pond = FilePond.create(inputElement);
+    FilePond.setOptions({
+        allowMultiple: true,
+        maxFiles: 5,
+        labelIdle: 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>',
+        acceptedFileTypes: ['.pdf', '.xls', '.xlsx'],
+        maxFileSize: '5MB',
+        server: {
+            process: '{{ route('renstra.realisasi.tmpUpload',[$departemen->kode, $realisasi->kode]) }}',
+            revert: '{{ route('renstra.realisasi.tmpDelete',[$departemen->kode, $realisasi->kode]) }}',
+            headers: {
+                'X-CSRF-TOKEN' : '{{ csrf_token() }}'
+            }
+        },
     });
 </script>
 @endsection

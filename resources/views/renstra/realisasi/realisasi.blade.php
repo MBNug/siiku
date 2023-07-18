@@ -55,9 +55,15 @@
                                     <td>{{ $realisasi->status }}</td>
                                 @endif
                                 <td>
-                                    @if ($user->level!=2 && ($realisasi->nilai != null || $realisasi->bukti1 != null))
+                                    {{-- @dd(
+                                        $user->level!=2 && ($realisasi->nilai != null && $realisasi->bukti1 != null)
+                                    ) --}}
+                                    @if($user->level!=2 && $realisasi->status != null)
+                                        <a class="btn mb-2" href="{{ route('renstra.realisasi.show', [$renstradept, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">
+                                            Lihat Data
+                                    @elseif ($user->level!=2 && ($realisasi->nilai != null || $realisasi->bukti1 != null))
                                         <a class="btn mb-2" href="{{ route('renstra.realisasi.form', [$renstradept, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">
-                                            Check
+                                            Cek Nilai
                                     @elseif($user->level == 2 && $realisasi->status === null)
                                         <a class="btn mb-2" href="{{ route('renstra.realisasi.form', [$renstradept, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">    
                                             Update Data
