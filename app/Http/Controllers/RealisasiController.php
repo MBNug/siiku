@@ -179,6 +179,7 @@ class RealisasiController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        Storage::deleteDirectory('uploads/'.$realisasi->kode);
         $datarealisasi = 
         [
             'kode' => ''.$realisasi->kode,
