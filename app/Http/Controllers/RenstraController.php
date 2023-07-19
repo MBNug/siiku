@@ -18,6 +18,13 @@ class RenstraController extends Controller
     //
     public function index(){
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
+        $err=0;
+        if($actConfig==null){
+            $err = 1;
+            return view('renstra.dashboard', compact('err'))->with([
+                'user'=> Auth::user()
+            ]);
+        }
         $departemens = Departemen::all();
         $dept = Departemen::where('kode', '<>', '00')->get();
 
@@ -103,7 +110,7 @@ class RenstraController extends Controller
             $RealisasiUncheck=Arr::add($RealisasiUncheck, $i, ['kode'=>'0'.$i,'departemen'=>$namadept->nama, 'jumlah'=>$jmluncheckrealisasi]);
         } 
 
-        return view('renstra.dashboard', compact('jmldept','departemens','actConfig','dept','jmlrealisasis','jmlrealisasis0','jmlrealisasis1','jmlrealisasis2','jmlrealisasis3','dataPoints','ketercapaiantargetdept','targetapproved','targetreject','targetwaiting','RealisasiUncheck','namadepartemen','targetdisetujui','targetditolak','targetmenunggupersetujuan'))->with([
+        return view('renstra.dashboard', compact('jmldept','departemens','actConfig','dept','jmlrealisasis','jmlrealisasis0','jmlrealisasis1','jmlrealisasis2','jmlrealisasis3','dataPoints','ketercapaiantargetdept','targetapproved','targetreject','targetwaiting','RealisasiUncheck','namadepartemen','targetdisetujui','targetditolak','targetmenunggupersetujuan','err'))->with([
             'user'=> Auth::user()
         ]);
     }
