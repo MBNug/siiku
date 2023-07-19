@@ -206,7 +206,7 @@ class RealisasiController extends Controller
         else{
             foreach($temp_buktis as $key => $temp_bukti){
                 Storage::copy('uploads/tmp/'.$temp_bukti->folder.'/'.$temp_bukti->file, 'uploads/'.$realisasi->kode.'/'.$temp_bukti->file);
-                $path = 'uploads/'.$temp_bukti->folder.'/'.$temp_bukti->file;
+                $path = 'uploads/'.$realisasi->kode.'/'.$temp_bukti->file;
                 $datarealisasi['bukti'.($key + 1)] = $path;
                 Storage::deleteDirectory('uploads/tmp/'.$temp_bukti->folder);
                 $temp_bukti->delete();
