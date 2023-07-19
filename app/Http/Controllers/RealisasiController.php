@@ -6,6 +6,7 @@ use App\Models\Config;
 use App\Models\Target;
 use App\Models\Indikator;
 use App\Models\Realisasi;
+use App\Models\TempBukti;
 use App\Models\Departemen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreRealisasiRequest;
 use App\Http\Requests\UpdateRealisasiRequest;
 
@@ -125,9 +127,21 @@ class RealisasiController extends Controller
      * @param  \App\Models\Realisasi  $realisasi
      * @return \Illuminate\Http\Response
      */
-    public function show(Realisasi $realisasi)
+    public function show(Departemen $departemen, Realisasi $realisasi)
     {
-        //
+        $files = 
+        [
+            'bukti1' => $realisasi->bukti1,
+            'bukti2' => $realisasi->bukti2,
+            'bukti3' => $realisasi->bukti3,
+            'bukti4' => $realisasi->bukti4,
+            'bukti5' => $realisasi->bukti5,
+        ];
+        // dd($files);
+        $title = "Realisasi Departemen ".$departemen->nama;
+        return view('renstra.realisasi.show', compact('departemen','realisasi', 'title', 'files'))->with([
+            'user'=> Auth::user()
+        ]);
     }
 
     /**
@@ -151,10 +165,21 @@ class RealisasiController extends Controller
     public function update(UpdateRealisasiRequest $request, Departemen $departemen, Realisasi $realisasi)
     {
         //
-        $request->validate([
+        // dd($request);
+        $validator= Validator::make($request->all(),[
             'nilai' => 'required',
-            'files.*' => 'required'
         ]);
+
+        $temp_buktis = TempBukti::all();
+        if($validator->fails()){
+            foreach($temp_buktis as $temp_bukti){
+                Storage::deleteDirectory('uploads/tmp/'.$temp_bukti->folder);
+                $temp_bukti->delete();
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        Storage::deleteDirectory('uploads/'.$realisasi->kode);
         $datarealisasi = 
         [
             'kode' => ''.$realisasi->kode,
@@ -166,28 +191,28 @@ class RealisasiController extends Controller
             'cara_perhitungan' => ''.$realisasi->cara_perhitungan,
             'target' => ''.$realisasi->target,
             'nilai' => ''.$request->nilai,
+            'bukti1' => null,
+            'bukti2' => null,
+            'bukti3' => null,
+            'bukti4' => null,
+            'bukti5' => null,
         ];
         $realisasi->update($datarealisasi);
 
-        if ($request->hasFile('files')) {
-            $files = $request->file('files');
-
-            if (count($files) <= 5) {
-                foreach ($files as $key => $file) {
-                    if ($file->getSize() > 5 * 1024 * 1024) {
-                        Alert::error('Error!', 'Ukuran File Maksimal 5MB');
-                        return redirect()->back();
-                    }
-                    $originalName = $file->getClientOriginalName();
-                    $path = $file->storeAs('uploads/'.$realisasi->kode, $originalName, 'public');
-                    $datarealisasi['bukti'.($key + 1)] = $path;
-                }
-            } else {
-                Alert::error('Error!', 'Hanya bisa mengunggah sampai dengan 5 file.');
-                return back();
-            }
-
+        if(count($temp_buktis)>5){
+            Alert::error('Error!', 'Hanya bisa mengunggah sampai dengan 5 file.');
+            return back();
         }
+        else{
+            foreach($temp_buktis as $key => $temp_bukti){
+                Storage::copy('uploads/tmp/'.$temp_bukti->folder.'/'.$temp_bukti->file, 'uploads/'.$realisasi->kode.'/'.$temp_bukti->file);
+                $path = 'uploads/'.$realisasi->kode.'/'.$temp_bukti->file;
+                $datarealisasi['bukti'.($key + 1)] = $path;
+                Storage::deleteDirectory('uploads/tmp/'.$temp_bukti->folder);
+                $temp_bukti->delete();
+            }
+        }
+        
         $realisasi->update($datarealisasi);
         Alert::success('Berhasil!', 'Data Realisasi berhasil disimpan');
         return redirect(route('renstra.realisasidepartemen', $departemen->kode));
@@ -253,4 +278,31 @@ class RealisasiController extends Controller
             'user'=> Auth::user()
         ]);
     }
+
+    public function tmpUpload(Request $request, Departemen $departemen, Realisasi $realisasi){
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+            
+            $originalName = $files->getClientOriginalName();
+            $folder = uniqid($realisasi->kode.'-', true);
+            $files->storeAs('uploads/tmp/'.$folder, $originalName, 'public');
+                TempBukti::create([
+                    'folder' => $folder,
+                    'file' => $originalName
+                ]);
+
+            return $folder;
+        }
+    }
+
+    public function tmpDelete(){
+        $temp_bukti = TempBukti::where('folder', request()->getContent())->first();
+        if($temp_bukti){
+            Storage::deleteDirectory('uploads/tmp/'.$temp_bukti->folder);
+            $temp_bukti->delete();
+        }
+        return response()->noContent();
+    }
+
+    
 }
