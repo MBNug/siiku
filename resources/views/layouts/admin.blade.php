@@ -23,7 +23,7 @@
     <div class="sidebar" id="side_nav">
       <div class="header-box d-flex justify-content-between">
         <a href="{{ route('renstra.dashboard') }}" class="d-flex align-items-center px-3 pt-3 pb-2 mb-3 text-decoration-none text-white">
-          <img class="bi me-2" width="30" height="24" src="img/undip.png">
+          <img class="bi me-2" width="30" height="24" src="https://pelajarinfo.id/wp-content/uploads/2021/06/Universitas-Diponegoro-Semarang-Logo.png" alt="Logo Undip">
           <span class="fs-5 fw-semibold">SI-IKU</span>
           <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="fa-solid fa-bars-staggered"></i></button>
         </a>
