@@ -30,7 +30,7 @@
                                 <th>Jabatan</th>
                                 <th>Nama</th>
                                 <th>NIP</th>
-                                <th>Tanda Tangan</th>
+                                {{-- <th>Tanda Tangan</th> --}}
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -43,7 +43,7 @@
                                 <td>{{ $pejabat->jabatan }}</td>
                                 <td>{{ $pejabat->nama }}</td>
                                 <td>{{ $pejabat->nip }}</td>
-                                <td><img src="{{ asset($pejabat->tandatangan) }}" alt="Tanda Tangan"></td>
+                                {{-- <td><img src="{{ asset($pejabat->tandatangan) }}" alt="Tanda Tangan"></td> --}}
                                 @if ($user->level==1)
                                 <td>
                                     <a class="btn btn-warning" href="{{ route('pejabat.edit',$pejabat->kode) }}">Edit</a>
