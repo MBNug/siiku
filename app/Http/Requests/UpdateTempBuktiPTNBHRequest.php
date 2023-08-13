@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTargetRequest extends FormRequest
+class UpdateTempBuktiPTNBHRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +13,7 @@ class StoreTargetRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check();
+        return false;
     }
 
     /**

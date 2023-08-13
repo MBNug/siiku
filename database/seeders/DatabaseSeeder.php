@@ -20,5 +20,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(IndikatorSeeder::class);
         // $this->call(TargetSeeder::class);
         $this->call(ConfigSeeder::class);
+        $this->call(TriwulanSeeder::class);
+
     }
 }

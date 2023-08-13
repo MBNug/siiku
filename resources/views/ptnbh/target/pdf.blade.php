@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title> Download IKU Renstra FSM Departemen {{ $departemen->nama }}</title>
+    <title> Download IKU PTNBH FSM Departemen {{ $departemen->nama }}</title>
     
     <style>
         @page {
@@ -154,7 +154,7 @@
             text-align: center;
             font-weight: bold;
             ">
-            KONTRAK KINERJA RENSTRA TAHUN {{ $tahun[0] }}
+            KONTRAK KINERJA PTNBH TAHUN {{ $tahun[0] }}
         </p>
         <p style="
             text-align: center;

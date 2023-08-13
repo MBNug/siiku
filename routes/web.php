@@ -10,6 +10,7 @@ use App\Http\Controllers\RenstraController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RealisasiController;
+use App\Http\Controllers\TargetPTNBHController;
 use App\Models\Target;
 
 /*
@@ -48,7 +49,6 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/target/departemen/edit/{kode}', [TargetController::class, 'edit'])->name('renstra.target.edit');
     Route::put('/renstra/target/departemen/update/{kode}', [TargetController::class, 'update'])->name('renstra.target.kirim');
     Route::get('/renstra/target/departemen/setujui/{kode}', [TargetController::class, 'setujui'])->name('renstra.target.setujui');
-    // Route::get('/renstra/target/departemen/urungkan/{kode}', [TargetController::class, 'urungkan'])->name('renstra.target.urungkan');
     Route::get('/renstra/target/departemen/tolak/{kode}', [TargetController::class, 'tolak'])->name('renstra.target.tolak');
     Route::get('/renstra/target/departemen/batal/{kode}', [TargetController::class, 'batal'])->name('renstra.target.batal');
     Route::get('/renstra/target/departemen/setujuisemua/{kode}', [TargetController::class, 'AllAprove'])->name('renstra.target.AllAprove');
@@ -68,11 +68,39 @@ Route::group(['middleware' => ['auth']], function(){
     Route::delete('/renstra/departemen/{departemen}/realisasi/{realisasi}/tmp-delete', [RealisasiController::class, 'tmpDelete'])->name('renstra.realisasi.tmpDelete');
     Route::get('/renstra/departemen/{departemen}/realisasi/{realisasi}/show', [RealisasiController::class, 'show'])->name('renstra.realisasi.show');
 
+
+    //Target-PTNBH
+    Route::get('/ptnbh/target/', [TargetPTNBHController::class, 'index'])->name('ptnbh.target.index');
+    Route::get('/ptnbh/target/departemen/{kode}', [TargetPTNBHController::class, 'getTarget'])->name('ptnbh.targetdepartemen');
+    Route::get('/ptnbh/target/departemen/store/{kode}', [TargetPTNBHController::class, 'store'])->name('ptnbh.target.store');
+    Route::get('/ptnbh/target/departemen/edit/{kode}', [TargetPTNBHController::class, 'edit'])->name('ptnbh.target.edit');
+    Route::put('/ptnbh/target/departemen/update/{kode}', [TargetPTNBHController::class, 'update'])->name('ptnbh.target.kirim');
+    Route::get('/ptnbh/target/departemen/setujui/{kode}', [TargetPTNBHController::class, 'setujui'])->name('ptnbh.target.setujui');
+    Route::get('/ptnbh/target/departemen/tolak/{kode}', [TargetPTNBHController::class, 'tolak'])->name('ptnbh.target.tolak');
+    Route::get('/ptnbh/target/departemen/batal/{kode}', [TargetPTNBHController::class, 'batal'])->name('ptnbh.target.batal');
+    Route::get('/ptnbh/target/departemen/setujuisemua/{kode}', [TargetPTNBHController::class, 'AllAprove'])->name('ptnbh.target.AllAprove');
+    Route::get('/ptnbh/indikators/{kode}', [TargetPTNBHController::class, 'getIndikator'])->name('ptnbh.getindikator');
+    Route::get('/ptnbh/strategis/{kode}', [TargetPTNBHController::class, 'getStrategi'])->name('ptnbh.getstrategi');
+    Route::get('/ptnbh/target/departemen/{departemen}/download', [TargetPTNBHController::class, 'downloadPDFTarget'])->name('ptnbh.target.download');
+
+
+    //realisasi-PTNBH 
+    Route::get('/ptnbh/realisasi/', [RealisasiPTNBHController::class, 'index'])->name('ptnbh.realisasi.index');
+    Route::get('/ptnbh/realisasi/departemen/{kode}', [RealisasiPTNBHController::class, 'getRealisasi'])->name('ptnbh.realisasidepartemen');
+    Route::get('/ptnbh/realisasi/departemen/store/{kode}', [RealisasiPTNBHController::class, 'store'])->name('ptnbh.realisasi.store');
+    Route::get('/ptnbh/departemen/{departemen}/realisasi/{realisasi}', [RealisasiPTNBHController::class, 'form'])->name('ptnbh.realisasi.form');
+    Route::put('/ptnbh/departemen/{departemen}/realisasi/{realisasi}/simpan', [RealisasiPTNBHController::class, 'update'])->name('ptnbh.realisasi.simpan');
+    Route::put('/ptnbh/departemen/{departemen}/realisasi/{realisasi}/simpan2', [RealisasiPTNBHController::class, 'update2'])->name('ptnbh.realisasi.simpan2');
+    Route::post('/ptnbh/departemen/{departemen}/realisasi/{realisasi}/tmp-upload', [RealisasiPTNBHController::class, 'tmpUpload'])->name('ptnbh.realisasi.tmpUpload');
+    Route::delete('/ptnbh/departemen/{departemen}/realisasi/{realisasi}/tmp-delete', [RealisasiPTNBHController::class, 'tmpDelete'])->name('ptnbh.realisasi.tmpDelete');
+    Route::get('/ptnbh/departemen/{departemen}/realisasi/{realisasi}/show', [RealisasiPTNBHController::class, 'show'])->name('ptnbh.realisasi.show');
     
     //Config
     Route::get('/config/tahun', [ConfigController::class, 'index'])->name('config.index');
     Route::match(['put', 'post'], '/config/settahun', [ConfigController::class, 'storeTahun'])->name('config.settahun');
     Route::post('/config/setindikator', [ConfigController::class, 'storeIndikator'])->name('config.setindikator');
+    Route::post('/config/setindikatorptnbh', [ConfigController::class, 'storeIndikatorPTNBH'])->name('config.setindikatorptnbh');
+    Route::match(['put', 'post'], '/config/settriwulan', [ConfigController::class, 'storeTriwulan'])->name('config.settriwulan');
 
     //ConfigPejabat
     Route::resource('/config/pejabat', PejabatController::class);

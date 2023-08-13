@@ -42,29 +42,6 @@
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
               <li><a href="{{ $user->level != 2 ? route('renstra.realisasi.index') : route('renstra.realisasidepartemen', substr($user->kode, 0, 2)) }}" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
-              {{-- <li class="mb-1">
-                <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstratarget-collapse" aria-expanded="false">Target</a>
-                <div class="collapse" id="renstratarget-collapse">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal px-3 pb-1 small">
-                    @foreach ($departemens as $departemen)
-                      <li><a href="{{ route('renstra.target.index', $departemen->kode) }}" class="link-dark rounded">{{ $departemen->nama }}</a></li>
-                    @endforeach
-                  </ul>
-                </div>
-              </li>
-              <li class="mb-1">
-                <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstrarealisasi-collapse" aria-expanded="false">Realisasi</a>
-                <div class="collapse" id="renstrarealisasi-collapse">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal px-3 pb-1 small">
-                    <li><a href="#" class="link-dark rounded">Matematika</a></li>
-                    <li><a href="#" class="link-dark rounded">Biologi</a></li>
-                    <li><a href="#" class="link-dark rounded">Kimia</a></li>
-                    <li><a href="#" class="link-dark rounded">Fisika</a></li>
-                    <li><a href="#" class="link-dark rounded">Statistika</a></li>
-                    <li><a href="#" class="link-dark rounded">Informatika</a></li>
-                  </ul>
-                </div>
-              </li> --}}
             </ul>
           </div>
         </li>
@@ -74,38 +51,12 @@
           </button>
           <div class="collapse {{ Request::is('ptnbh*') ? 'show' : '' }}" id="ptnbh-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="{{ route('renstra.dashboard') }}" class="{{ Request::is('ptnbh/dashboard') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/dashboard') ? 
+              <li><a href="#" class="{{ Request::is('ptnbh/dashboard') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/dashboard') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
-              <li><a href="#" class="{{ Request::is('ptnbh/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/target') ? 
+              <li><a href="{{ $user->level != 2 ? route('ptnbh.target.index') : route('ptnbh.targetdepartemen', substr($user->kode, 0, 2))  }}" class="{{ Request::is('ptnbh/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/target') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
               <li><a href="#" class="{{ Request::is('ptnbh/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/realisasi') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
-              {{-- <li class="mb-1">
-                <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ptnbhtarget-collapse" aria-expanded="false">Target</a>
-                <div class="collapse" id="ptnbhtarget-collapse">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal px-3 pb-1 small">
-                    <li><a href="#" class="link-dark rounded">Matematika</a></li>
-                    <li><a href="#" class="link-dark rounded">Biologi</a></li>
-                    <li><a href="#" class="link-dark rounded">Kimia</a></li>
-                    <li><a href="#" class="link-dark rounded">Fisika</a></li>
-                    <li><a href="#" class="link-dark rounded">Statistika</a></li>
-                    <li><a href="#" class="link-dark rounded">Informatika</a></li>
-                  </ul>
-                </div>
-              </li>
-              <li class="mb-1">
-                <a class="align-items-center text-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ptnbhrealisasi-collapse" aria-expanded="false">Realisasi</a>
-                <div class="collapse" id="ptnbhrealisasi-collapse">
-                  <ul class="btn-toggle-nav list-unstyled fw-normal px-3 pb-1 small">
-                    <li><a href="#" class="link-dark rounded">Matematika</a></li>
-                    <li><a href="#" class="link-dark rounded">Biologi</a></li>
-                    <li><a href="#" class="link-dark rounded">Kimia</a></li>
-                    <li><a href="#" class="link-dark rounded">Fisika</a></li>
-                    <li><a href="#" class="link-dark rounded">Statistika</a></li>
-                    <li><a href="#" class="link-dark rounded">Informatika</a></li>
-                  </ul>
-                </div>
-              </li> --}}
             </ul>
           </div>
         </li>

@@ -2,11 +2,11 @@
 
 namespace App\Imports;
 
-use App\Models\Indikator;
+use App\Models\IndikatorPTNBH;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
 
-class IndikatorImport implements ToModel
+class IndikatorPTNBHImport implements ToModel
 {
     /**
     * @param array $row
@@ -16,7 +16,7 @@ class IndikatorImport implements ToModel
     public function model(array $row)
     {
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
-        return new Indikator([
+        return new IndikatorPTNBH([
             //
             'kode' => $row[0].$tahun->tahun, 
             'strategi' => $row[1], 

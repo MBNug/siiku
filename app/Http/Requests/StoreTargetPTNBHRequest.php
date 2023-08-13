@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTargetRequest extends FormRequest
+class StoreTargetPTNBHRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
