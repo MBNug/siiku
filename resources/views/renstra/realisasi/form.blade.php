@@ -142,7 +142,7 @@
                 <div class="col">
                     <div class="bg-primary rounded-4 py-4">
                         @if ($user->level!=2)
-                            <form action="{{ route('renstra.realisasi.simpan2',[$departemen->kode, $realisasi->kode]) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('renstra.realisasi.simpan2',[$departemen->kode, $triwulan->triwulan, $realisasi->kode]) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group row">
@@ -177,7 +177,7 @@
                                 </div>
                             </form>
                         @else
-                            <form action="{{ route('renstra.realisasi.simpan',[$departemen->kode, $realisasi->kode]) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('renstra.realisasi.simpan',[$departemen->kode, $triwulan->triwulan, $realisasi->kode]) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group row">
@@ -240,8 +240,8 @@
         acceptedFileTypes: ['.pdf', '.xls', '.xlsx'],
         maxFileSize: '5MB',
         server: {
-            process: '{{ route('renstra.realisasi.tmpUpload',[$departemen->kode, $realisasi->kode]) }}',
-            revert: '{{ route('renstra.realisasi.tmpDelete',[$departemen->kode, $realisasi->kode]) }}',
+            process: '{{ route('renstra.realisasi.tmpUpload',[$departemen->kode, $triwulan->triwulan, $realisasi->kode]) }}',
+            revert: '{{ route('renstra.realisasi.tmpDelete',[$departemen->kode, $triwulan->triwulan, $realisasi->kode]) }}',
             headers: {
                 'X-CSRF-TOKEN' : '{{ csrf_token() }}'
             }

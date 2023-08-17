@@ -15,6 +15,14 @@
     </div>
   </section>
   <div class="row">
+    <div class="row">
+        <div class="col-9">
+        </div>
+        <div class="col-3">
+            <a href="{{ route('ptnbh.realisasi.download', [$ptnbhdept, $triwulan->triwulan])}}" class="btn btn-primary">Download PDF Realisasi</a>
+        </div>
+        
+    </div>
     <div class="col-lg">
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -49,25 +57,10 @@
                                     <td>{{ $realisasi->keterangan }}</td>
                                 @endif
                                 <td>{{ $realisasi->target }}</td>
-                                @if ($realisasi->status === null)
-                                    <td>Sedang Diproses</td>
-                                @else
-                                    <td>{{ $realisasi->status }}</td>
-                                @endif
+                                <td>{{ $realisasi->status }}</td>
                                 <td>
-                                    {{-- @dd(
-                                        $user->level!=2 && ($realisasi->nilai != null && $realisasi->bukti1 != null)
-                                    ) --}}
-                                    @if($user->level!=2 && $realisasi->status != null)
-                                        <a class="btn mb-2" href="{{ route('renstra.realisasi.show', [$renstradept, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">
+                                    <a class="btn mb-2" href="{{ route('ptnbh.realisasi.show', [$ptnbhdept, $triwulan->triwulan, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">
                                             Lihat Data
-                                    @elseif ($user->level!=2 && ($realisasi->nilai != null || $realisasi->bukti1 != null))
-                                        <a class="btn mb-2" href="{{ route('renstra.realisasi.form', [$renstradept, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">
-                                            Cek Nilai
-                                    @elseif($user->level == 2 && $realisasi->status === null)
-                                        <a class="btn mb-2" href="{{ route('renstra.realisasi.form', [$renstradept, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">    
-                                            Update Data
-                                    @endif
                                     </a>
                                 </td>
                                 

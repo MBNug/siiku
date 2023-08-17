@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('configs', function (Blueprint $table) {
             $table->id();
             $table->year('tahun')->unique();
-            $table->string('status', 1); #1 aktif, 0 tidak aktif
+            $table->string('status', 1); #1 aktif, 0 tidak aktif,  2 sudah aktif 3 sedang aktif tapi tidak aktif
+            $table->string('statusterakhir', 1);
+            $table->string('triwulanterakhir', 1);
             $table->timestamps();
             
         });

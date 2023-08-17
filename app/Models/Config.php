@@ -9,5 +9,5 @@ class config extends Model
 {
     use HasFactory;
     protected $primaryKey = 'tahun';
-    protected $fillable =['tahun'];
+    protected $fillable =['tahun', 'status', 'statusterakhir', 'triwulanterakhir'];
 }

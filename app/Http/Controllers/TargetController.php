@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreTargetRequest;
 use App\Http\Requests\UpdateTargetRequest;
+use App\Models\Triwulan;
 use PDF;
 
 
@@ -29,7 +30,8 @@ class TargetController extends Controller
     {
         $departemens = Departemen::where('kode', '<>', '00')->get();
         $title = 'Target Departemen ';
-        return view('renstra.target.index', compact('departemens','title')) ->with([
+        $triwulan = Triwulan::where('status', '=', '1')->first();
+        return view('renstra.target.index', compact('departemens','title', 'triwulan')) ->with([
             'user'=> Auth::user()
         ]);
     }
@@ -42,6 +44,7 @@ class TargetController extends Controller
     public function getTarget($renstradept)
     {   
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
+        $triwulan = Triwulan::where('status', '=', '1')->first();
         // dd($actConfig);
         if($actConfig===null){
             Alert::error('Gagal!', "Config Tahun Belum diatur");
@@ -53,7 +56,7 @@ class TargetController extends Controller
             $title = 'Target Departemen '.$t;
             // dd($title);
             if($targets->count()==0){
-                return view('renstra.target.uncreate', compact('title', 'renstradept')) ->with([
+                return view('renstra.target.uncreate', compact('title', 'renstradept', 'triwulan')) ->with([
                     'user'=> Auth::user()
                 ]);
             }
@@ -67,7 +70,7 @@ class TargetController extends Controller
                     $status=1;
                 }
                 $departemens = Departemen::all();
-                return view('renstra.target.target', compact('targets', 'departemens', 'title', 'renstradept',"status")) ->with([
+                return view('renstra.target.target', compact('targets', 'departemens', 'title', 'renstradept',"status", 'triwulan')) ->with([
                     'user'=> Auth::user()
                 ]);
             }
@@ -263,6 +266,14 @@ class TargetController extends Controller
 
     public function downloadPDFTarget(Departemen $departemen)
     {
+        $pejabatDep = Pejabat::where('kode', 'like', $departemen->kode.'%')->first();
+        $pejabatFak = Pejabat::where('kode', '=', '0099')->first();
+        if($pejabatDep === null || $pejabatFak === null){
+            Alert::error('Data Pejabat', 'Data pejabat belum diatur!');
+            return redirect()->back();
+        }
+        
+        
         $data = Target::where('kode', 'like', $departemen->kode.'%')->get();
         //Gabung strategi 
         $combinedData = $data->groupBy('strategi')->map(function($group){
@@ -283,8 +294,6 @@ class TargetController extends Controller
 
         // $view = view('renstra.target.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'));
         // dd($pdf);
-        $pejabatDep = Pejabat::where('kode', 'like', $departemen->kode.'%')->first();
-        $pejabatFak = Pejabat::where('kode', '=', '0099')->first();
 
         $tahun = DB::table('configs') -> where('status', '=', '1') -> pluck('tahun');
         $filename = 'Target Renstra FSM '.$tahun[0].'_'.$departemen->nama.'.pdf';

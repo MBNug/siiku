@@ -40,7 +40,7 @@
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
               <li><a href="{{ $user->level != 2 ? route('renstra.target.index') : route('renstra.targetdepartemen', substr($user->kode, 0, 2))  }}" class="{{ Request::is('renstra/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/target') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
-              <li><a href="{{ $user->level != 2 ? route('renstra.realisasi.index') : route('renstra.realisasidepartemen', substr($user->kode, 0, 2)) }}" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
+              <li><a href="{{ $user->level != 2 ? route('renstra.realisasi.index') : route('renstra.realisasidepartemen', [substr($user->kode, 0, 2), $triwulan->triwulan] )}}" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
             </ul>
           </div>
@@ -55,7 +55,7 @@
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
               <li><a href="{{ $user->level != 2 ? route('ptnbh.target.index') : route('ptnbh.targetdepartemen', substr($user->kode, 0, 2))  }}" class="{{ Request::is('ptnbh/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/target') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
-              <li><a href="#" class="{{ Request::is('ptnbh/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/realisasi') ? 
+              <li><a href="{{ $user->level != 2 ? route('ptnbh.realisasi.index') : route('ptnbh.realisasidepartemen', [substr($user->kode, 0, 2), $triwulan->triwulan] )}}" class="{{ Request::is('ptnbh/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/realisasi') ? 
                 'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
             </ul>
           </div>

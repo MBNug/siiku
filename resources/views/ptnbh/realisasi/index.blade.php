@@ -15,9 +15,9 @@
         </div>
     </section>
     @foreach ($departemens as $departemen)
-        <a href="{{ route('renstra.realisasidepartemen', $departemen->kode) }}" class="btn btn-secondary">{{ $departemen->nama }}</a>
+        <a href="{{ route('ptnbh.realisasidepartemen', [$departemen->kode, $triwulan->triwulan]) }}" class="btn btn-secondary">{{ $departemen->nama }}</a>
     @endforeach
 </div>
 @endsection
 
-{{-- {{ route('renstra.targetdepartemen', $departemen->kode) }} --}}
+{{-- {{ route('ptnbh.targetdepartemen', $departemen->kode) }} --}}

@@ -71,31 +71,90 @@ class ConfigController extends Controller
         // dd($config);
 
         $actConfig1 = Config::where('status', '=', '1')->first();
+        $triwulan = Triwulan::where('status', '=', '1')->first();
+        $triwulan1 = Triwulan::where('triwulan', '=', '1')->first();
+        $triwulan0 = Triwulan::where('triwulan', '=', '0')->first();
         // dd($actConfig===null);
         // dd($actConfig);
         $request->validate([
             'tahun' => 'required',
         ]);
 
+
+        // kalo null semua tahun jadi 1 triwulan1 jadi 1
+        //kalo tahun null triwulan not null, tahun jadi 1, triwulan1 jadi 1
+        //kalo tahun not null triwulan not null.
+                 // kalo config = 2, tahun jadi 1+triwulan, triwulan 0 jadi 1. dan hanya bisa akses realisasi
+                 // kalo config = 1+triwulan, config jadi 1, triwulan N jadi 1 
+                 // kalo config 0 kasih warning tahun ini tidak ada data yang bisa dilihat dan ini akan mengubah tahun aktif yang sedang diisi.
+
         if($actConfig1 === null){
+           
             $config->status = '1';
             $config->save();
+            $triwulan1->status = '1';
+            $triwulan1->save();
+            
+            
             // dd($config);
 
             Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
             return redirect(route('config.index'));
         }
         else{
-            if($actConfig2 =Config::find($actConfig1->tahun) == $config){
+            if($config->status == '1'){
                 Alert::error('Gagal!', 'Pilih Tahun yang berbeda!');
                 return redirect(route('config.index'));
             }
-            else{
-                $actConfig2 =Config::find($actConfig1->tahun);
-                $actConfig2->status = '0';
-                $actConfig2->save();
+            elseif($config->status =='0'){
+                $actConfig1->statusterakhir = $actConfig1->status;
+                $actConfig1->status = '3';
+                $actConfig1->triwulanterakhir = $triwulan->triwulan;
+                $actConfig1->save();
                 $config->status = '1';
                 $config->save();
+                if($triwulan->triwulan != '1'){
+                    $triwulan->status='0';
+                    $triwulan->save();
+                    $triwulan1->status='1';
+                    $triwulan1->save();
+                }
+                // dd($triwulan1);
+                Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
+                return redirect(route('config.index'));
+            }
+            elseif($config->status =='2'){
+                $actConfig1->status = '3';
+                $actConfig1->triwulanterakhir = $triwulan->triwulan;
+                $actConfig1->save();
+                $config->status = '1';
+                $config->statusterakhir = '2';
+                $config->save();
+                $triwulan->status = '0';
+                $triwulan->save();
+                $triwulan0->status = '1';
+                $triwulan0->save();
+                Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
+                return redirect(route('config.index'));
+
+            }
+            else{
+                $actConfig1->status = $actConfig1->statusterakhir;
+                $actConfig1->triwulanterakhir = $triwulan->triwulan;
+                $actConfig1->save();
+                $config->status = '1';
+                $config->statusterakhir = '3';
+                $config->save();
+                $triwulan->status = '0';
+                $triwulan->save();
+                $triwulanN = Triwulan::where('triwulan', '=', $config->triwulanterakhir)->first();
+                $triwulanN->status = '1';
+                $triwulanN->save();
+                // $actConfig2 =Config::find($actConfig1->tahun);
+                // $actConfig2->status = '0';
+                // $actConfig2->save();
+                // $config->status = '1';
+                // $config->save();
                 Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
                 return redirect(route('config.index'));
             }

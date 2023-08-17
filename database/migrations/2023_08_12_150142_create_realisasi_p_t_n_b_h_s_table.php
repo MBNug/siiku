@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('bukti3')->nullable()->default(null);
             $table->string('bukti4')->nullable()->default(null);
             $table->string('bukti5')->nullable()->default(null);
-            $table->enum('status', ['Tidak Tercapai', 'Tercapai', 'Melampaui Target'])->nullable()->default(null);
+            $table->enum('status', ['Tidak Tercapai', 'Tercapai', 'Melampaui Target', 'Belum Diupdate', 'Sedang Diproses'])->nullable()->default('Belum Diupdate');
             $table->string('nilaireal')->nullable()->default(null);
             $table->timestamps();
         });
