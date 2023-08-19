@@ -44,6 +44,13 @@ form .input-group-addon {
 
 /* END Login Page CSS */
 
+.no-padding {padding:0 !important;}
+
+.add-padding {
+    padding: .625em 2em; 
+    display: inline-block;
+}
+
 #side_nav {
     background: #17356d;
     min-width: 250px;

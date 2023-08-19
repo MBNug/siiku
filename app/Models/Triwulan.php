@@ -9,5 +9,6 @@ class Triwulan extends Model
 {
     use HasFactory;
     protected $primaryKey = 'triwulan';
-    protected $fillable =['triwulan'];
+    public $incrementing = false;
+    protected $fillable =['triwulan', 'status'];
 }

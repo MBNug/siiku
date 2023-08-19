@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Triwulan;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -23,7 +24,8 @@ class UserController extends Controller
     {
         // $departemens = Departemen::where('kode', '<>', '00')->get();
         $title = 'Ganti Password ';
-        return view('user.gantiPassword', compact('title')) ->with([
+        $triwulan = Triwulan::where('status', '=', '1')->first();
+        return view('user.gantiPassword', compact('title','triwulan')) ->with([
             'user'=> Auth::user()
         ]);
     }

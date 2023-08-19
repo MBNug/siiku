@@ -22,6 +22,8 @@ class ConfigSeeder extends Seeder
             Config::create([
                 'tahun' => $year,
                 'status' => '0',
+                'statusterakhir' => '0',
+                'triwulanterakhir' => '0',
             ]);
         }
     }
