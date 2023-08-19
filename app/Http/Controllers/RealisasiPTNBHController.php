@@ -837,6 +837,19 @@ class RealisasiPTNBHController extends Controller
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1PTNBH::where('kode', '=', ''.$realisasi)->first();
         }
+        elseif($triwulan->triwulan == '2'){
+            $realisasi = Triwulan2PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '3'){
+            $realisasi = Triwulan3PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '4'){
+            $realisasi = Triwulan4PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '0'){
+            $realisasi = RealisasiPTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+
         $validator= Validator::make($request->all(),[
             'nilai' => 'required',
         ]);
@@ -899,6 +912,18 @@ class RealisasiPTNBHController extends Controller
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1PTNBH::where('kode', '=', ''.$realisasi)->first();
         }
+        elseif($triwulan->triwulan == '2'){
+            $realisasi = Triwulan2PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '3'){
+            $realisasi = Triwulan3PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '4'){
+            $realisasi = Triwulan4PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '0'){
+            $realisasi = RealisasiPTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
 
         $request->validate([
             'status' => 'required',
@@ -947,6 +972,18 @@ class RealisasiPTNBHController extends Controller
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1PTNBH::where('kode', '=', ''.$realisasi)->first();
         }
+        elseif($triwulan->triwulan == '2'){
+            $realisasi = Triwulan2PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '3'){
+            $realisasi = Triwulan3PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '4'){
+            $realisasi = Triwulan4PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '0'){
+            $realisasi = RealisasiPTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
         // dd($realisasi);
         $files = 
         [
@@ -967,6 +1004,18 @@ class RealisasiPTNBHController extends Controller
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '2'){
+            $realisasi = Triwulan2PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '3'){
+            $realisasi = Triwulan3PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '4'){
+            $realisasi = Triwulan4PTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '0'){
+            $realisasi = RealisasiPTNBH::where('kode', '=', ''.$realisasi)->first();
         }
         if ($request->hasFile('files')) {
             $files = $request->file('files');

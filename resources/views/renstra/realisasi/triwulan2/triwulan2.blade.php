@@ -26,12 +26,12 @@
         @if ($user->level != 2 && $actTri->triwulan == '2')
         <div class="col-4">
             <a class="btn" href="{{ route('renstra.realisasi.alertakhiritriwulan', [$renstradept, $triwulan->triwulan]) }}" style="background-color: #17356d;color:white">Akhiri Triwulan 2</a>
-            <a href="{{ route('renstra.realisasi.download', [$renstradept, $triwulan->triwulan])}}" class="btn btn-primary">Download PDF Triwulan 2</a>
+            <a href="{{ route('renstra.realisasi.download', [$renstradept, $triwulan->triwulan])}}" class="btn btn-primary">Download PDF Triwulan 2 </a>
         </div>
         @else
         <div class="col-1"></div>
         <div class="col-3">
-            <a href="{{ route('renstra.realisasi.download', [$renstradept, $triwulan->triwulan])}}" class="btn btn-primary">Download PDF Triwulan 2</a>
+            <a href="{{ route('renstra.realisasi.download', [$renstradept, $triwulan->triwulan])}}" class="btn btn-primary" target="_blank">Download PDF Triwulan 2</a>
         </div>
         @endif
         
@@ -52,6 +52,7 @@
                                 <th>Satuan</th>
                                 <th>Keterangan</th>
                                 <th>Target</th>
+                                <th>Status Realisasi Triwulan 1</th>
                                 <th>Status Realisasi</th>
                                 <th>Aksi</th>
                             </tr>
@@ -71,13 +72,14 @@
                                     <td>{{ $realisasi->keterangan }}</td>
                                 @endif
                                 <td>{{ $realisasi->target }}</td>
+                                <td>{{ $realisasi->statusterakhir }}</td>
                                 <td>{{ $realisasi->status }}</td>
                                 <td>
                                     {{-- @dd(
                                         $user->level!=2 && ($realisasi->nilai != null && $realisasi->bukti1 != null)
                                     ) --}}
-                                    @if($user->level!=2 && $realisasi->status != 'Belum Diupdate' && $realisasi->status != 'Sedang Diproses' )
-                                        <a class="btn mb-2" href="{{ route('renstra.realisasi.show', [$renstradept, $triwulan->triwulan, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">
+                                    @if($realisasi->status != 'Belum Diupdate' && $realisasi->status != 'Sedang Diproses' )
+                                        <a class="btn mb-2" href="{{ route('renstra.realisasi.show', [$renstradept, $triwulan->triwulan, $realisasi->kode]) }}" style="background-color: #787878;color:white">
                                             Lihat Data
                                     @elseif ($user->level!=2 && $realisasi->status != 'Belum Diupdate' && $realisasi->bukti1 != null)
                                         <a class="btn mb-2" href="{{ route('renstra.realisasi.form', [$renstradept, $triwulan->triwulan, $realisasi->kode]) }}" style="background-color: #2D7E18;color:white">

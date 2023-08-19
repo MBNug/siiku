@@ -847,6 +847,19 @@ class RealisasiController extends Controller
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1::where('kode', '=', ''.$realisasi)->first();
         }
+        elseif($triwulan->triwulan == '2'){
+            $realisasi = Triwulan2::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '3'){
+            $realisasi = Triwulan3::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '4'){
+            $realisasi = Triwulan4::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '0'){
+            $realisasi = Realisasi::where('kode', '=', ''.$realisasi)->first();
+        }
+
         $validator= Validator::make($request->all(),[
             'nilai' => 'required',
         ]);
@@ -909,6 +922,18 @@ class RealisasiController extends Controller
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1::where('kode', '=', ''.$realisasi)->first();
         }
+        elseif($triwulan->triwulan == '2'){
+            $realisasi = Triwulan2::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '3'){
+            $realisasi = Triwulan3::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '4'){
+            $realisasi = Triwulan4::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '0'){
+            $realisasi = Realisasi::where('kode', '=', ''.$realisasi)->first();
+        }
 
         $request->validate([
             'status' => 'required',
@@ -957,6 +982,18 @@ class RealisasiController extends Controller
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1::where('kode', '=', ''.$realisasi)->first();
         }
+        elseif($triwulan->triwulan == '2'){
+            $realisasi = Triwulan2::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '3'){
+            $realisasi = Triwulan3::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '4'){
+            $realisasi = Triwulan4::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '0'){
+            $realisasi = Realisasi::where('kode', '=', ''.$realisasi)->first();
+        }
         // dd($realisasi);
         $files = 
         [
@@ -978,6 +1015,19 @@ class RealisasiController extends Controller
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1::where('kode', '=', ''.$realisasi)->first();
         }
+        elseif($triwulan->triwulan == '2'){
+            $realisasi = Triwulan2::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '3'){
+            $realisasi = Triwulan3::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '4'){
+            $realisasi = Triwulan4::where('kode', '=', ''.$realisasi)->first();
+        }
+        elseif($triwulan->triwulan == '0'){
+            $realisasi = Realisasi::where('kode', '=', ''.$realisasi)->first();
+        }
+
         if ($request->hasFile('files')) {
             $files = $request->file('files');
             
