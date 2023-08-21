@@ -3,6 +3,9 @@
     background: #17356d;
     height: 100vh;
 }
+#dashboard {
+    margin-top: 20px;
+}
 .btn-login {
     width: 100%;
     padding-top: 10px;
@@ -44,17 +47,19 @@ form .input-group-addon {
 
 /* END Login Page CSS */
 
-.no-padding {padding:0 !important;}
+.no-padding {
+    padding: 0 !important;
+}
 
 .add-padding {
-    padding: .625em 2em; 
+    padding: 0.625em 2em;
     display: inline-block;
 }
 
 #side_nav {
     background: #17356d;
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 210px;
+    max-width: 210px;
     transition: all 0.3s;
 }
 

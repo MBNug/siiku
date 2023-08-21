@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreTargetPTNBHRequest;
+use App\Models\Triwulan;
 use App\Http\Requests\UpdateTargetPTNBHRequest;
 use PDF;
 
@@ -24,8 +25,9 @@ class TargetPTNBHController extends Controller
     public function index()
     {
         $departemens = Departemen::where('kode', '<>', '00')->get();
+        $triwulan = Triwulan::where('status', '=', '1')->first();
         $title = 'Target Departemen ';
-        return view('ptnbh.target.index', compact('departemens','title')) ->with([
+        return view('ptnbh.target.index', compact('departemens','title','triwulan')) ->with([
             'user'=> Auth::user()
         ]);
     }
@@ -38,6 +40,7 @@ class TargetPTNBHController extends Controller
     public function getTarget($ptnbhdept)
     {   
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
+        $triwulan = Triwulan::where('status', '=', '1')->first();
         // dd($actConfig);
         if($actConfig===null){
             Alert::error('Gagal!', "Config Tahun Belum diatur");
@@ -49,7 +52,7 @@ class TargetPTNBHController extends Controller
             $title = 'Target Departemen '.$t;
             // dd($title);
             if($targets->count()==0){
-                return view('ptnbh.target.uncreate', compact('title', 'ptnbhdept')) ->with([
+                return view('ptnbh.target.uncreate', compact('title', 'ptnbhdept','triwulan')) ->with([
                     'user'=> Auth::user()
                 ]);
             }
