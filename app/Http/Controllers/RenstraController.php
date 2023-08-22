@@ -40,13 +40,13 @@ class RenstraController extends Controller
         $jmldept = $dept->count();
         $jmlindikator = Target::where('kode', 'like', '%'.$actConfig->tahun)->count()/$jmldept;
         $indikator = Indikator::where('kode', 'like', '%'.$actConfig->tahun)->count();
-        $jmltarget = Target::where('kode', 'like', '%'.$actConfig->tahun)->count();
         $jmlbelumdisetujui = Target::where('kode', 'like', '%'.$actConfig->tahun)->where('status', '<>', '1')->count();
         $jmlrealisasi = Realisasi::where('kode', 'like', '%'.$actConfig->tahun)->count();
-
+        
         
         //dekan dan fakultas
         if ($levelakun->level <2){
+            $jmltarget = Target::where('kode', 'like', '%'.$actConfig->tahun)->count();
             if($jmlbelumdisetujui!=0){
                 //fase pengisian Target
                 $targetdisetujui=[];
@@ -222,6 +222,7 @@ class RenstraController extends Controller
             $triwulanY=[]; 
             $ketercapaianpertriwulan=[];
             $kode = substr(Auth::user()->kode, 0, 2);
+            $jmltarget = Target::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
             
             for($i=1; $i<=4;$i++){
                 if($i==1){
