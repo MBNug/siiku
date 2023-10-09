@@ -43,7 +43,7 @@
                     </div>
                 </form>
             </div>
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-9">
                     <h1 class="h5 mx-3 mb-2 text-primary">Atur Triwulan Berjalan</h1>
                 </div>
@@ -75,12 +75,12 @@
                             @enderror
                         </div>
                         <div class="col-lg-2"></div> {{-- padding --}}
-                        <div class="col-lg-2">
+                        {{-- <div class="col-lg-2">
                             <button type="submit" class="btn btn-success"><i class="fa fa-plus mr-2"></i>Set Triwulan</button>
                         </div>
                     </div>
                 </form>
-            </div>
+            </div>  --}}
             
             <div class="row">
                 <div class="col-lg-9">
