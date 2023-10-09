@@ -5,6 +5,11 @@
 @section('csslocal')
     <link href="https://unpkg.com/filepond/dist/filepond.min.css" rel="stylesheet">
 
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
+
+
 @endsection
 
 @section('content')
@@ -196,11 +201,11 @@
                                 <div class="form-group row">
                                     <label class="col-3 col-form-label pt-3 px-5 text-white fw-bold">Pilih File</label>
                                     <div class="col-7">
-                                        <input type="file" class="filepond" name="files" multiple data-allow-reorder="true" data-max-file-size="5MB"
-                                            data-max-files="5" data-file-types=".pdf,.xls,.xlsx">
+                                        <input type="file" class="filepond" required name="files" multiple data-allow-reorder="true" data-max-file-size="5MB"
+                                            data-max-files="5" data-file-types=".pdf,.xls,.xlsx,.jpg" accept=".pdf,.xls,.xlsx,.jpg">
                                     </div>
                                     <small class="col-7 offset-3 form-text text-white">(Maksimal 5 file, Tiap file maksimal 5MB, File yang diterima
-                                        *.pdf, *.xls, *.xlsx)</small>
+                                        *.pdf, *.xls, *.xlsx, *.jpg)</small>
                                 </div>
                                 {{-- <div class="form-group row">
                                     <small class="px-5 form-text text-white">File dipilih:</small>
@@ -228,6 +233,9 @@
 <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
 
 <script>
+    FilePond.registerPlugin(FilePondPluginFileValidateSize);
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+
     // Get a reference to the file input element
     const inputElement = document.querySelector('input[type="file"]');
 
@@ -237,7 +245,7 @@
         allowMultiple: true,
         maxFiles: 5,
         labelIdle: 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>',
-        acceptedFileTypes: ['.pdf', '.xls', '.xlsx'],
+        acceptedFileTypes: ['.pdf', '.xls', '.xlsx', '.jpg'],
         maxFileSize: '5MB',
         server: {
             process: '{{ route('ptnbh.realisasi.tmpUpload',[$departemen->kode, $triwulan->triwulan, $realisasi->kode]) }}',

@@ -3,15 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\config;
+use App\Models\Target;
 use App\Models\Triwulan;
 use App\Models\Indikator;
+use App\Models\Realisasi;
+use App\Models\Triwulan1;
+use App\Models\Triwulan2;
+use App\Models\Triwulan3;
+use App\Models\Triwulan4;
+use App\Models\TargetPTNBH;
 use Illuminate\Http\Request;
 use App\Models\IndikatorPTNBH;
+use App\Models\RealisasiPTNBH;
+use App\Models\Triwulan1PTNBH;
+use App\Models\Triwulan2PTNBH;
+use App\Models\Triwulan3PTNBH;
+use App\Models\Triwulan4PTNBH;
 use App\Imports\IndikatorImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\IndikatorPTNBHImport;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreconfigRequest;
 use App\Http\Requests\UpdateconfigRequest;
@@ -207,90 +220,260 @@ class ConfigController extends Controller
         //
     }
 
-    public function storeIndikator(Request $request)
-    {
+    public function alertStoreIndikator(Request $request){
         $actConfig1 = Config::where('status', '=', '1')->first();
-        // dd($actConfig1);
+        $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
+        $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        // dd($indikatorlama);
+        $jmlindikatorlama = count($indikatorlama);
         if($actConfig1 != null)
         {
-            $this->validate($request, [
-                'indikator' => 'required'
-            ]);
+            $this->validate($request, 
+                [
+                    'indikator' => 'required|mimes:xlsx,xls,csv'
+                ],
+                [
+                    'indikator.mimes' => 'Format yang diterima hanya .xls,.xlsx, dan .csv'
+                ]
+            );
     
             $file = $request->file('indikator');
      
             // membuat nama file unik
-            $nama_file = rand().$file->getClientOriginalName();
-     
+            $nama_file = 'IndikatorNew.xlsx';
+
             // upload ke folder file_indikator di dalam folder public
+            if(Storage::exists('file_indikator/renstra/'.$actConfig1->tahun.'/new/'.$nama_file)){
+                Storage::delete('file_indikator/renstra/'.$actConfig1->tahun.'/new/'.$nama_file);
+            }
+            $file->storeAs('file_indikator/renstra/'.$actConfig1->tahun.'/new/',$nama_file, 'public');
             
             // dd($request);
-    
-            $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
-            $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
-            // dd($indikatorlama);
-            $jmlindikatorlama = count($indikatorlama);
-            if($jmlindikatorlama!=0){
-                for ($i = 0; $i < $jmlindikatorlama; $i++){
-                    Indikator::destroy($indikatorlama[$i]->kode);
-                }
+            if($jmlindikatorlama==0){
+                Storage::move('file_indikator/renstra/'.$actConfig1->tahun.'/new/IndikatorNew.xlsx', 'file_indikator/renstra/'.$actConfig1->tahun.'/Indikator.xlsx');
+                Excel::import(new IndikatorImport, public_path('storage/file_indikator/renstra/'.$actConfig1->tahun.'/Indikator.xlsx'));
+                Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
+                return redirect(route('config.index'));
             }
-            $file->storeAs('file_indikator/renstra/'.$actConfig1->tahun,$nama_file, 'public');
-    
-            // import data
-            Excel::import(new IndikatorImport, public_path('storage/file_indikator/renstra/'.$actConfig1->tahun.'/'.$nama_file));
-    
-            Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
-            return redirect(route('config.index'));
+            else{
+                alert()->error('Ubah Indikator Aktif !','Ini akan membuat indikator, target, dan realisasi sekarang akan dihapus!')
+                ->showCancelButton('Cancel', '#aaa')
+                ->showConfirmButton(
+                    $btnText = '<a class="add-padding" href="/config/setindikator/new">Yes</a>', // here is class for link
+                    $btnColor = '#17356d',
+                    ['className'  => 'no-padding'], // add class to button
+                );
+                return redirect()->back();
+            }
         } 
         else
         {
             Alert::error('Gagal', 'Config Tahun belum diatur!');
             return redirect(route('config.index'));
         }
-		
     }
-    public function storeIndikatorPTNBH(Request $request)
-    {
+    public function alertStoreIndikatorPTNBH(Request $request){
         $actConfig1 = Config::where('status', '=', '1')->first();
-        // dd($actConfig1);
+        $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
+        $indikatorlama = DB::table('indikator_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        // dd($indikatorlama);
+        $jmlindikatorlama = count($indikatorlama);
         if($actConfig1 != null)
         {
             $this->validate($request, [
-                'indikatorptnbh' => 'required'
+                'indikatorptnbh' => 'required|mimes:xlsx,xls,csv'
+            ],
+            [
+                'indikator.mimes' => 'Format yang diterima hanya .xls,.xlsx, dan .csv'
             ]);
     
             $file = $request->file('indikatorptnbh');
      
             // membuat nama file unik
-            $nama_file = rand().$file->getClientOriginalName();
-     
+            $nama_file = 'IndikatorNew.xlsx';
+
             // upload ke folder file_indikator di dalam folder public
+            if(Storage::exists('file_indikator/ptnbh/'.$actConfig1->tahun.'/new/'.$nama_file)){
+                Storage::delete('file_indikator/ptnbh/'.$actConfig1->tahun.'/new/'.$nama_file);
+            }
+            $file->storeAs('file_indikator/ptnbh/'.$actConfig1->tahun.'/new/',$nama_file, 'public');
             
             // dd($request);
-    
-            $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
-            $indikatorlama = DB::table('indikator_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
-            // dd($indikatorlama);
-            $jmlindikatorlama = count($indikatorlama);
-            if($jmlindikatorlama!=0){
-                for ($i = 0; $i < $jmlindikatorlama; $i++){
-                    IndikatorPTNBH::destroy($indikatorlama[$i]->kode);
-                }
+            if($jmlindikatorlama==0){
+                Storage::move('file_indikator/ptnbh/'.$actConfig1->tahun.'/new/IndikatorNew.xlsx', 'file_indikator/ptnbh/'.$actConfig1->tahun.'/Indikator.xlsx');
+                Excel::import(new IndikatorPTNBHImport, public_path('storage/file_indikator/ptnbh/'.$actConfig1->tahun.'/Indikator.xlsx'));
+                Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
+                return redirect(route('config.index'));
             }
-            $file->storeAs('file_indikator/ptnbh/'.$actConfig1->tahun,$nama_file, 'public');
-    
-            // import data
-            Excel::import(new IndikatorPTNBHImport, public_path('storage/file_indikator/ptnbh/'.$actConfig1->tahun.'/'.$nama_file));
-    
-            Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
-            return redirect(route('config.index'));
+            else{
+                alert()->error('Ubah Indikator PTNBH Aktif !','Ini akan membuat indikator, target, dan realisasi sekarang akan dihapus!')
+                ->showCancelButton('Cancel', '#aaa')
+                ->showConfirmButton(
+                    $btnText = '<a class="add-padding" href="/config/setindikatorptnbh/new">Yes</a>', // here is class for link
+                    $btnColor = '#17356d',
+                    ['className'  => 'no-padding'], // add class to button
+                );
+                return redirect()->back();
+            }
         } 
         else
         {
             Alert::error('Gagal', 'Config Tahun belum diatur!');
             return redirect(route('config.index'));
         }
+    }
+
+    public function storeIndikator(Request $request)
+    {
+        $actConfig1 = Config::where('status', '=', '1')->first();
+        
+        $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
+        $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $targetlama = DB::table('targets') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $realisasilama = DB::table('realisasis') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $triwulan1lama = DB::table('triwulan1s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $triwulan2lama = DB::table('triwulan2s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $triwulan3lama = DB::table('triwulan3s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $triwulan4lama = DB::table('triwulan4s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        // dd($targetlama);
+        
+
+        $jmlindikatorlama = count($indikatorlama);
+        $jmltargetlama = count($targetlama);
+        $jmlrealisasilama = count($realisasilama);
+        $jmltriwulan1lama = count($triwulan1lama);
+        $jmltriwulan2lama = count($triwulan2lama);
+        $jmltriwulan3lama = count($triwulan3lama);
+        $jmltriwulan4lama = count($triwulan4lama);
+
+        if($jmlindikatorlama!=0){
+            Storage::delete('file_indikator/renstra/'.$actConfig1->tahun.'/Indikator.xlsx');
+            for ($i = 0; $i < $jmlindikatorlama; $i++){
+                Indikator::destroy($indikatorlama[$i]->kode);
+            }
+        }
+        if($jmltargetlama!=0){
+            for ($i = 0; $i < $jmltargetlama; $i++){
+                Target::destroy($targetlama[$i]->kode);
+            }
+        }
+        if($jmltriwulan1lama!=0){
+            for ($i = 0; $i < $jmltriwulan1lama; $i++){
+                Triwulan1::destroy($triwulan1lama[$i]->kode);
+            }
+            if($jmltriwulan2lama!=0){
+                for ($i = 0; $i < $jmltriwulan2lama; $i++){
+                    Triwulan2::destroy($triwulan2lama[$i]->kode);
+                }
+                if($jmltriwulan3lama!=0){
+                    for ($i = 0; $i < $jmltriwulan3lama; $i++){
+                        Triwulan3::destroy($triwulan3lama[$i]->kode);
+                    }
+                    if($jmltriwulan4lama!=0){
+                        for ($i = 0; $i < $jmltriwulan4lama; $i++){
+                            Triwulan4::destroy($triwulan4lama[$i]->kode);
+                        }
+                        if($jmlrealisasilama!=0){
+                            for ($i = 0; $i < $jmlrealisasilama; $i++){
+                                Realisasi::destroy($realisasilama[$i]->kode);
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        $triwulan = Triwulan::where('status', '=', '1')->first();
+        $triwulan4 = Triwulan::where('triwulan', '=', '4')->first();
+
+        if($triwulan->triwulan == '0'){
+            $triwulan->status='0';
+            $triwulan->save();
+            $triwulan4->status='1';
+            $triwulan4->save();
+        }
+        
+        // import data
+        Storage::move('file_indikator/renstra/'.$actConfig1->tahun.'/new/IndikatorNew.xlsx', 'file_indikator/renstra/'.$actConfig1->tahun.'/Indikator.xlsx');
+        Excel::import(new IndikatorImport, public_path('storage/file_indikator/renstra/'.$actConfig1->tahun.'/Indikator.xlsx'));
+        Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
+        return redirect(route('config.index'));
+    }
+    public function storeIndikatorPTNBH(Request $request)
+    {
+        $actConfig1 = Config::where('status', '=', '1')->first();
+        $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
+        $indikatorlama = DB::table('indikator_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $targetlama = DB::table('target_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $realisasilama = DB::table('realisasi_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $triwulan1lama = DB::table('triwulan1_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $triwulan2lama = DB::table('triwulan2_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $triwulan3lama = DB::table('triwulan3_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+        $triwulan4lama = DB::table('triwulan4_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
+
+        
+
+        $jmlindikatorlama = count($indikatorlama);
+        $jmltargetlama = count($targetlama);
+        $jmlrealisasilama = count($realisasilama);
+        $jmltriwulan1lama = count($triwulan1lama);
+        $jmltriwulan2lama = count($triwulan2lama);
+        $jmltriwulan3lama = count($triwulan3lama);
+        $jmltriwulan4lama = count($triwulan4lama);
+
+        if($jmlindikatorlama!=0){
+            Storage::delete('file_indikator/ptnbh/'.$actConfig1->tahun.'/Indikator.xlsx');
+            for ($i = 0; $i < $jmlindikatorlama; $i++){
+                IndikatorPTNBH::destroy($indikatorlama[$i]->kode);
+            }
+        }
+        if($jmltargetlama!=0){
+            for ($i = 0; $i < $jmltargetlama; $i++){
+                TargetPTNBH::destroy($targetlama[$i]->kode);
+            }
+        }
+        if($jmltriwulan1lama!=0){
+            for ($i = 0; $i < $jmltriwulan1lama; $i++){
+                Triwulan1PTNBH::destroy($triwulan1lama[$i]->kode);
+            }
+            if($jmltriwulan2lama!=0){
+                for ($i = 0; $i < $jmltriwulan2lama; $i++){
+                    Triwulan2PTNBH::destroy($triwulan2lama[$i]->kode);
+                }
+                if($jmltriwulan3lama!=0){
+                    for ($i = 0; $i < $jmltriwulan3lama; $i++){
+                        Triwulan3PTNBH::destroy($triwulan3lama[$i]->kode);
+                    }
+                    if($jmltriwulan4lama!=0){
+                        for ($i = 0; $i < $jmltriwulan4lama; $i++){
+                            Triwulan4PTNBH::destroy($triwulan4lama[$i]->kode);
+                        }
+                        if($jmlrealisasilama!=0){
+                            for ($i = 0; $i < $jmlrealisasilama; $i++){
+                                RealisasiPTNBH::destroy($realisasilama[$i]->kode);
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+        
+        $triwulan = Triwulan::where('status', '=', '1')->first();
+        $triwulan4 = Triwulan::where('triwulan', '=', '4')->first();
+
+        if($triwulan->triwulan == '0'){
+            $triwulan->status='0';
+            $triwulan->save();
+            $triwulan4->status='1';
+            $triwulan4->save();
+        }
+        // import data
+        Storage::move('file_indikator/ptnbh/'.$actConfig1->tahun.'/new/IndikatorNew.xlsx', 'file_indikator/ptnbh/'.$actConfig1->tahun.'/Indikator.xlsx');
+        Excel::import(new IndikatorPTNBHImport, public_path('storage/file_indikator/ptnbh/'.$actConfig1->tahun.'/Indikator.xlsx'));
+        Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
+        return redirect(route('config.index'));
 		
     }
 

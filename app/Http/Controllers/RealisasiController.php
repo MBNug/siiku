@@ -41,14 +41,15 @@ class RealisasiController extends Controller
     {
         $departemens = Departemen::where('kode', '<>', '00')->get();
         $title = 'Realisasi Departemen ';
-        $triwulan = Triwulan::where('status', '=', '1')->first();
+        $triwulan = Triwulan::where('status', '=', '1')->first(); // tahun skrg
+        $tahun = Config::where('status', '=', '1')->first(); // tahun skrg
         // alert()->error('Gagal!','Config Triwulan Belum diatur');
 
-        if($triwulan === null){
+        if($tahun === null){
             
 
             // Alert::error('Gagal!', "Config Triwulan Belum diatur");
-            alert()->error('Gagal!','Config Triwulan Belum diatur');
+            alert()->error('Gagal!','Config Tahun Belum diatur');
 
             return redirect()->back();
         }
@@ -67,7 +68,7 @@ class RealisasiController extends Controller
     {   
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         $actTri = Triwulan::where('status', '=', '1')->first();
-        // dd($triwulan);
+        // dd($actTri);
         // dd($actConfig);
         if($actConfig===null){
             Alert::error('Gagal!', "Config Tahun Belum diatur");
@@ -81,13 +82,20 @@ class RealisasiController extends Controller
                 if($triwulan->triwulan == '1'){
                     $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
                     $targets = DB::table('targets') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
+                    $indikators = DB::table('indikators') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
                     $errmsg1="Indikator Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum diatur pihak fakultas.';
-                    if($targets->count()==0){
+                    $errmsg2="Target Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum diatur pihak fakultas.';
+                    if($indikators->count()==0){
                         Alert::error('Data Belum Tersedia', $errmsg1);
                         return redirect()->back();
                     }
+                    if($targets->count()==0){
+                        Alert::error('Data Target Belum Tersedia', $errmsg2);
+                        return redirect()->back();
+                    }
+                    
                     $targetsNotApproved = DB::table('targets') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> where('status', '!=', '1')-> get();
-                    $errmsg2="Indikator Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum disetujui pihak fakultas.';
+                    $errmsg2="Target Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum disetujui pihak fakultas.';
                     if($targetsNotApproved->count()>0){
                         Alert::error('Data Belum Tersedia', $errmsg2);
                         return redirect()->back();
@@ -161,7 +169,7 @@ class RealisasiController extends Controller
     }
 
     public function alertakhiriTriwulan(Departemen $departemen, Triwulan $triwulan){
-        alert()->error('Akhiri Triwulan '.$triwulan->triwulan.'!','Ini akan membuat triwulan 1 tidak akan bisa diubah lagi dan beralih ke triwulan 2 untuk semua departemen.')
+        alert()->error('Akhiri Triwulan '.$triwulan->triwulan.'!','Ini akan membuat triwulan '.$triwulan->triwulan.' tidak akan bisa diubah lagi dan beralih ke triwulan selanjutnya untuk semua departemen.')
         ->showCancelButton('Cancel', '#aaa')
         ->showConfirmButton(
             //renstra/realisasi/departemen/01/%7B%7B%20/renstra/realisasi/departemen/01/realisasi/1/akhiri%7D%7D
@@ -216,7 +224,7 @@ class RealisasiController extends Controller
                     $triwulan2->definisi = ''.$t->definisi;
                     $triwulan2->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan2->target = ''.$t->target;
-                    $triwulan2->nilai = ''.$t->nilai;
+                    $triwulan2->nilai = ''.$t->nilaireal;
                     $triwulan2->bukti1 = $t->bukti1;
                     $triwulan2->bukti2 = $t->bukti2;
                     $triwulan2->bukti3 = $t->bukti3;
@@ -266,7 +274,7 @@ class RealisasiController extends Controller
                     $triwulan2->definisi = ''.$t->definisi;
                     $triwulan2->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan2->target = ''.$t->target;
-                    $triwulan2->nilai = ''.$t->nilai;
+                    $triwulan2->nilai = ''.$t->nilaireal;
                     $triwulan2->bukti1 = $t->bukti1;
                     $triwulan2->bukti2 = $t->bukti2;
                     $triwulan2->bukti3 = $t->bukti3;
@@ -305,7 +313,7 @@ class RealisasiController extends Controller
                     $triwulan3->definisi = ''.$t->definisi;
                     $triwulan3->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan3->target = ''.$t->target;
-                    $triwulan3->nilai = ''.$t->nilai;
+                    $triwulan3->nilai = ''.$t->nilaireal;
                     $triwulan3->bukti1 = $t->bukti1;
                     $triwulan3->bukti2 = $t->bukti2;
                     $triwulan3->bukti3 = $t->bukti3;
@@ -328,7 +336,7 @@ class RealisasiController extends Controller
                     $triwulan3->definisi = ''.$t->definisi;
                     $triwulan3->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan3->target = ''.$t->target;
-                    $triwulan3->nilai = ''.$t->nilai;
+                    $triwulan3->nilai = ''.$t->nilaireal;
                     $triwulan3->bukti1 = $t->bukti1;
                     $triwulan3->bukti2 = $t->bukti2;
                     $triwulan3->bukti3 = $t->bukti3;
@@ -355,7 +363,7 @@ class RealisasiController extends Controller
                     $triwulan3->definisi = ''.$t->definisi;
                     $triwulan3->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan3->target = ''.$t->target;
-                    $triwulan3->nilai = ''.$t->nilai;
+                    $triwulan3->nilai = ''.$t->nilaireal;
                     $triwulan3->bukti1 = $t->bukti1;
                     $triwulan3->bukti2 = $t->bukti2;
                     $triwulan3->bukti3 = $t->bukti3;
@@ -378,7 +386,7 @@ class RealisasiController extends Controller
                     $triwulan3->definisi = ''.$t->definisi;
                     $triwulan3->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan3->target = ''.$t->target;
-                    $triwulan3->nilai = ''.$t->nilai;
+                    $triwulan3->nilai = ''.$t->nilaireal;
                     $triwulan3->bukti1 = $t->bukti1;
                     $triwulan3->bukti2 = $t->bukti2;
                     $triwulan3->bukti3 = $t->bukti3;
@@ -419,7 +427,7 @@ class RealisasiController extends Controller
                     $triwulan4->definisi = ''.$t->definisi;
                     $triwulan4->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan4->target = ''.$t->target;
-                    $triwulan4->nilai = ''.$t->nilai;
+                    $triwulan4->nilai = ''.$t->nilaireal;
                     $triwulan4->bukti1 = $t->bukti1;
                     $triwulan4->bukti2 = $t->bukti2;
                     $triwulan4->bukti3 = $t->bukti3;
@@ -442,7 +450,7 @@ class RealisasiController extends Controller
                     $triwulan4->definisi = ''.$t->definisi;
                     $triwulan4->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan4->target = ''.$t->target;
-                    $triwulan4->nilai = ''.$t->nilai;
+                    $triwulan4->nilai = ''.$t->nilaireal;
                     $triwulan4->bukti1 = $t->bukti1;
                     $triwulan4->bukti2 = $t->bukti2;
                     $triwulan4->bukti3 = $t->bukti3;
@@ -471,7 +479,7 @@ class RealisasiController extends Controller
                     $triwulan4->definisi = ''.$t->definisi;
                     $triwulan4->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan4->target = ''.$t->target;
-                    $triwulan4->nilai = ''.$t->nilai;
+                    $triwulan4->nilai = ''.$t->nilaireal;
                     $triwulan4->bukti1 = $t->bukti1;
                     $triwulan4->bukti2 = $t->bukti2;
                     $triwulan4->bukti3 = $t->bukti3;
@@ -494,7 +502,7 @@ class RealisasiController extends Controller
                     $triwulan4->definisi = ''.$t->definisi;
                     $triwulan4->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan4->target = ''.$t->target;
-                    $triwulan4->nilai = ''.$t->nilai;
+                    $triwulan4->nilai = ''.$t->nilaireal;
                     $triwulan4->bukti1 = $t->bukti1;
                     $triwulan4->bukti2 = $t->bukti2;
                     $triwulan4->bukti3 = $t->bukti3;
@@ -535,7 +543,7 @@ class RealisasiController extends Controller
                     $realisasi->definisi = ''.$t->definisi;
                     $realisasi->cara_perhitungan = ''.$t->cara_perhitungan;
                     $realisasi->target = ''.$t->target;
-                    $realisasi->nilai = ''.$t->nilai;
+                    $realisasi->nilai = ''.$t->nilaireal;
                     $realisasi->bukti1 = $t->bukti1;
                     $realisasi->bukti2 = $t->bukti2;
                     $realisasi->bukti3 = $t->bukti3;
@@ -557,7 +565,7 @@ class RealisasiController extends Controller
                     $realisasi->definisi = ''.$t->definisi;
                     $realisasi->cara_perhitungan = ''.$t->cara_perhitungan;
                     $realisasi->target = ''.$t->target;
-                    $realisasi->nilai = ''.$t->nilai;
+                    $realisasi->nilai = ''.$t->nilaireal;
                     $realisasi->bukti1 = $t->bukti1;
                     $realisasi->bukti2 = $t->bukti2;
                     $realisasi->bukti3 = $t->bukti3;
@@ -585,7 +593,7 @@ class RealisasiController extends Controller
                     $realisasi->definisi = ''.$t->definisi;
                     $realisasi->cara_perhitungan = ''.$t->cara_perhitungan;
                     $realisasi->target = ''.$t->target;
-                    $realisasi->nilai = ''.$t->nilai;
+                    $realisasi->nilai = ''.$t->nilaireal;
                     $realisasi->bukti1 = $t->bukti1;
                     $realisasi->bukti2 = $t->bukti2;
                     $realisasi->bukti3 = $t->bukti3;
@@ -607,7 +615,7 @@ class RealisasiController extends Controller
                     $realisasi->definisi = ''.$t->definisi;
                     $realisasi->cara_perhitungan = ''.$t->cara_perhitungan;
                     $realisasi->target = ''.$t->target;
-                    $realisasi->nilai = ''.$t->nilai;
+                    $realisasi->nilai = ''.$t->nilaireal;
                     $realisasi->bukti1 = $t->bukti1;
                     $realisasi->bukti2 = $t->bukti2;
                     $realisasi->bukti3 = $t->bukti3;
@@ -675,6 +683,7 @@ class RealisasiController extends Controller
 
     public function downloadPDFRealisasi(Departemen $departemen, Triwulan $triwulan)
     {
+        // dd($triwulan);
         $pejabatDep = Pejabat::where('kode', 'like', $departemen->kode.'%')->first();
         $pejabatFak = Pejabat::where('kode', '=', '0099')->first();
         if($pejabatDep === null || $pejabatFak === null){
@@ -734,18 +743,19 @@ class RealisasiController extends Controller
         
 
 
-        $view = view('renstra.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'))->render();
+        $view = view('renstra.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen', 'triwulan'))->render();
 
 
         // $pdf = new PDF();
         // $pdf->AddPage();
         // $pdf->WriteHTML($view);
-        $pdf=PDF::loadView('renstra.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'));
+        $pdf=PDF::loadView('renstra.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen', 'triwulan'));
         $pdf->setOption('enable-local-file-access', true);
 
+
         // dd($pejabatDep);
-        return $pdf->stream($filename.'.pdf');
-        return view('renstra.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen')) ->with([
+        return $pdf->stream($filename);
+        return view('renstra.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen', 'triwulan')) ->with([
             'user'=> Auth::user()
         ]);
     }
@@ -861,7 +871,10 @@ class RealisasiController extends Controller
         }
 
         $validator= Validator::make($request->all(),[
-            'nilai' => 'required',
+            'nilai' => 'required|numeric',
+        ],
+        [
+            'nilai.numeric' => 'Pastikan nilai dalam format numerik'
         ]);
 
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
@@ -937,7 +950,7 @@ class RealisasiController extends Controller
 
         $request->validate([
             'status' => 'required',
-            'nilaireal' => 'required'
+            'nilaireal' => 'required|numeric'
         ]);
         $datarealisasi = 
         [

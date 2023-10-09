@@ -18,14 +18,16 @@
     <div class="row">
         <div class="col-6">
             <a class="btn" href="{{ route('ptnbh.realisasidepartemen', [$ptnbhdept, '1']) }}" style="background-color: #17356d;color:white">Triwulan 1</a>
-            <a class="btn" href="{{ route('ptnbh.realisasidepartemen', [$ptnbhdept, '2']) }}" style="background-color: white;color:#17356d">Triwulan 2</a>
-            <a class="btn" href="{{ route('ptnbh.realisasidepartemen', [$ptnbhdept, '3']) }}" style="background-color: white;color:#17356d">Triwulan 3</a>
-            <a class="btn" href="{{ route('ptnbh.realisasidepartemen', [$ptnbhdept, '4']) }}" style="background-color: white;color:#17356d">Triwulan 4</a>
+            <a class="btn disabled" href="{{ route('ptnbh.realisasidepartemen', [$ptnbhdept, '2']) }}" style="background-color: white;color:#17356d">Triwulan 2</a>
+            <a class="btn disabled" href="{{ route('ptnbh.realisasidepartemen', [$ptnbhdept, '3']) }}" style="background-color: white;color:#17356d">Triwulan 3</a>
+            <a class="btn disabled" href="{{ route('ptnbh.realisasidepartemen', [$ptnbhdept, '4']) }}" style="background-color: white;color:#17356d">Triwulan 4</a>
         </div>
         <div class="col-2"></div>
         @if ($user->level != 2 && $actTri->triwulan == '1')
         <div class="col-4">
-            <a class="btn" href="{{ route('ptnbh.realisasi.alertakhiritriwulan', [$ptnbhdept, $triwulan->triwulan]) }}" style="background-color: #17356d;color:white">Akhiri Triwulan 1</a>
+            @if ($user->level == 1)
+                <a class="btn" href="{{ route('ptnbh.realisasi.alertakhiritriwulan', [$ptnbhdept, $triwulan->triwulan]) }}" style="background-color: #17356d;color:white">Akhiri Triwulan 1</a>
+            @endif
             <a href="{{ route('ptnbh.realisasi.download', [$ptnbhdept, $triwulan->triwulan])}}" class="btn btn-primary">Download PDF Triwulan 1</a>
         </div>
         @else

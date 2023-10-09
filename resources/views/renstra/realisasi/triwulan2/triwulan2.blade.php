@@ -18,14 +18,17 @@
     <div class="row">
         <div class="col-6">
             <a class="btn" href="{{ route('renstra.realisasidepartemen', [$renstradept, '1']) }}" style="background-color: white;color:#17356d">Triwulan 1</a>
-            <a class="btn" href="{{ route('renstra.realisasidepartemen', [$renstradept, '2']) }}" style="background-color: #17356d;color:white">Triwulan 2</a>
-            <a class="btn" href="{{ route('renstra.realisasidepartemen', [$renstradept, '3']) }}" style="background-color: white;color:#17356d">Triwulan 3</a>
-            <a class="btn" href="{{ route('renstra.realisasidepartemen', [$renstradept, '4']) }}" style="background-color: white;color:#17356d">Triwulan 4</a>
+            <a @if ($actTri->triwulan == '1' || $actTri->triwulan == '0' ) class="btn disabled" @else class="btn" @endif  href="{{ route('renstra.realisasidepartemen', [$renstradept, '2']) }}" style="background-color: #17356d;color:white">Triwulan 2</a>
+            <a @if ($actTri->triwulan == '2' || $actTri->triwulan == '1' || $actTri->triwulan == '0' ) class="btn disabled" @else class="btn" @endif href="{{ route('renstra.realisasidepartemen', [$renstradept, '3']) }}" style="background-color: white;color:#17356d">Triwulan 3</a>
+            <a @if ($actTri->triwulan == '3' || $actTri->triwulan == '2' || $actTri->triwulan == '1' || $actTri->triwulan == '0' ) class="btn disabled" @else class="btn" @endif href="{{ route('renstra.realisasidepartemen', [$renstradept, '4']) }}" style="background-color: white;color:#17356d">Triwulan 4</a>
         </div>
         <div class="col-2"></div>
         @if ($user->level != 2 && $actTri->triwulan == '2')
         <div class="col-4">
-            <a class="btn" href="{{ route('renstra.realisasi.alertakhiritriwulan', [$renstradept, $triwulan->triwulan]) }}" style="background-color: #17356d;color:white">Akhiri Triwulan 2</a>
+            @if ($user->level == 1)
+                <a class="btn" href="{{ route('renstra.realisasi.alertakhiritriwulan', [$renstradept, $triwulan->triwulan]) }}" style="background-color: #17356d;color:white">Akhiri Triwulan 2</a>
+            @endif
+            
             <a href="{{ route('renstra.realisasi.download', [$renstradept, $triwulan->triwulan])}}" class="btn btn-primary">Download PDF Triwulan 2 </a>
         </div>
         @else

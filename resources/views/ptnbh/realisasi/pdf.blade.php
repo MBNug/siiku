@@ -88,7 +88,9 @@
             text-align: center;
             font-weight: bold;
             ">
-            KONTRAK KINERJA PTNBH TAHUN {{ $tahun[0] }}
+            KONTRAK KINERJA PTNBH TAHUN {{ $tahun[0] }} @if ($triwulan->triwulan != '0')
+                TRIWULAN {{ $triwulan->triwulan }}
+                @endif
         </p>
         <p style="
             text-align: center;

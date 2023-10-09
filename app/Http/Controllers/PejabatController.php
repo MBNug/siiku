@@ -80,15 +80,18 @@ class PejabatController extends Controller
         elseif(strcmp($jabatan, '94') == 0){
             $jabatan = "Admin Operator Fakultas";
         }
-        $request->validate([
-            'departemen' => 'required',
-            'jabatan' => 'required',
-            'nama' => 'required',
-            'nip' => 'required|numeric',
-            'tandatangan' => 'required|max:2048',
-        ]);
-
-
+        $this->validate($request, 
+            [
+                'departemen' => 'required',
+                'jabatan' => 'required',
+                'nama' => 'required',
+                'nip' => 'required|numeric',
+                'tandatangan' => 'required|max:2048|mimes:png',
+            ],
+            [
+                'tandatangan.mimes' => 'Format yang diterima hanya .png'
+            ]
+    );
         $request->request->add(['kode' => ''.$kode]);
         $request->merge(['departemen' => ''.$departemen[0]]);
         $request->merge(['jabatan' => ''.$jabatan]);
@@ -148,12 +151,15 @@ class PejabatController extends Controller
     public function update(UpdatePejabatRequest $request, Pejabat $pejabat)
     {
         //
-        $request->validate([
+        $this->validate($request, [
             'departemen' => 'required',
             'jabatan' => 'required',
             'nama' => 'required',
             'nip' => 'required',
-            'tandatangan' => 'required',
+            'tandatangan' => 'required|max:2048|mimes:png',
+        ],
+        [
+            'tandatangan.mimes' => 'Format yang diterima hanya .png'
         ]);
         if ($request->hasFile('tandatangan')){
             // dd($request);

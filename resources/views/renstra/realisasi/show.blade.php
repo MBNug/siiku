@@ -158,7 +158,7 @@
                     <p class="fw-bold text-primary">{{ $realisasi->nilaireal }}</p>
                 </div>
             </div>
-            @if ($user->level != 2)
+            @if ($user->level != 2 && $triwulan->triwulan != '0')
             <div class="row">
                 <div class="col-2">
                     <a class="btn mb-2" href="{{ route('renstra.realisasi.form', [$departemen->kode, $triwulan->triwulan, $realisasi->kode]) }}" style="background-color: #17356d;color:white"><i class="fa-solid fa-pen-to-square"></i>
