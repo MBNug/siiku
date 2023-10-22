@@ -245,7 +245,9 @@
         allowMultiple: true,
         maxFiles: 5,
         labelIdle: 'Drag & Drop your files or <span class="filepond--label-action">Browse</span>',
-        acceptedFileTypes: ['.pdf', '.xls', '.xlsx', '.jpg'],
+        acceptedFileTypes: ['application/pdf', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg'],
+        fileValidateTypeLabelExpectedTypesMap: {'application/pdf' : '.pdf', 'application/vnd.ms-excel' : '.xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : '.xlsx', 'image/jpeg' : '.jpeg'},
+        labelFileTypeNotAllowed: 'Format File tidak sesuai. Pastikan file dalam format: *.pdf, *.xls, *.xlsx, atau *.jpeg',
         maxFileSize: '5MB',
         server: {
             process: '{{ route('ptnbh.realisasi.tmpUpload',[$departemen->kode, $triwulan->triwulan, $realisasi->kode]) }}',

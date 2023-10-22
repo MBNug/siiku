@@ -723,7 +723,7 @@ class RealisasiPTNBHController extends Controller
         // dd($pdf);
 
         $tahun = DB::table('configs') -> where('status', '=', '1') -> pluck('tahun');
-        if($triwulan != '0'){
+        if($triwulan->triwulan != '0'){
             $filename = 'Realisasi PTNBH FSM '.$tahun[0].'_Departemen '.$departemen->nama.'Triwulan '.$triwulan->triwulan.'.pdf';
         }
         else{
@@ -859,7 +859,10 @@ class RealisasiPTNBHController extends Controller
         }
 
         $validator= Validator::make($request->all(),[
-            'nilai' => 'required',
+            'nilai' => 'required|numeric',
+        ],
+        [
+            'nilai.numeric' => 'Pastikan nilai dalam format numerik'
         ]);
 
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
@@ -867,13 +870,13 @@ class RealisasiPTNBHController extends Controller
         $temp_buktis = TempBuktiPTNBH::all();
         if($validator->fails()){
             foreach($temp_buktis as $temp_bukti){
-                Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+                Storage::deleteDirectory('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
                 $temp_bukti->delete();
             }
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        Storage::deleteDirectory('uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode);
+        Storage::deleteDirectory('uploads/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode);
         $datarealisasi = 
         [
             'kode' => ''.$realisasi->kode,
@@ -901,10 +904,10 @@ class RealisasiPTNBHController extends Controller
         else{
             
             foreach($temp_buktis as $key => $temp_bukti){
-                Storage::copy('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder.'/'.$temp_bukti->file, 'uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file);
-                $path = 'uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file;
+                Storage::copy('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder.'/'.$temp_bukti->file, 'uploads/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file);
+                $path = 'uploads/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file;
                 $datarealisasi['bukti'.($key + 1)] = $path;
-                Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+                Storage::deleteDirectory('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
                 $temp_bukti->delete();
             }
         }
@@ -1030,7 +1033,7 @@ class RealisasiPTNBHController extends Controller
             
             $originalName = $files->getClientOriginalName();
             $folder = uniqid($realisasi->kode.'-', true);
-            $files->storeAs('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$folder, $originalName, 'public');
+            $files->storeAs('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$folder, $originalName, 'public');
                 TempBuktiPTNBH::create([
                     'folder' => $folder,
                     'file' => $originalName
@@ -1045,7 +1048,7 @@ class RealisasiPTNBHController extends Controller
         $triwulan = DB::table('triwulans') -> where('status', '=', '1') -> first();
         $temp_bukti = TempBuktiPTNBH::where('folder', request()->getContent())->first();
         if($temp_bukti){
-            Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+            Storage::deleteDirectory('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
             $temp_bukti->delete();
         }
         return response()->noContent();

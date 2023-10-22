@@ -734,7 +734,7 @@ class RealisasiController extends Controller
         // dd($pdf);
 
         $tahun = DB::table('configs') -> where('status', '=', '1') -> pluck('tahun');
-        if($triwulan != '0'){
+        if($triwulan->triwulan != '0'){
             $filename = 'Realisasi Renstra FSM '.$tahun[0].'_Departemen '.$departemen->nama.'Triwulan '.$triwulan->triwulan.'.pdf';
         }
         else{
@@ -882,13 +882,13 @@ class RealisasiController extends Controller
         $temp_buktis = TempBukti::all();
         if($validator->fails()){
             foreach($temp_buktis as $temp_bukti){
-                Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+                Storage::deleteDirectory('uploads/tmp/renstra/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
                 $temp_bukti->delete();
             }
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        Storage::deleteDirectory('uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode);
+        Storage::deleteDirectory('uploads/renstra/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode);
         $datarealisasi = 
         [
             'kode' => ''.$realisasi->kode,
@@ -916,10 +916,10 @@ class RealisasiController extends Controller
         else{
             
             foreach($temp_buktis as $key => $temp_bukti){
-                Storage::copy('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder.'/'.$temp_bukti->file, 'uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file);
-                $path = 'uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file;
+                Storage::copy('uploads/tmp/renstra/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder.'/'.$temp_bukti->file, 'uploads/renstra/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file);
+                $path = 'uploads/renstra/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file;
                 $datarealisasi['bukti'.($key + 1)] = $path;
-                Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+                Storage::deleteDirectory('uploads/tmp/renstra/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
                 $temp_bukti->delete();
             }
         }
@@ -1046,7 +1046,7 @@ class RealisasiController extends Controller
             
             $originalName = $files->getClientOriginalName();
             $folder = uniqid($realisasi->kode.'-', true);
-            $files->storeAs('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$folder, $originalName, 'public');
+            $files->storeAs('uploads/tmp/renstra/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$folder, $originalName, 'public');
                 TempBukti::create([
                     'folder' => $folder,
                     'file' => $originalName
@@ -1061,7 +1061,7 @@ class RealisasiController extends Controller
         $triwulan = DB::table('triwulans') -> where('status', '=', '1') -> first();
         $temp_bukti = TempBukti::where('folder', request()->getContent())->first();
         if($temp_bukti){
-            Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+            Storage::deleteDirectory('uploads/tmp/renstra/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
             $temp_bukti->delete();
         }
         return response()->noContent();
