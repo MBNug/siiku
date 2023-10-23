@@ -1,4 +1,4 @@
-{{-- @dd($status); --}}
+{{-- @dd($triwulan); --}}
 
 @extends('layouts.admin')
 

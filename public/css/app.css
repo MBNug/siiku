@@ -52,7 +52,8 @@ form .input-group-addon {
 }
 
 .add-padding {
-    padding: 0.625em 2em;
+    padding: 0;
+    color: white;
     display: inline-block;
 }
 

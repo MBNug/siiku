@@ -111,8 +111,10 @@ Route::group(['middleware' => ['auth']], function(){
     //Config
     Route::get('/config/tahun', [ConfigController::class, 'index'])->name('config.index');
     Route::match(['put', 'post'], '/config/settahun', [ConfigController::class, 'storeTahun'])->name('config.settahun');
-    Route::post('/config/setindikator', [ConfigController::class, 'storeIndikator'])->name('config.setindikator');
-    Route::post('/config/setindikatorptnbh', [ConfigController::class, 'storeIndikatorPTNBH'])->name('config.setindikatorptnbh');
+    Route::post('/config/setindikator', [ConfigController::class, 'alertStoreIndikator'])->name('config.setindikator');
+    Route::get('/config/setindikator/new', [ConfigController::class, 'storeIndikator'])->name('config.setindikatorbaru');
+    Route::post('/config/setindikatorptnbh', [ConfigController::class, 'alertStoreIndikatorPTNBH'])->name('config.setindikatorptnbh');
+    Route::get('/config/setindikatorptnbh/new', [ConfigController::class, 'storeIndikatorPTNBH'])->name('config.setindikatorptnbhbaru');
     Route::match(['put', 'post'], '/config/settriwulan', [ConfigController::class, 'storeTriwulan'])->name('config.settriwulan');
 
     //ConfigPejabat

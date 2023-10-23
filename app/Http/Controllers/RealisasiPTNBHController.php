@@ -38,6 +38,7 @@ class RealisasiPTNBHController extends Controller
     {
         $departemens = Departemen::where('kode', '<>', '00')->get();
         $title = 'Realisasi Departemen ';
+        $tahun = Config::where('status', '=', '1')->first();
         $triwulan = Triwulan::where('status', '=', '1')->first();
         // alert()->error('Gagal!','Config Triwulan Belum diatur');
 
@@ -45,7 +46,7 @@ class RealisasiPTNBHController extends Controller
             
 
             // Alert::error('Gagal!', "Config Triwulan Belum diatur");
-            alert()->error('Gagal!','Config Triwulan Belum diatur');
+            alert()->error('Gagal!','Config Tahun Belum diatur');
 
             return redirect()->back();
         }
@@ -72,13 +73,20 @@ class RealisasiPTNBHController extends Controller
                 if($triwulan->triwulan == '1'){
                     $namadept = DB::table('departemens') -> where('kode', '=', $ptnbhdept)->first();
                     $targets = DB::table('target_p_t_n_b_h_s') -> where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
+                    $indikators = DB::table('indikator_p_t_n_b_h_s') -> where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
                     $errmsg1="Indikator Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum diatur pihak fakultas.';
+                    $errmsg2="Target Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum diatur pihak fakultas.';
+                    if($indikators->count()==0){
+                        Alert::error('Data Belum Tersedia', $errmsg1);
+                        return redirect()->back();
+                    }
                     if($targets->count()==0){
                         Alert::error('Data Belum Tersedia', $errmsg1);
                         return redirect()->back();
                     }
+                    
                     $targetsNotApproved = DB::table('target_p_t_n_b_h_s') -> where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> where('status', '!=', '1')-> get();
-                    $errmsg2="Indikator Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum disetujui pihak fakultas.';
+                    $errmsg2="Target Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum disetujui pihak fakultas.';
                     if($targetsNotApproved->count()>0){
                         Alert::error('Data Belum Tersedia', $errmsg2);
                         return redirect()->back();
@@ -207,7 +215,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan2->definisi = ''.$t->definisi;
                     $triwulan2->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan2->target = ''.$t->target;
-                    $triwulan2->nilai = ''.$t->nilai;
+                    $triwulan2->nilai = ''.$t->nilaireal;
                     $triwulan2->bukti1 = $t->bukti1;
                     $triwulan2->bukti2 = $t->bukti2;
                     $triwulan2->bukti3 = $t->bukti3;
@@ -257,7 +265,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan2->definisi = ''.$t->definisi;
                     $triwulan2->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan2->target = ''.$t->target;
-                    $triwulan2->nilai = ''.$t->nilai;
+                    $triwulan2->nilai = ''.$t->nilaireal;
                     $triwulan2->bukti1 = $t->bukti1;
                     $triwulan2->bukti2 = $t->bukti2;
                     $triwulan2->bukti3 = $t->bukti3;
@@ -295,7 +303,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan3->definisi = ''.$t->definisi;
                     $triwulan3->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan3->target = ''.$t->target;
-                    $triwulan3->nilai = ''.$t->nilai;
+                    $triwulan3->nilai = ''.$t->nilaireal;
                     $triwulan3->bukti1 = $t->bukti1;
                     $triwulan3->bukti2 = $t->bukti2;
                     $triwulan3->bukti3 = $t->bukti3;
@@ -318,7 +326,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan3->definisi = ''.$t->definisi;
                     $triwulan3->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan3->target = ''.$t->target;
-                    $triwulan3->nilai = ''.$t->nilai;
+                    $triwulan3->nilai = ''.$t->nilaireal;
                     $triwulan3->bukti1 = $t->bukti1;
                     $triwulan3->bukti2 = $t->bukti2;
                     $triwulan3->bukti3 = $t->bukti3;
@@ -345,7 +353,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan3->definisi = ''.$t->definisi;
                     $triwulan3->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan3->target = ''.$t->target;
-                    $triwulan3->nilai = ''.$t->nilai;
+                    $triwulan3->nilai = ''.$t->nilaireal;
                     $triwulan3->bukti1 = $t->bukti1;
                     $triwulan3->bukti2 = $t->bukti2;
                     $triwulan3->bukti3 = $t->bukti3;
@@ -368,7 +376,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan3->definisi = ''.$t->definisi;
                     $triwulan3->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan3->target = ''.$t->target;
-                    $triwulan3->nilai = ''.$t->nilai;
+                    $triwulan3->nilai = ''.$t->nilaireal;
                     $triwulan3->bukti1 = $t->bukti1;
                     $triwulan3->bukti2 = $t->bukti2;
                     $triwulan3->bukti3 = $t->bukti3;
@@ -409,7 +417,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan4->definisi = ''.$t->definisi;
                     $triwulan4->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan4->target = ''.$t->target;
-                    $triwulan4->nilai = ''.$t->nilai;
+                    $triwulan4->nilai = ''.$t->nilaireal;
                     $triwulan4->bukti1 = $t->bukti1;
                     $triwulan4->bukti2 = $t->bukti2;
                     $triwulan4->bukti3 = $t->bukti3;
@@ -432,7 +440,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan4->definisi = ''.$t->definisi;
                     $triwulan4->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan4->target = ''.$t->target;
-                    $triwulan4->nilai = ''.$t->nilai;
+                    $triwulan4->nilai = ''.$t->nilaireal;
                     $triwulan4->bukti1 = $t->bukti1;
                     $triwulan4->bukti2 = $t->bukti2;
                     $triwulan4->bukti3 = $t->bukti3;
@@ -461,7 +469,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan4->definisi = ''.$t->definisi;
                     $triwulan4->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan4->target = ''.$t->target;
-                    $triwulan4->nilai = ''.$t->nilai;
+                    $triwulan4->nilai = ''.$t->nilaireal;
                     $triwulan4->bukti1 = $t->bukti1;
                     $triwulan4->bukti2 = $t->bukti2;
                     $triwulan4->bukti3 = $t->bukti3;
@@ -484,7 +492,7 @@ class RealisasiPTNBHController extends Controller
                     $triwulan4->definisi = ''.$t->definisi;
                     $triwulan4->cara_perhitungan = ''.$t->cara_perhitungan;
                     $triwulan4->target = ''.$t->target;
-                    $triwulan4->nilai = ''.$t->nilai;
+                    $triwulan4->nilai = ''.$t->nilaireal;
                     $triwulan4->bukti1 = $t->bukti1;
                     $triwulan4->bukti2 = $t->bukti2;
                     $triwulan4->bukti3 = $t->bukti3;
@@ -525,7 +533,7 @@ class RealisasiPTNBHController extends Controller
                     $realisasi->definisi = ''.$t->definisi;
                     $realisasi->cara_perhitungan = ''.$t->cara_perhitungan;
                     $realisasi->target = ''.$t->target;
-                    $realisasi->nilai = ''.$t->nilai;
+                    $realisasi->nilai = ''.$t->nilaireal;
                     $realisasi->bukti1 = $t->bukti1;
                     $realisasi->bukti2 = $t->bukti2;
                     $realisasi->bukti3 = $t->bukti3;
@@ -547,7 +555,7 @@ class RealisasiPTNBHController extends Controller
                     $realisasi->definisi = ''.$t->definisi;
                     $realisasi->cara_perhitungan = ''.$t->cara_perhitungan;
                     $realisasi->target = ''.$t->target;
-                    $realisasi->nilai = ''.$t->nilai;
+                    $realisasi->nilai = ''.$t->nilaireal;
                     $realisasi->bukti1 = $t->bukti1;
                     $realisasi->bukti2 = $t->bukti2;
                     $realisasi->bukti3 = $t->bukti3;
@@ -575,7 +583,7 @@ class RealisasiPTNBHController extends Controller
                     $realisasi->definisi = ''.$t->definisi;
                     $realisasi->cara_perhitungan = ''.$t->cara_perhitungan;
                     $realisasi->target = ''.$t->target;
-                    $realisasi->nilai = ''.$t->nilai;
+                    $realisasi->nilai = ''.$t->nilaireal;
                     $realisasi->bukti1 = $t->bukti1;
                     $realisasi->bukti2 = $t->bukti2;
                     $realisasi->bukti3 = $t->bukti3;
@@ -597,7 +605,7 @@ class RealisasiPTNBHController extends Controller
                     $realisasi->definisi = ''.$t->definisi;
                     $realisasi->cara_perhitungan = ''.$t->cara_perhitungan;
                     $realisasi->target = ''.$t->target;
-                    $realisasi->nilai = ''.$t->nilai;
+                    $realisasi->nilai = ''.$t->nilaireal;
                     $realisasi->bukti1 = $t->bukti1;
                     $realisasi->bukti2 = $t->bukti2;
                     $realisasi->bukti3 = $t->bukti3;
@@ -715,7 +723,7 @@ class RealisasiPTNBHController extends Controller
         // dd($pdf);
 
         $tahun = DB::table('configs') -> where('status', '=', '1') -> pluck('tahun');
-        if($triwulan != '0'){
+        if($triwulan->triwulan != '0'){
             $filename = 'Realisasi PTNBH FSM '.$tahun[0].'_Departemen '.$departemen->nama.'Triwulan '.$triwulan->triwulan.'.pdf';
         }
         else{
@@ -724,18 +732,18 @@ class RealisasiPTNBHController extends Controller
         
 
 
-        $view = view('ptnbh.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'))->render();
+        $view = view('ptnbh.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen', 'triwulan'))->render();
 
 
         // $pdf = new PDF();
         // $pdf->AddPage();
         // $pdf->WriteHTML($view);
-        $pdf=PDF::loadView('ptnbh.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen'));
+        $pdf=PDF::loadView('ptnbh.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen', 'triwulan'));
         $pdf->setOption('enable-local-file-access', true);
 
         // dd($pejabatDep);
-        return $pdf->stream($filename.'.pdf');
-        return view('ptnbh.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen')) ->with([
+        return $pdf->stream($filename);
+        return view('ptnbh.realisasi.pdf', compact('combinedData', 'pejabatDep', 'pejabatFak', 'tahun', 'departemen', 'triwulan')) ->with([
             'user'=> Auth::user()
         ]);
     }
@@ -851,7 +859,10 @@ class RealisasiPTNBHController extends Controller
         }
 
         $validator= Validator::make($request->all(),[
-            'nilai' => 'required',
+            'nilai' => 'required|numeric',
+        ],
+        [
+            'nilai.numeric' => 'Pastikan nilai dalam format numerik'
         ]);
 
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
@@ -859,13 +870,13 @@ class RealisasiPTNBHController extends Controller
         $temp_buktis = TempBuktiPTNBH::all();
         if($validator->fails()){
             foreach($temp_buktis as $temp_bukti){
-                Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+                Storage::deleteDirectory('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
                 $temp_bukti->delete();
             }
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        Storage::deleteDirectory('uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode);
+        Storage::deleteDirectory('uploads/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode);
         $datarealisasi = 
         [
             'kode' => ''.$realisasi->kode,
@@ -893,10 +904,10 @@ class RealisasiPTNBHController extends Controller
         else{
             
             foreach($temp_buktis as $key => $temp_bukti){
-                Storage::copy('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder.'/'.$temp_bukti->file, 'uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file);
-                $path = 'uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file;
+                Storage::copy('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder.'/'.$temp_bukti->file, 'uploads/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file);
+                $path = 'uploads/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file;
                 $datarealisasi['bukti'.($key + 1)] = $path;
-                Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+                Storage::deleteDirectory('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
                 $temp_bukti->delete();
             }
         }
@@ -1022,7 +1033,7 @@ class RealisasiPTNBHController extends Controller
             
             $originalName = $files->getClientOriginalName();
             $folder = uniqid($realisasi->kode.'-', true);
-            $files->storeAs('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$folder, $originalName, 'public');
+            $files->storeAs('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$folder, $originalName, 'public');
                 TempBuktiPTNBH::create([
                     'folder' => $folder,
                     'file' => $originalName
@@ -1037,7 +1048,7 @@ class RealisasiPTNBHController extends Controller
         $triwulan = DB::table('triwulans') -> where('status', '=', '1') -> first();
         $temp_bukti = TempBuktiPTNBH::where('folder', request()->getContent())->first();
         if($temp_bukti){
-            Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+            Storage::deleteDirectory('uploads/tmp/ptnbh/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
             $temp_bukti->delete();
         }
         return response()->noContent();

@@ -25,7 +25,10 @@
         <div class="col-2"></div>
         @if ($user->level != 2 && $actTri->triwulan == '4' )
         <div class="col-4">
-            <a class="btn" href="{{ route('ptnbh.realisasi.alertakhiritriwulan', [$ptnbhdept, $triwulan->triwulan]) }}" style="background-color: #17356d;color:white">Akhiri Triwulan 4</a>
+            @if ($user->level == 1)
+                <a class="btn" href="{{ route('ptnbh.realisasi.alertakhiritriwulan', [$ptnbhdept, $triwulan->triwulan]) }}" style="background-color: #17356d;color:white">Akhiri Triwulan 4</a>
+            @endif
+            
             <a href="{{ route('ptnbh.realisasi.download', [$ptnbhdept, $triwulan->triwulan])}}" class="btn btn-primary">Download PDF Triwulan 4</a>
         </div>
         @else

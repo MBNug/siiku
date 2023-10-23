@@ -44,8 +44,11 @@
                     <div class="form-group py-3">
                         <button type="submit" class="btn btn-success"><i class="fa fa-floppy-disk"></i> Simpan</button>
                         <a href="{{ route('departemen.index') }}" id="back" class="btn btn-light"><i class="fa fa-times mr-2"></i> Batal</a>
+                        
                     </div>
                 </form>
+                <form action="{{ route('departemen.destroy', $departeman->kode) }}" method="post" class="d-inline">@csrf @method('DELETE')<button type="button" class="btn btn-sm btn-danger confirm-delete"><i class="fas fa-trash"></i> Hapus</button></form>
+
 
             </div>
         </div>
@@ -55,6 +58,24 @@
 
 @section('scriptlocal')
 
+<script>
+    $(document).on('click', 'button.confirm-delete', function () {
+        Swal.fire({
+        title: 'Hapus data Departemen?',
+        text: "Ini akan membuat target dan realisasi untuk departemen ini akan dihapus!",
+        showCancelButton: true,
+        confirmButtonColor: '#17356d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, hapus'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            $(this).parent('form').trigger('submit')
+        } else if (result.isDenied) {
+            Swal.fire('Changes are not saved', '', 'info')
+        }
+        })
+    });;
+</script>
 
 
 @endsection
