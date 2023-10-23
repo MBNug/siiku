@@ -686,25 +686,26 @@ class RealisasiController extends Controller
         // dd($triwulan);
         $pejabatDep = Pejabat::where('kode', 'like', $departemen->kode.'%')->first();
         $pejabatFak = Pejabat::where('kode', '=', '0099')->first();
+        $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         if($pejabatDep === null || $pejabatFak === null){
             Alert::error('Data Pejabat', 'Data pejabat belum diatur!');
             return redirect()->back();
         }
         
         if($triwulan->triwulan == '1'){
-            $data = Triwulan1::where('kode', 'like', $departemen->kode.'%')->get();
+            $data = Triwulan1::where('kode', 'like', $departemen->kode.'%'.$actConfig->tahun)->get();
         }
         elseif($triwulan->triwulan == '2'){
-            $data = Triwulan2::where('kode', 'like', $departemen->kode.'%')->get();
+            $data = Triwulan2::where('kode', 'like', $departemen->kode.'%'.$actConfig->tahun)->get();
         }
         elseif($triwulan->triwulan == '3'){
-            $data = Triwulan3::where('kode', 'like', $departemen->kode.'%')->get();
+            $data = Triwulan3::where('kode', 'like', $departemen->kode.'%'.$actConfig->tahun)->get();
         }
         elseif($triwulan->triwulan == '4'){
-            $data = Triwulan4::where('kode', 'like', $departemen->kode.'%')->get();
+            $data = Triwulan4::where('kode', 'like', $departemen->kode.'%'.$actConfig->tahun)->get();
         }
         elseif($triwulan->triwulan == '0'){
-            $data = Realisasi::where('kode', 'like', $departemen->kode.'%')->get();
+            $data = Realisasi::where('kode', 'like', $departemen->kode.'%'.$actConfig->tahun)->get();
         }
         
         //Gabung strategi 

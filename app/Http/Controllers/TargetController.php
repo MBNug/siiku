@@ -267,13 +267,14 @@ class TargetController extends Controller
     {
         $pejabatDep = Pejabat::where('kode', 'like', $departemen->kode.'%')->first();
         $pejabatFak = Pejabat::where('kode', '=', '0099')->first();
+        $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         if($pejabatDep === null || $pejabatFak === null){
             Alert::error('Data Pejabat', 'Data pejabat belum diatur!');
             return redirect()->back();
         }
         
         
-        $data = Target::where('kode', 'like', $departemen->kode.'%')->get();
+        $data = Target::where('kode', 'like', $departemen->kode.'%'.$actConfig->tahun)->get();
         //Gabung strategi 
         $combinedData = $data->groupBy('strategi')->map(function($group){
             $indikators = $group->pluck('indikator_kinerja')->toArray();
