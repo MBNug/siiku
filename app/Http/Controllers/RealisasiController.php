@@ -40,7 +40,7 @@ class RealisasiController extends Controller
     public function index()
     {
         $departemens = Departemen::where('kode', '<>', '00')->get();
-        $title = 'Realisasi Departemen ';
+        $title = 'Realisasi Renstra Departemen ';
         $triwulan = Triwulan::where('status', '=', '1')->first(); // tahun skrg
         $tahun = Config::where('status', '=', '1')->first(); // tahun skrg
         // alert()->error('Gagal!','Config Triwulan Belum diatur');
@@ -82,7 +82,7 @@ class RealisasiController extends Controller
                 if($triwulan->triwulan == '1'){
                     $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
                     $targets = DB::table('targets') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
-                    $indikators = DB::table('indikators') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
+                    $indikators = DB::table('indikators') -> where('kode', 'like', '%'.$actConfig->tahun) -> get();
                     $errmsg1="Indikator Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum diatur pihak fakultas.';
                     $errmsg2="Target Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum diatur pihak fakultas.';
                     if($indikators->count()==0){

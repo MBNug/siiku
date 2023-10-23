@@ -8,17 +8,13 @@
 <div class="container">
   <!-- Page Heading -->
   <section class="content-header">
-    <div class="row">
-        <div class="col-lg-9">
-            <h1 class="h3 mb-4 text-primary">Data Pejabat Fakultas Sains dan Matematika</h1>
-        </div>
+    <div style="display: flex;flex-direction:row;justify-content:space-between">
+        <h1 class="h3 mb-4 text-primary">Data Pejabat Fakultas Sains dan Matematika</h1>
+        <a style="" href="{{ route('pejabat.create') }}" class="btn btn-primary mb-3 px-10" ><i class="fa fa-plus mr-2"></i>Tambah Pejabat Baru</a>  
     </div>
   </section>
   <div class="row">
     <div class="col-lg">
-        @if ($user->level == 1)
-            <a href="{{ route('pejabat.create') }}" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Tambah Pejabat Baru</a>
-        @endif
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">

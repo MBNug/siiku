@@ -53,16 +53,16 @@ class PtnBHController extends Controller
                 $targetditolak=[];
                 $targetmenunggupersetujuan = [];
                 $namadepartemen=[];
-                if($jmlbelumdisetujui>0){            
-                    for($i=1; $i<=$jmldept;$i++){
-                        $jmlapprovetarget = Target::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', '1')->count();
-                        $jmlrejecttarget = Target::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', '3')->count();
-                        $jmlwaitingtarget = Target::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', '2')->count();
-                        $deptname = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
+                if($jmlbelumdisetujui>0){    
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmlapprovetarget = TargetPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', '1')->count();
+                        $jmlrejecttarget = TargetPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', '3')->count();
+                        $jmlwaitingtarget = TargetPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', '2')->count();
                         $targetdisetujui[]=$jmlapprovetarget;
                         $targetditolak[]=$jmlrejecttarget;
                         $targetmenunggupersetujuan[]=$jmlwaitingtarget;
-                        $namadepartemen[]=$deptname->nama;
+                        $namadepartemen[]=$dept[$i]->nama;
                     }
                 }
                 return view('ptnbh.dashboard', compact('actConfig','err','title','triwulan','targetdisetujui','targetditolak','targetmenunggupersetujuan','namadepartemen','jmlbelumdisetujui','jmlindikator','jmltarget','jmlrealisasi','indikator'))->with([
@@ -84,15 +84,15 @@ class PtnBHController extends Controller
                             'user'=> Auth::user()
                         ]);
                     }
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmltotalrealisasidept = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();
+                            $jmltidaktercapai = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                            $jmltercapai = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                            $jmlmelampauitarget = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                            $jmlmenunggu = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                            $jmlbelumdiupdate = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Belum Diupdate')->count();
                             $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                         }else{
                             $jmltidaktercapai = '-';
@@ -103,20 +103,20 @@ class PtnBHController extends Controller
                             $totalketercapaian = 0;
                         }
                         $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
+                        $namadept[]=$dept[$i]->nama;
+                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$dept[$i]->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>$kode]);
                     }
                 }
                 elseif($triwulan->triwulan == '2'){
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmltotalrealisasidept = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();;
+                            $jmltidaktercapai = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                            $jmltercapai = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                            $jmlmelampauitarget = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                            $jmlmenunggu = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                            $jmlbelumdiupdate = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Belum Diupdate')->count();
                             $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                         }else{
                             $jmltidaktercapai = '-';
@@ -127,20 +127,20 @@ class PtnBHController extends Controller
                             $totalketercapaian = 0;
                         }
                         $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
+                        $namadept[]=$dept[$i]->nama;
+                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$dept[$i]->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>$kode]);
                     }
                 }
                 elseif($triwulan->triwulan == '3'){
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmltotalrealisasidept = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();
+                            $jmltidaktercapai = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                            $jmltercapai = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                            $jmlmelampauitarget = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                            $jmlmenunggu = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                            $jmlbelumdiupdate = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Belum Diupdate')->count();
                             $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                         }else{
                             $jmltidaktercapai = '-';
@@ -151,20 +151,20 @@ class PtnBHController extends Controller
                             $totalketercapaian = 0;
                         }
                         $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
+                        $namadept[]=$dept[$i]->nama;
+                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$dept[$i]->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>$kode]);
                     }
                 }
                 elseif($triwulan->triwulan == '4'){
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmltotalrealisasidept = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();
+                            $jmltidaktercapai = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                            $jmltercapai = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                            $jmlmelampauitarget = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                            $jmlmenunggu = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                            $jmlbelumdiupdate = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Belum Diupdate')->count();
                             $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                         }else{
                             $jmltidaktercapai = '-';
@@ -175,21 +175,21 @@ class PtnBHController extends Controller
                             $totalketercapaian = 0;
                         }
                         $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
+                        $namadept[]=$dept[$i]->nama;
+                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$dept[$i]->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>$kode]);
                     }
                 }
                 elseif($triwulan->triwulan == '0'){
                     $check = 1;
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmltotalrealisasidept = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();
+                            $jmltidaktercapai = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                            $jmltercapai = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                            $jmlmelampauitarget = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                            $jmlmenunggu = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                            $jmlbelumdiupdate = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Belum Diupdate')->count();
                             $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                         }else{
                             $jmltidaktercapai = '-';
@@ -200,8 +200,8 @@ class PtnBHController extends Controller
                             $totalketercapaian = 0;
                         }
                         $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
+                        $namadept[]=$dept[$i]->nama;
+                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$dept[$i]->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>$kode]);
                     }
                 }
                 // dd($namadept);
@@ -354,23 +354,21 @@ class PtnBHController extends Controller
                 $jmlbelumdiupdate = 0;
                 $namadept=[]; 
                 $ketercapaianpertriwulan=[];
-                // dd($triwulan);
                 if($triwulan->triwulan == '1'){
-                    // dd($triwulan->triwulan);
                     if ($jmltriwulan1==0){
                         return view('ptnbh.dashboard', compact('actConfig','err','title','triwulan','jmlbelumdisetujui','jmlindikator','jmltriwulan1','check'))->with([
                             'user'=> Auth::user()
                         ]);
                     }
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmltotalrealisasidept = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();
+                            $jmltidaktercapai = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                            $jmltercapai = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                            $jmlmelampauitarget = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                            $jmlmenunggu = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                            $jmlbelumdiupdate = Triwulan1PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Belum Diupdate')->count();
                             $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                         }else{
                             $jmltidaktercapai = '-';
@@ -381,20 +379,20 @@ class PtnBHController extends Controller
                             $totalketercapaian = 0;
                         }
                         $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
+                        $namadept[]=$dept[$i]->nama;
+                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$dept[$i]->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>$kode]);
                     }
                 }
                 elseif($triwulan->triwulan == '2'){
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmltotalrealisasidept = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();;
+                            $jmltidaktercapai = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                            $jmltercapai = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                            $jmlmelampauitarget = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                            $jmlmenunggu = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                            $jmlbelumdiupdate = Triwulan2PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Belum Diupdate')->count();
                             $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                         }else{
                             $jmltidaktercapai = '-';
@@ -405,20 +403,20 @@ class PtnBHController extends Controller
                             $totalketercapaian = 0;
                         }
                         $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
+                        $namadept[]=$dept[$i]->nama;
+                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$dept[$i]->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>$kode]);
                     }
                 }
                 elseif($triwulan->triwulan == '3'){
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmltotalrealisasidept = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();
+                            $jmltidaktercapai = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                            $jmltercapai = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                            $jmlmelampauitarget = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                            $jmlmenunggu = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                            $jmlbelumdiupdate = Triwulan3PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Belum Diupdate')->count();
                             $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                         }else{
                             $jmltidaktercapai = '-';
@@ -429,20 +427,20 @@ class PtnBHController extends Controller
                             $totalketercapaian = 0;
                         }
                         $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
+                        $namadept[]=$dept[$i]->nama;
+                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$dept[$i]->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>$kode]);
                     }
                 }
                 elseif($triwulan->triwulan == '4'){
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
+                    for($i=0; $i<$jmldept;$i++){
+                        $kode=$dept[$i]->kode;
+                        $jmltotalrealisasidept = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();
+                            $jmltidaktercapai = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                            $jmltercapai = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                            $jmlmelampauitarget = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                            $jmlmenunggu = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                            $jmlbelumdiupdate = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Belum Diupdate')->count();
                             $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                         }else{
                             $jmltidaktercapai = '-';
@@ -453,32 +451,8 @@ class PtnBHController extends Controller
                             $totalketercapaian = 0;
                         }
                         $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
-                    }
-                }
-                elseif($triwulan->triwulan == '0'){
-                    for($i=1; $i<=$jmldept;$i++){
-                        $namedept = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
-                        $jmltotalrealisasidept = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->count();
-                        if($jmltotalrealisasidept>0){
-                            $jmltidaktercapai = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                            $jmltercapai = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Tercapai')->count();
-                            $jmlmelampauitarget = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Melampaui Target')->count();
-                            $jmlmenunggu = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Sedang Diproses')->count();
-                            $jmlbelumdiupdate = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', 'Belum Diupdate')->count();
-                            $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
-                        }else{
-                            $jmltidaktercapai = '-';
-                            $jmltercapai = '-';
-                            $jmlmelampauitarget = '-';
-                            $jmlmenunggu = '-';
-                            $jmlbelumdiupdate ='-';
-                            $totalketercapaian = 0;
-                        }
-                        $ketercapaianpertriwulan[]=$totalketercapaian;
-                        $namadept[]=$namedept->nama;
-                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$namedept->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>'0'.$i]);
+                        $namadept[]=$dept[$i]->nama;
+                        $ketercapaiantargetdept=Arr::add($ketercapaiantargetdept, $i, ['departemen'=>$dept[$i]->nama, '0'=>$jmlmelampauitarget,'1'=>$jmltercapai,'2'=>$jmltidaktercapai,'3'=>$jmlmenunggu,'4'=>$jmlbelumdiupdate,'kode'=>$kode]);
                     }
                 }
 

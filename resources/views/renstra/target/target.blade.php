@@ -9,12 +9,12 @@
   <!-- Page Heading -->
   <section class="content-header">
     <div class="row">
-        <div class="col-lg-9" style="display: flex; flex-direction:row;justify-content:space-between;width:100%">
+        <div class="container" style="display: flex;justify-content:space-between;width:100%">
             <h1 class="h3 mb-4 text-primary">@yield('title')</h1>
             @if ($user->level == 0 && $status===2)
                 <a href="{{ route('renstra.target.AllAprove', $renstradept )}}" class="btn btn-primary mb-3 px-8"><i class="fa fa-plus mr-2"></i>Setujui Target</a>
             @endif
-            <a href="{{ route('renstra.target.download', $renstradept)}}" target="_blank" class="btn btn-primary">Download PDF Target</a>
+            <a style="height: 40px" href="{{ route('renstra.target.download', $renstradept)}}" target="_blank" class="btn btn-primary">Download PDF Target</a>
         </div>
     </div>
   </section>

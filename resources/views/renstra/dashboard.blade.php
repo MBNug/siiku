@@ -5,12 +5,14 @@
 @section('csslocal')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 @endsection
-
+{{-- {{dd($jmlindikator)}} --}}
 @if($err=='0')
     {{-- Departemen --}}
     @if($user->level==2)
         @section('content')
             <div id="dashboard" class="container">
+                <h3 style="text-align: center">Dashboard Renstra Fakultas Sains dan Matematika</h3>
+                <hr>
                 <div class="container" style="padding: 0%;display:flex;justify-content:space-between">
                     <div class="card" style="width: 24%">
                         <div class="card-header">
@@ -25,10 +27,11 @@
                             <h4>Triwulan</h4>
                         </div>
                         <div class="card-body" style="display: flex;align-items:center;justify-content:flex-end">
-                            @if($indikator==0 && $jmlrealisasi==0)
-                            <h4 style="text-align: right">{{$triwulan->triwulan}}</h4>
+                            {{-- @dd($indikator); --}}
+                            @if($triwulan->triwulan==0 )
+                                <h4 style="text-align: right">Periode Selesai </h4>
                             @else
-                            <h4 style="text-align: right">Periode Selesai</h4>
+                                <h4 style="text-align: right">{{$triwulan->triwulan}}</h4>
                             @endif
                         </div>
                     </div>
@@ -117,7 +120,7 @@
                                                         {{-- {{dd($ketercapaiantargetdept)}} --}}
                                                         @foreach ($ketercapaiantargetdept as $satuan)
                                                             <tr style="text-align: center">
-                                                                <td><a style="text-decoration:none" href="#" target="_blank" >{{$satuan['triwulan']}}</a></td>
+                                                                <td><a style="text-decoration:none" href="{{route('renstra.realisasidepartemen', [substr($user->kode, 0, 2), $triwulan->triwulan] )}}" target="_blank" >{{$satuan['triwulan']}}</a></td>
                                                                 <td>{{$satuan['0']}}</td>
                                                                 <td>{{$satuan['1']}}</td>
                                                                 <td>{{$satuan['2']}}</td>
@@ -156,7 +159,7 @@
                                             scales: {
                                                 y: {
                                                     beginAtZero: true,
-                                                    suggestedMax: {{$jmlindikator}},
+                                                    suggestedMax: {{$indikator}},
                                                     ticks: {
                                                             stepSize: 1, // Set the interval between ticks
                                                             precision: 0 // Display integer values (no decimal places)
@@ -177,6 +180,8 @@
     @else
         @section('content')
             <div id="dashboard" class="container">
+                <h3 style="text-align: center">Dashboard Renstra Fakultas Sains dan Matematika</h3>
+                <hr>
                 @if($jmlbelumdisetujui==0 && $jmlindikator!=0)
                     @if($jmltriwulan1==0 && $check==0 )
                         <div class="container" style="padding: 0%;display:flex;justify-content:space-between">
@@ -225,7 +230,7 @@
                                 </div>
                                 <div class="card-body">
                                     @if($triwulan->triwulan==0 && $check==1)
-                                    <h4 style="text-align: right">Periode Selesai</h4>
+                                    <h4 style="text-align: right">Periode Selesai </h4>
                                     @else
                                     <h4 style="text-align: right">{{$triwulan->triwulan}}</h4>
                                     @endif
@@ -249,7 +254,7 @@
                                 @if($check==0)
                                 <h4 style="color: #17356d;text-align:center">Monitoring Ketercapaian Target IKU Triwulan {{$triwulan->triwulan}}</h4>
                                 @else
-                                <h4 style="color: #17356d;text-align:center">Ketercapaian Target IKU FSM Tahun 2022</h4>
+                                <h4 style="color: #17356d;text-align:center">Ketercapaian Target IKU FSM Tahun {{$actConfig->tahun}}</h4>
                                 @endif
                             </div>
                             <div style="display: flex;flex-direction:row">
@@ -332,7 +337,7 @@
                                     scales: {
                                         y: {
                                             beginAtZero: true,
-                                            suggestedMax: {{$jmlindikator}},
+                                            suggestedMax: {{$indikator}},
                                             ticks: {
                                                     stepSize: 1, // Set the interval between ticks
                                                     precision: 0 // Display integer values (no decimal places)
@@ -493,7 +498,7 @@
                                 scales: {
                                     y: {
                                         beginAtZero: true,
-                                        suggestedMax: {{$jmlindikator}},
+                                        suggestedMax: {{$indikator}},
                                         ticks: {
                                                 stepSize: 1, // Set the interval between ticks
                                                 precision: 0 // Display integer values (no decimal places)
@@ -523,7 +528,7 @@
                                 scales: {
                                     y: {
                                         beginAtZero: true,
-                                        suggestedMax: {{$jmlindikator}},
+                                        suggestedMax: {{$indikator}},
                                         ticks: {
                                             stepSize: 1, // Set the interval between ticks
                                             precision: 0 // Display integer values (no decimal places)
@@ -553,7 +558,7 @@
                                 scales: {
                                     y: {
                                         beginAtZero: true,
-                                        suggestedMax: {{$jmlindikator}},
+                                        suggestedMax: {{$indikator}},
                                         ticks: {
                                             stepSize: 1, // Set the interval between ticks
                                             precision: 0 // Display integer values (no decimal places)

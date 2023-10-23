@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\Pejabat;
-use App\Models\Departemen;
+use App\Models\config;
 use App\Models\TargetPTNBH;
+use App\Models\Strategi;
+use App\Models\Pejabat;
+use App\Models\Indikator;
+use App\Models\Departemen;
+use App\Models\Triwulan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreTargetPTNBHRequest;
-use App\Models\Triwulan;
 use App\Http\Requests\UpdateTargetPTNBHRequest;
 use PDF;
 
@@ -25,8 +28,8 @@ class TargetPTNBHController extends Controller
     public function index()
     {
         $departemens = Departemen::where('kode', '<>', '00')->get();
+        $title = 'Target PTN-BH Departemen ';
         $triwulan = Triwulan::where('status', '=', '1')->first();
-        $title = 'Target Departemen ';
         return view('ptnbh.target.index', compact('departemens','title','triwulan')) ->with([
             'user'=> Auth::user()
         ]);
@@ -39,6 +42,7 @@ class TargetPTNBHController extends Controller
      */
     public function getTarget($ptnbhdept)
     {   
+        
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         $triwulan = Triwulan::where('status', '=', '1')->first();
         // dd($actConfig);
@@ -66,7 +70,7 @@ class TargetPTNBHController extends Controller
                     $status=1;
                 }
                 $departemens = Departemen::all();
-                return view('ptnbh.target.target', compact('targets', 'departemens', 'title', 'ptnbhdept',"status")) ->with([
+                return view('ptnbh.target.target', compact('targets', 'departemens', 'title', 'ptnbhdept',"status","triwulan")) ->with([
                     'user'=> Auth::user()
                 ]);
             }

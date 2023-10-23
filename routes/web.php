@@ -31,6 +31,7 @@ Route::get('/',[RenstraController::class, 'index'])->middleware('auth');
 Route::get('/renstra/dashboard/',[RenstraController::class, 'index'])->middleware('auth')->name('renstra.dashboard');
 Route::get('/renstra/dashboard/filter/',[RenstraController::class, 'gantiData'])->middleware('auth')->name('renstra.dashboard.filter');
 Route::get('/ptnbh/dashboard/',[PtnBHController::class, 'index'])->middleware('auth')->name('ptnbh.dashboard');
+Route::get('/ptnbh/dashboard/filter/',[PtnBHController::class, 'gantiData'])->middleware('auth')->name('ptnbh.dashboard.filter');
 
 Route::controller(LoginController::class)->group(function(){
     Route::get('login','index')->name('login');

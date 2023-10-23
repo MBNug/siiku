@@ -4,7 +4,7 @@
     height: 100vh;
 }
 #dashboard {
-    margin-top: 20px;
+    color: #17356d;
 }
 .btn-login {
     width: 100%;
@@ -25,6 +25,9 @@
     border-radius: 125px 0px 0px 0px;
     display: flex;
     align-items: center;
+}
+.navbar {
+    margin-bottom: 20px;
 }
 #login-container {
     max-width: 65%;

@@ -8,21 +8,12 @@
 <div class="container">
   <!-- Page Heading -->
   <section class="content-header">
-    <div class="row">
-        <div class="col-lg-9">
-            <h1 class="h3 mb-4 text-primary">@yield('title')</h1>
-        </div>
+    <div class="container" style="display: flex;justify-content:space-between;width:100%">
+        <h1 class="h3 mb-4 text-primary">@yield('title')</h1>
+        <a style="height: 40px" href="{{ route('ptnbh.realisasi.download', [$ptnbhdept, $triwulan->triwulan])}}" target="_blank" class="btn btn-primary">Download PDF Realisasi</a>
     </div>
   </section>
   <div class="row">
-    <div class="row">
-        <div class="col-9">
-        </div>
-        <div class="col-3">
-            <a href="{{ route('ptnbh.realisasi.download', [$ptnbhdept, $triwulan->triwulan])}}" class="btn btn-primary">Download PDF Realisasi</a>
-        </div>
-        
-    </div>
     <div class="col-lg">
         <div class="card shadow mb-4">
             <div class="card-body">

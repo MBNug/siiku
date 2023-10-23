@@ -6,11 +6,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 @endsection
 
+@section('title', 'Dashboard Renstra Fakultas Sains dan Matematika')
+
 @if($err=='0')
     {{-- Departemen --}}
     @if($user->level==2)
         @section('content')
             <div id="dashboard" class="container">
+                <h3 style="text-align: center">Dashboard PTN-BH Fakultas Sains dan Matematika</h3>
+                <hr>
                 <div class="container" style="padding: 0%;display:flex;justify-content:space-between">
                     <div class="card" style="width: 24%">
                         <div class="card-header">
@@ -25,7 +29,7 @@
                             <h4>Triwulan</h4>
                         </div>
                         <div class="card-body" style="display: flex;align-items:center;justify-content:flex-end">
-                            @if($indikator==0 && $jmlrealisasi==0)
+                            @if($indikator!=0 && $jmlrealisasi==0)
                             <h4 style="text-align: right">{{$triwulan->triwulan}}</h4>
                             @else
                             <h4 style="text-align: right">Periode Selesai</h4>
@@ -81,7 +85,7 @@
                 </div>
                 <div class="card mt-3 mb-3" style="width:100%;margin-right: 15px;padding: 20px;border-width:1px;border-color:#ececec;background-color:#f8f9fa;display: flex;justify-content: center;align-items: center;">
                     <h4 style="color: #17356d;text-align:center">Waktu Pengisian Realisasi tahun {{$actConfig->tahun}} Telah Selesai</h4>
-                    <a href="{{ route('renstra.realisasidepartemen', [$kode, $triwulan->triwulan]) }}" class="btn btn-primary mt-2 mb-1 px-10">Lihat Data Realisasi IKU Tahun {{$actConfig->tahun}}</a>
+                    <a href="{{ route('ptnbh.realisasidepartemen', [$kode, $triwulan->triwulan]) }}" class="btn btn-primary mt-2 mb-1 px-10">Lihat Data Realisasi IKU Tahun {{$actConfig->tahun}}</a>
                 </div>
                                 @else    
                             <h4>Pengisian Realisasi Oleh Fakultas dan Departemen</h4>
@@ -117,7 +121,7 @@
                                                         {{-- {{dd($ketercapaiantargetdept)}} --}}
                                                         @foreach ($ketercapaiantargetdept as $satuan)
                                                             <tr style="text-align: center">
-                                                                <td><a style="text-decoration:none" href="#" target="_blank" >{{$satuan['triwulan']}}</a></td>
+                                                                <td><a style="text-decoration:none" href="{{route('ptnbh.realisasidepartemen', [substr($user->kode, 0, 2), $triwulan->triwulan] )}}" target="_blank" >{{$satuan['triwulan']}}</a></td>
                                                                 <td>{{$satuan['0']}}</td>
                                                                 <td>{{$satuan['1']}}</td>
                                                                 <td>{{$satuan['2']}}</td>
@@ -177,6 +181,8 @@
     @else
         @section('content')
             <div id="dashboard" class="container">
+                <h3 style="text-align: center">Dashboard PTN-BH Fakultas Sains dan Matematika</h3>
+                <hr>
                 @if($jmlbelumdisetujui==0 && $jmlindikator!=0)
                     @if($jmltriwulan1==0 && $check==0 )
                         <div class="container" style="padding: 0%;display:flex;justify-content:space-between">
@@ -207,7 +213,7 @@
                         </div>
                         <div class="card mt-3 mb-3" style="width:100%;margin-right: 15px;padding: 20px;border-width:1px;border-color:#ececec;background-color:#f8f9fa;display: flex;justify-content: center;align-items: center;">
                             <h4 style="color: #17356d;text-align:center">Data Realisasi Tahun {{$actConfig->tahun}} Belum dibuat</h4>
-                            <a href="{{ route('renstra.realisasi.index') }}" class="btn btn-primary mt-2 mb-1 px-10">Buat Data Realisasi IKU Tahun {{$actConfig->tahun}}</a>
+                            <a href="{{ route('ptnbh.realisasi.index') }}" class="btn btn-primary mt-2 mb-1 px-10">Buat Data Realisasi IKU Tahun {{$actConfig->tahun}}</a>
                         </div>
                     @else
                         <div class="container" style="padding: 0%;display:flex;justify-content:space-between">
@@ -249,13 +255,13 @@
                                 @if($check==0)
                                 <h4 style="color: #17356d;text-align:center">Monitoring Ketercapaian Target IKU Triwulan {{$triwulan->triwulan}}</h4>
                                 @else
-                                <h4 style="color: #17356d;text-align:center">Ketercapaian Target IKU FSM Tahun 2022</h4>
+                                <h4 style="color: #17356d;text-align:center">Ketercapaian Target IKU FSM Tahun {{$actConfig->tahun}}</h4>
                                 @endif
                             </div>
                             <div style="display: flex;flex-direction:row">
                                 <div style="display: flex;flex-direction:column;width: 70%;">
                                     @if($check==0)
-                                    <form action="{{ route('renstra.dashboard.filter') }}" method="GET">
+                                    <form action="{{ route('ptnbh.dashboard.filter') }}" method="GET">
                                         <div style="display: flex;justify-content:flex-start;padding-left:10px">
                                             <select name="triwulan">
                                                 <option value="" selected disabled>Ganti Triwulan</option>
@@ -289,7 +295,7 @@
                                                 {{-- {{dd($ketercapaiantargetdept)}} --}}
                                                 @foreach ($ketercapaiantargetdept as $satuan)
                                                     <tr style="text-align: center">
-                                                        <td style="text-align:left;"><a style="text-decoration:none" href="{{route('renstra.realisasidepartemen', [$satuan['kode'], $triwulan->triwulan] )}}" target="_blank" >{{$satuan['departemen']}}</a></td>
+                                                        <td style="text-align:left;"><a style="text-decoration:none" href="{{route('ptnbh.realisasidepartemen', [$satuan['kode'], $triwulan->triwulan] )}}" target="_blank" >{{$satuan['departemen']}}</a></td>
                                                         <td>{{$satuan['0']}}</td>
                                                         <td>{{$satuan['1']}}</td>
                                                         <td>{{$satuan['2']}}</td>
@@ -305,7 +311,7 @@
                         </div>
                         <div class="card mt-3 mb-3" style="width:100%;margin-right: 15px;padding: 20px;border-width:1px;border-color:#ececec;background-color:#f8f9fa;display: flex;justify-content: center;align-items: center;">
                             <h4 style="color: #17356d;text-align:center">Target tahun {{$actConfig->tahun}} untuk setiap departemen telah disetujui</h4>
-                            <a target="_blank" href="{{ route('renstra.target.index') }}" class="btn btn-primary mt-2 mb-1 px-10">Lihat Data Target IKU Tahun {{$actConfig->tahun}}</a>
+                            <a target="_blank" href="{{ route('ptnbh.target.index') }}" class="btn btn-primary mt-2 mb-1 px-10">Lihat Data Target IKU Tahun {{$actConfig->tahun}}</a>
                         </div>
                         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                         <script>
@@ -393,7 +399,7 @@
                     <div class="card mt-3 mb-3" style="width:100%;margin-right: 15px;padding: 20px;border-width:1px;border-color:#ececec;background-color:#f8f9fa;display: flex;justify-content: center;align-items: center;">
                         <h4 style="color: #17356d;text-align:center">Target Tahun {{$actConfig->tahun}} Belum diatur</h4>
                         @if($user->level == 1)
-                        <a href="{{ route('renstra.target.index') }}" class="btn btn-primary mt-2 mb-1 px-10">Atur Target IKU Tahun {{$actConfig->tahun}}</a>
+                        <a href="{{ route('ptnbh.target.index') }}" class="btn btn-primary mt-2 mb-1 px-10">Atur Target IKU Tahun {{$actConfig->tahun}}</a>
                         @endif
                     </div>
                         @else

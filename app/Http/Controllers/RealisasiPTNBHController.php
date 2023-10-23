@@ -37,7 +37,7 @@ class RealisasiPTNBHController extends Controller
     public function index()
     {
         $departemens = Departemen::where('kode', '<>', '00')->get();
-        $title = 'Realisasi Departemen ';
+        $title = 'Realisasi PTN-BH Departemen ';
         $tahun = Config::where('status', '=', '1')->first();
         $triwulan = Triwulan::where('status', '=', '1')->first();
         // alert()->error('Gagal!','Config Triwulan Belum diatur');
@@ -59,8 +59,6 @@ class RealisasiPTNBHController extends Controller
     {   
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         $actTri = Triwulan::where('status', '=', '1')->first();
-        // dd($triwulan);
-        // dd($actConfig);
         if($actConfig===null){
             Alert::error('Gagal!', "Config Tahun Belum diatur");
             return redirect()->back();
@@ -73,14 +71,14 @@ class RealisasiPTNBHController extends Controller
                 if($triwulan->triwulan == '1'){
                     $namadept = DB::table('departemens') -> where('kode', '=', $ptnbhdept)->first();
                     $targets = DB::table('target_p_t_n_b_h_s') -> where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
-                    $indikators = DB::table('indikator_p_t_n_b_h_s') -> where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
+                    $indikators = DB::table('indikator_p_t_n_b_h_s') ->where('kode', 'like', '%'.$actConfig->tahun) -> get();
                     $errmsg1="Indikator Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum diatur pihak fakultas.';
                     $errmsg2="Target Departemen ".$namadept->nama.' untuk tahun '.$actConfig->tahun.' belum diatur pihak fakultas.';
                     if($indikators->count()==0){
                         Alert::error('Data Belum Tersedia', $errmsg1);
                         return redirect()->back();
                     }
-                    if($targets->count()==0){
+                    elseif($targets->count()==0){
                         Alert::error('Data Belum Tersedia', $errmsg1);
                         return redirect()->back();
                     }
@@ -93,7 +91,6 @@ class RealisasiPTNBHController extends Controller
                     }
                     else{
                         $realisasis = Triwulan1PTNBH::where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) ->paginate(10);
-                        // dd($realisasis);
                         $t= $namadept->nama." ".$actConfig->tahun;
                         $title = 'Realisasi Departemen '.$t;
                         if($realisasis->count()==0){

@@ -58,7 +58,7 @@
                             <input type="file" accept=".xlsx" class="form-control @error('indikator') is-invalid @enderror" name="indikator" placeholder="Indikator Renstra" value="{{ old('indikator') }}" required>
                         </div>
                         <div class="col-lg-2"></div> {{-- padding --}}
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
                             <button type="submit" class="btn btn-success"><i class="fa fa-plus mr-2"></i>Set Indikator Renstra</button>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                             <input type="file" accept=".xlsx" class="form-control @error('indikatorptnbh') is-invalid @enderror" name="indikatorptnbh" placeholder="Indikator PTNBH" value="{{ old('indikatorptnbh') }}" required>
                         </div>
                         <div class="col-lg-2"></div> {{-- padding --}}
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
                             <button type="submit" class="btn btn-success"><i class="fa fa-plus mr-2"></i>Set Indikator PTNBH</button>
                         </div>
                     </div>

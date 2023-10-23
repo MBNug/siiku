@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\config;
 use App\Models\Target;
-use App\Models\Pejabat;
 use App\Models\Strategi;
+use App\Models\Pejabat;
 use App\Models\Indikator;
 use App\Models\Departemen;
+use App\Models\Triwulan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +16,7 @@ use Illuminate\Support\Facades\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\StoreTargetRequest;
 use App\Http\Requests\UpdateTargetRequest;
-use App\Models\Triwulan;
 use PDF;
-
 
 class TargetController extends Controller
 {
@@ -29,7 +28,7 @@ class TargetController extends Controller
     public function index()
     {
         $departemens = Departemen::where('kode', '<>', '00')->get();
-        $title = 'Target Departemen ';
+        $title = 'Target Renstra Departemen ';
         $triwulan = Triwulan::where('status', '=', '1')->first();
         return view('renstra.target.index', compact('departemens','title', 'triwulan')) ->with([
             'user'=> Auth::user()
