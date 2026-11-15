@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Triwulan;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TriwulanSeeder extends Seeder
@@ -15,35 +14,15 @@ class TriwulanSeeder extends Seeder
      */
     public function run()
     {
-        //
         $triwulans = [
-            [
-                'triwulan' => "0",  #akhir tahun
-                'status' => "0",
-                
-            ],
-            [
-                'triwulan' => "1", 
-                'status' => "0",
-                
-            ],
-            [
-                'triwulan' => "2", 
-                'status' => "0",
-                
-            ],
-            [
-                'triwulan' => "3", 
-                'status' => "0",
-                
-            ],
-            [
-                'triwulan' => "4", 
-                'status' => "0",
-                
-            ],
+            ['triwulan' => '0', 'status' => '0'],
+            ['triwulan' => '1', 'status' => '0'],
+            ['triwulan' => '2', 'status' => '1'],
+            ['triwulan' => '3', 'status' => '0'],
+            ['triwulan' => '4', 'status' => '0'],
         ];
-        foreach($triwulans as $key => $value){
+
+        foreach ($triwulans as $value) {
             Triwulan::create($value);
         }
     }

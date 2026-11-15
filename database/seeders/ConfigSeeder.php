@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Config;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\DB;
 
 class ConfigSeeder extends Seeder
 {
@@ -15,16 +14,22 @@ class ConfigSeeder extends Seeder
      */
     public function run()
     {
-        //
-        $years = range(2000, 2100);
+        $activeYear = max(2000, min(2100, (int) date('Y')));
+        $now = now();
+        $rows = [];
 
-        foreach ($years as $year) {
-            Config::create([
+        foreach (range(2000, 2100) as $year) {
+            $isActive = ($year === $activeYear);
+            $rows[] = [
                 'tahun' => $year,
-                'status' => '0',
-                'statusterakhir' => '0',
-                'triwulanterakhir' => '0',
-            ]);
+                'status' => $isActive ? '1' : '0',
+                'statusterakhir' => $isActive ? '1' : '0',
+                'triwulanterakhir' => $isActive ? '2' : '0',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
         }
+
+        DB::table('configs')->insert($rows);
     }
 }
