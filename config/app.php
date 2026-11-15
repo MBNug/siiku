@@ -206,4 +206,8 @@ return [
 
     ])->toArray(),
 
+    'demo_mode' => filter_var(env('DEMO_MODE', false), FILTER_VALIDATE_BOOLEAN),
+    'demo_reset_token' => env('DEMO_RESET_TOKEN'),
+    'demo_login_password' => env('DEMO_LOGIN_PASSWORD', env('SEED_DEFAULT_PASSWORD')),
+
 ];

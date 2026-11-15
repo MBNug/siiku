@@ -54,6 +54,16 @@
                             </div>
                         </div>
                     </form>
+                    @if (config('app.demo_mode') && config('app.demo_login_password'))
+                        <div class="alert alert-info mt-3 mb-0 small text-start">
+                            <div class="fw-bold mb-1">Akun Demo</div>
+                            <div>Admin Fakultas: <code>admin</code></div>
+                            <div>Dekan (Approval): <code>dekan</code></div>
+                            <div>Departemen: <code>adminMatematika</code></div>
+                            <div class="mt-1">Password semua akun: <code>{{ config('app.demo_login_password') }}</code></div>
+                            <div class="text-muted mt-1">Database di-reset otomatis setiap hari pukul 03:00 WIB.</div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

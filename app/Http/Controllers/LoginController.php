@@ -33,7 +33,7 @@ class LoginController extends Controller
             $user = Auth::user();
 
             if($user){
-                if(Hash::check('123456', $user->password)){
+                if(!config('app.demo_mode') && Hash::check('123456', $user->password)){
                     return redirect()->intended('/user/gantiPassword');
                 }
                 return redirect()->intended('/renstra/dashboard');

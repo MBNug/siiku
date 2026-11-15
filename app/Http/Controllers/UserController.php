@@ -39,6 +39,11 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function updatePassword(UpdateUserRequest $request){
+        if (config('app.demo_mode')) {
+            Alert::warning('Mode Demo', 'Pengubahan password dinonaktifkan pada mode demo.');
+            return back();
+        }
+
         $user = Auth::user();
         $request->validate([
             'passwordlama' => 'required',

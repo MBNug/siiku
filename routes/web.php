@@ -14,6 +14,7 @@ use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\TargetPTNBHController;
 use App\Http\Controllers\RealisasiPTNBHController;
 use App\Http\Controllers\PtnBHController;
+use App\Http\Controllers\DemoResetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,8 @@ Route::get('/renstra/dashboard/',[RenstraController::class, 'index'])->middlewar
 Route::get('/renstra/dashboard/filter/',[RenstraController::class, 'gantiData'])->middleware('auth')->name('renstra.dashboard.filter');
 Route::get('/ptnbh/dashboard/',[PtnBHController::class, 'index'])->middleware('auth')->name('ptnbh.dashboard');
 Route::get('/ptnbh/dashboard/filter/',[PtnBHController::class, 'gantiData'])->middleware('auth')->name('ptnbh.dashboard.filter');
+
+Route::post('/_internal/demo-reset', [DemoResetController::class, 'reset'])->name('internal.demo-reset');
 
 Route::controller(LoginController::class)->group(function(){
     Route::get('login','index')->name('login');
