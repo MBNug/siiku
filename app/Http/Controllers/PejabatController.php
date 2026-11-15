@@ -85,7 +85,7 @@ class PejabatController extends Controller
             'jabatan' => 'required',
             'nama' => 'required',
             'nip' => 'required|numeric',
-            'tandatangan' => 'required|max:2048',
+            'tandatangan' => 'required|image|mimes:png,jpg,jpeg|max:2048',
         ]);
 
 
@@ -153,27 +153,22 @@ class PejabatController extends Controller
             'jabatan' => 'required',
             'nama' => 'required',
             'nip' => 'required',
-            'tandatangan' => 'required',
+            'tandatangan' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ]);
-        if ($request->hasFile('tandatangan')){
-            // dd($request);
-            $pejabatnew = [
-                'kode' => ''.$pejabat->kode,
-                'departemen' => ''.$pejabat->departemen,
-                'jabatan' => ''.$pejabat->jabatan,
-                'nama' => ''.$request->nama,
-                'nip' => ''.$request->nip,
-            ];
 
-            $request->file('tandatangan')->store('tandatangan', 'public');
+        $pejabatnew = [
+            'kode' => ''.$pejabat->kode,
+            'departemen' => ''.$pejabat->departemen,
+            'jabatan' => ''.$pejabat->jabatan,
+            'nama' => ''.$request->nama,
+            'nip' => ''.$request->nip,
+        ];
+
+        if ($request->hasFile('tandatangan')) {
             $path = $request->file('tandatangan')->store('tandatangan', 'public');
             $pejabatnew['tandatangan'] = $path;
-            // $pejabat->nama = $request->input('nama');
-            // $pejabat->nip = $request->input('nip');
-            // $pejabat->tandatangan = $request->file('tandatangan')->store('tandatangan', 'public');
-
         }
-        // dd($request);
+
         $pejabat->update($pejabatnew);
         Alert::success('Berhasil!', 'Pejabat berhasil diupdate');
         return redirect(route('pejabat.index'));

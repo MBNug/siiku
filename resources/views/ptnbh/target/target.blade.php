@@ -12,7 +12,10 @@
         <div class="col-lg-9" style="display: flex; flex-direction:row;justify-content:space-between;width:100%">
             <h1 class="h3 mb-4 text-primary">@yield('title')</h1>
             @if ($user->level == 0 && $status===2)
-                <a href="{{ route('ptnbh.target.AllAprove', $ptnbhdept )}}" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Setujui Target</a>
+                <form action="{{ route('ptnbh.target.AllAprove', $ptnbhdept) }}" method="POST" style="display:inline-block;">
+                    @csrf
+                    <button type="submit" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Setujui Target</button>
+                </form>
             @endif
             <a href="{{ route('ptnbh.target.download', $ptnbhdept)}}" class="btn btn-primary">Download PDF Target</a>
         </div>
@@ -78,7 +81,7 @@
                                         <td style="display:flex;flex-direction:column; justify-content:center ">
                                             <button type="submit" class="btn btn-primary mb-2" >kirim</button>
                                             @if($target->status == "4")
-                                                <a class="btn btn-secondary" href="{{ route('ptnbh.target.batal', $target->kode) }}">Batal</a>
+                                                <button type="submit" form="batal-form-{{ $target->kode }}" class="btn btn-secondary">Batal</button>
                                             @endif
                                         </td>
                                     </form>
@@ -86,13 +89,25 @@
                                         <td>{{ $target->target }}</td>
                                         <td style="display:flex;flex-direction:column; justify-content:center ">
                                         @if($target->status == "1")
-                                                <a class="btn mb-2" href="{{ route('ptnbh.target.batal', $target->kode) }}" style="background-color: #2D7E18;color:white">Disetujui</a>
+                                                <form action="{{ route('ptnbh.target.batal', $target->kode) }}" method="POST" class="mb-2">
+                                                    @csrf
+                                                    <button type="submit" class="btn w-100" style="background-color: #2D7E18;color:white">Disetujui</button>
+                                                </form>
                                         @elseif($target->status == "2")
-                                                <a class="btn btn-primary mb-2" href="{{ route('ptnbh.target.setujui', $target->kode) }}">Setujui</a>
-                                                <a class="btn btn-danger mb-2" href="{{ route('ptnbh.target.tolak', $target->kode) }}">Tolak</a>
+                                                <form action="{{ route('ptnbh.target.setujui', $target->kode) }}" method="POST" class="mb-2">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-primary w-100">Setujui</button>
+                                                </form>
+                                                <form action="{{ route('ptnbh.target.tolak', $target->kode) }}" method="POST" class="mb-2">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger w-100">Tolak</button>
+                                                </form>
                                                 <a class="btn btn-warning" href="{{ route('ptnbh.target.edit', $target->kode) }}">Edit</a>
                                         @elseif($target->status == "3")
-                                                <a class="btn btn-primary mb-2" href="{{ route('ptnbh.target.setujui', $target->kode) }}">Setujui</a>
+                                                <form action="{{ route('ptnbh.target.setujui', $target->kode) }}" method="POST" class="mb-2">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-primary w-100">Setujui</button>
+                                                </form>
                                                 <a class="btn btn-warning" href="{{ route('ptnbh.target.edit', $target->kode) }}">Edit</a>
                                         @endif
                                         </td>
@@ -138,6 +153,13 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @foreach ($targets as $target)
+                        @if ($user->level == 0 && $target->status == "4")
+                            <form id="batal-form-{{ $target->kode }}" action="{{ route('ptnbh.target.batal', $target->kode) }}" method="POST" style="display:none;">
+                                @csrf
+                            </form>
+                        @endif
+                    @endforeach
                     {{ $targets->links('pagination.custom') }}
                     
                 </div>

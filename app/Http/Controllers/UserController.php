@@ -58,8 +58,8 @@ class UserController extends Controller
             $konfirmasipassword= $request->konfirmasipassword;
             if($passwordbaru!=$passwordlama){
                 if($passwordbaru==$konfirmasipassword){
-                    $newpass=bcrypt($konfirmasipassword);
-                    DB::statement("UPDATE users SET password = '$newpass' where id='$user->id'");    
+                    $newpass = bcrypt($konfirmasipassword);
+                    DB::table('users')->where('id', $user->id)->update(['password' => $newpass]);
                     Alert::success('Berhasil!', 'Password Berhasil dirubah');
                     return redirect()->intended('/renstra/dashboard');
                 }else{

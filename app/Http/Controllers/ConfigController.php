@@ -10,6 +10,7 @@ use App\Models\IndikatorPTNBH;
 use App\Imports\IndikatorImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\IndikatorPTNBHImport;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -214,31 +215,23 @@ class ConfigController extends Controller
         if($actConfig1 != null)
         {
             $this->validate($request, [
-                'indikator' => 'required'
+                'indikator' => 'required|file|mimes:xlsx,xls,csv|max:10240'
             ]);
     
             $file = $request->file('indikator');
-     
-            // membuat nama file unik
-            $nama_file = rand().$file->getClientOriginalName();
-     
-            // upload ke folder file_indikator di dalam folder public
-            
-            // dd($request);
     
             $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
             $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
-            // dd($indikatorlama);
             $jmlindikatorlama = count($indikatorlama);
             if($jmlindikatorlama!=0){
                 for ($i = 0; $i < $jmlindikatorlama; $i++){
                     Indikator::destroy($indikatorlama[$i]->kode);
                 }
             }
-            $file->storeAs('file_indikator/renstra/'.$actConfig1->tahun,$nama_file, 'public');
+            $storedPath = $file->store('file_indikator/renstra/'.$actConfig1->tahun, 'public');
     
             // import data
-            Excel::import(new IndikatorImport, public_path('storage/file_indikator/renstra/'.$actConfig1->tahun.'/'.$nama_file));
+            Excel::import(new IndikatorImport, Storage::disk('public')->path($storedPath));
     
             Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
             return redirect(route('config.index'));
@@ -257,31 +250,23 @@ class ConfigController extends Controller
         if($actConfig1 != null)
         {
             $this->validate($request, [
-                'indikatorptnbh' => 'required'
+                'indikatorptnbh' => 'required|file|mimes:xlsx,xls,csv|max:10240'
             ]);
     
             $file = $request->file('indikatorptnbh');
-     
-            // membuat nama file unik
-            $nama_file = rand().$file->getClientOriginalName();
-     
-            // upload ke folder file_indikator di dalam folder public
-            
-            // dd($request);
     
             $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
             $indikatorlama = DB::table('indikator_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
-            // dd($indikatorlama);
             $jmlindikatorlama = count($indikatorlama);
             if($jmlindikatorlama!=0){
                 for ($i = 0; $i < $jmlindikatorlama; $i++){
                     IndikatorPTNBH::destroy($indikatorlama[$i]->kode);
                 }
             }
-            $file->storeAs('file_indikator/ptnbh/'.$actConfig1->tahun,$nama_file, 'public');
+            $storedPath = $file->store('file_indikator/ptnbh/'.$actConfig1->tahun, 'public');
     
             // import data
-            Excel::import(new IndikatorPTNBHImport, public_path('storage/file_indikator/ptnbh/'.$actConfig1->tahun.'/'.$nama_file));
+            Excel::import(new IndikatorPTNBHImport, Storage::disk('public')->path($storedPath));
     
             Alert::success('Berhasil', 'Config Indikator berhasil diubah!');
             return redirect(route('config.index'));
