@@ -42,7 +42,12 @@ class TargetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getTarget($renstradept)
-    {   
+    {
+        $authUser = Auth::user();
+        if ($authUser->level == 2 && substr($authUser->kode, 0, 2) !== $renstradept) {
+            abort(403, 'Anda tidak punya akses ke departemen ini.');
+        }
+
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         $triwulan = Triwulan::where('status', '=', '1')->first();
         // dd($actConfig);
@@ -111,8 +116,10 @@ class TargetController extends Controller
             return redirect()->back();
         }else{
             foreach($indikatorlama as $indikator){
-                // $kode = $renstradept.$indikator->kode;
-                DB::statement("INSERT INTO targets (kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan) SELECT CONCAT('$renstradept',kode), strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan FROM indikators where kode='$indikator->kode'");
+                DB::statement(
+                    "INSERT INTO targets (kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan) SELECT CONCAT(?, kode), strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan FROM indikators WHERE kode = ?",
+                    [$renstradept, $indikator->kode]
+                );
             }
             $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
             Alert::success('Berhasil!', 'Target Berhasil dibuat');
@@ -164,8 +171,8 @@ class TargetController extends Controller
     public function edit($kode)
     {   
         $target = DB::table('targets') -> where('kode', '=', $kode) -> first();
-        if($target->status == 2||$target->status == 3){
-            DB::statement("UPDATE targets SET status = '4' where kode='$kode'");
+        if($target && ($target->status == 2 || $target->status == 3)){
+            DB::table('targets')->where('kode', $kode)->update(['status' => '4']);
             return redirect()->back();
         }else{
             Alert::error('Gagal!', 'Nilai target sedang diedit user lain');
@@ -184,12 +191,15 @@ class TargetController extends Controller
     {   
         $target = DB::table('targets') -> where('kode', '=', $kode) -> first();
         // dd($target);
-        if($target->status == 4||$target->status == 0){
+        if($target && ($target->status == 4 || $target->status == 0)){
             $value=$request->target;
             if($value!=null){
                 // dd($value);
                 if($value != $target->target){
-                    DB::statement("UPDATE targets SET status = '2',target = '$value' where kode='$kode'");    
+                    DB::table('targets')->where('kode', $kode)->update([
+                        'status' => '2',
+                        'target' => $value,
+                    ]);
                     Alert::success('Berhasil!', 'Target berhasil diupdate');
                     return redirect()->back();
                 }else{
@@ -225,19 +235,19 @@ class TargetController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function setujui($kode){
-        DB::statement("UPDATE targets SET status = '1' where kode='$kode'");
+        DB::table('targets')->where('kode', $kode)->update(['status' => '1']);
         return redirect()->back();
     }
     public function tolak($kode){
-        DB::statement("UPDATE targets SET status = '3' where kode='$kode'");
+        DB::table('targets')->where('kode', $kode)->update(['status' => '3']);
         return redirect()->back();
     }
     public function batal($kode){
-        DB::statement("UPDATE targets SET status = '2' where kode='$kode'");
+        DB::table('targets')->where('kode', $kode)->update(['status' => '2']);
         return redirect()->back();
     }
     public function AllAprove($renstradept){
-        DB::statement("UPDATE targets set status = '1' where kode like '$renstradept%' and status = '2'");
+        DB::table('targets')->where('kode', 'like', $renstradept . '%')->where('status', '2')->update(['status' => '1']);
         return redirect()->back();
     }
     

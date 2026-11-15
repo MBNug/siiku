@@ -55,7 +55,12 @@ class RealisasiPTNBHController extends Controller
     }
 
     public function getRealisasi($ptnbhdept, Triwulan $triwulan)
-    {   
+    {
+        $authUser = Auth::user();
+        if ($authUser->level == 2 && substr($authUser->kode, 0, 2) !== $ptnbhdept) {
+            abort(403, 'Anda tidak punya akses ke departemen ini.');
+        }
+
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         $actTri = Triwulan::where('status', '=', '1')->first();
         // dd($triwulan);
@@ -157,7 +162,7 @@ class RealisasiPTNBHController extends Controller
         ->showConfirmButton(
             //ptnbh/realisasi/departemen/01/%7B%7B%20/ptnbh/realisasi/departemen/01/realisasi/1/akhiri%7D%7D
             
-            $btnText = '<a class="add-padding" href="/ptnbh/realisasi/departemen/'.$departemen->kode.'/realisasi/'.$triwulan->triwulan.'/akhiri">Yes</a>', // here is class for link
+            $btnText = '<form action="'.route('ptnbh.realisasi.akhiritriwulan', [$departemen->kode, $triwulan->triwulan]).'" method="POST" style="display:inline;margin:0;">'.csrf_field().'<button type="submit" class="add-padding" style="background:transparent;border:none;color:inherit;cursor:pointer;">Yes</button></form>',
             $btnColor = '#38c177',
             ['className'  => 'no-padding'], // add class to button
         );
@@ -761,8 +766,10 @@ class RealisasiPTNBHController extends Controller
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         $targets = DB::table('target_p_t_n_b_h_s') -> where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
         foreach($targets as $t){
-            // $kode = $ptnbhdept.$indikator->kode;
-            DB::statement("INSERT INTO triwulan1_p_t_n_b_h_s (kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan, target) SELECT kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan, target FROM target_p_t_n_b_h_s where kode='$t->kode'");
+            DB::statement(
+                "INSERT INTO triwulan1_p_t_n_b_h_s (kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan, target) SELECT kode, strategi, indikator_kinerja, satuan, keterangan, definisi, cara_perhitungan, target FROM target_p_t_n_b_h_s WHERE kode = ?",
+                [$t->kode]
+            );
         }
         $namadept = DB::table('departemens') -> where('kode', '=', $ptnbhdept)->first();
         Alert::success('Berhasil!', 'Realisasi Berhasil dibuat');
@@ -1018,15 +1025,20 @@ class RealisasiPTNBHController extends Controller
             $realisasi = RealisasiPTNBH::where('kode', '=', ''.$realisasi)->first();
         }
         if ($request->hasFile('files')) {
+            $request->validate([
+                'files' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx|max:10240',
+            ]);
+            if (!$realisasi) {
+                abort(404);
+            }
             $files = $request->file('files');
-            
-            $originalName = $files->getClientOriginalName();
             $folder = uniqid($realisasi->kode.'-', true);
-            $files->storeAs('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$folder, $originalName, 'public');
-                TempBuktiPTNBH::create([
-                    'folder' => $folder,
-                    'file' => $originalName
-                ]);
+            $storedPath = $files->store('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$folder, 'public');
+            $safeName = basename($storedPath);
+            TempBuktiPTNBH::create([
+                'folder' => $folder,
+                'file' => $safeName
+            ]);
 
             return $folder;
         }

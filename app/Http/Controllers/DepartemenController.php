@@ -51,16 +51,17 @@ class DepartemenController extends Controller
         //
         $dep = Departemen::where('kode', '=', $request->kode)->first();
         // dd($dep);
-        $request->validate([
+        $validated = $request->validate([
             'kode' => 'required',
             'nama' => 'required',
         ]);
         if($dep === null){
+            $defaultPassword = env('DEFAULT_DEPT_PASSWORD', '123456');
             $newuser1 = [
                 'kode' => $request->kode.'01',
                 'name' => "Kadep ".$request->nama, 
                 'username' => "kadep".$request->nama, 
-                'password' => bcrypt("123456"),
+                'password' => bcrypt($defaultPassword),
                 'level' => 2, 
                 'email' => "kadep".$request->nama."@gmail.com", 
             ];
@@ -68,13 +69,13 @@ class DepartemenController extends Controller
                 'kode' => $request->kode.'00',
                 'name' => "Administrator ".$request->nama, 
                 'username' => "admin".$request->nama, 
-                'password' => bcrypt("123456"),
+                'password' => bcrypt($defaultPassword),
                 'level' => 2, 
                 'email' => "admin".$request->nama."@gmail.com", 
             ];
             User::create($newuser1);
             User::create($newuser2);
-            Departemen::create($request->all());
+            Departemen::create($validated);
             Alert::success('Berhasil!', 'Departemen baru berhasil ditambahkan');
             return redirect(route('departemen.index'));
         }
@@ -120,11 +121,11 @@ class DepartemenController extends Controller
     public function update(UpdateDepartemenRequest $request, Departemen $departeman)
     {
         //
-        $request->validate([
+        $validated = $request->validate([
             'kode' => 'required',
             'nama' => 'required',
         ]);
-        $departeman->update($request->all());
+        $departeman->update($validated);
         Alert::success('Berhasil!', 'Departemen berhasil diupdate');
         return redirect(route('departemen.index'));
     }
