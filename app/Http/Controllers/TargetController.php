@@ -106,6 +106,7 @@ class TargetController extends Controller
      */
     public function store($renstradept, StoreTargetRequest $request)
     {
+        $this->authorizeDepartmentAccess($renstradept);
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
         $indikatorlama = DB::table('indikators') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
         // dd($indikatorlama);
@@ -170,6 +171,7 @@ class TargetController extends Controller
      */
     public function edit($kode)
     {   
+        $this->authorizeDepartmentAccess($kode);
         $target = DB::table('targets') -> where('kode', '=', $kode) -> first();
         if($target && ($target->status == 2 || $target->status == 3)){
             DB::table('targets')->where('kode', $kode)->update(['status' => '4']);
@@ -189,6 +191,7 @@ class TargetController extends Controller
      */
     public function update(UpdateTargetRequest $request, $kode)
     {   
+        $this->authorizeDepartmentAccess($kode);
         $target = DB::table('targets') -> where('kode', '=', $kode) -> first();
         // dd($target);
         if($target && ($target->status == 4 || $target->status == 0)){
@@ -276,6 +279,7 @@ class TargetController extends Controller
 
     public function downloadPDFTarget(Departemen $departemen)
     {
+        $this->authorizeDepartmentAccess($departemen->kode);
         $pejabatDep = Pejabat::where('kode', 'like', $departemen->kode.'%')->first();
         $pejabatFak = Pejabat::where('kode', '=', '0099')->first();
         if($pejabatDep === null || $pejabatFak === null){

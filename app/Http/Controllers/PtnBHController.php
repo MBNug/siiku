@@ -55,9 +55,9 @@ class PtnBHController extends Controller
                 $namadepartemen=[];
                 if($jmlbelumdisetujui>0){            
                     for($i=1; $i<=$jmldept;$i++){
-                        $jmlapprovetarget = Target::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', '1')->count();
-                        $jmlrejecttarget = Target::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', '3')->count();
-                        $jmlwaitingtarget = Target::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', '2')->count();
+                        $jmlapprovetarget = TargetPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', '1')->count();
+                        $jmlrejecttarget = TargetPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', '3')->count();
+                        $jmlwaitingtarget = TargetPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', '0'.$i.'%')->where('status', '=', '2')->count();
                         $deptname = DB::table('departemens') -> where('kode', '=', '0'.$i)->first();
                         $targetdisetujui[]=$jmlapprovetarget;
                         $targetditolak[]=$jmlrejecttarget;

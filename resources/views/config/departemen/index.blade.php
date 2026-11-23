@@ -1,26 +1,30 @@
 @extends('layouts.admin')
 
-@section('title', 'Departemen Fakultas Sains dan Matematika')
+@section('title', 'Data Departemen')
 
 @section('content')
-<div class="container">
-  <!-- Page Heading -->
-  <section class="content-header">
-    <div class="row">
-        <div class="col-lg-9">
-            <h1 class="h3 mb-4 text-primary">Departemen Fakultas Sains dan Matematika</h1>
+<div class="si-sheet">
+    <div class="si-sheet-head">
+        <div>
+            <h2 class="si-sheet-title">Daftar Departemen</h2>
+            <div class="small text-muted">Menambahkan departemen baru otomatis membuat akun Kepala &amp; Admin Departemen terkait.</div>
+        </div>
+        <a href="{{ route('departemen.create') }}" class="btn btn-sm btn-si-primary">
+            <i class="fa-solid fa-plus me-1"></i> Tambah Departemen
+        </a>
+    </div>
+    <div class="si-sheet-body">
+        <div class="si-dept-grid">
+            @foreach ($departemens as $departemen)
+                <a href="{{ route('departemen.edit', $departemen->kode) }}" class="si-dept-card">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="si-pill si-pill-neutral si-mono">{{ $departemen->kode }}</span>
+                        <span class="small text-muted"><i class="fa-solid fa-pen me-1"></i>Edit</span>
+                    </div>
+                    <div class="fw-bold" style="font-size: 1.02rem;">{{ $departemen->nama }}</div>
+                </a>
+            @endforeach
         </div>
     </div>
-  </section>
-  <div class="row">
-    <div class="col-lg">
-      <a href="{{ route('departemen.create') }}" class="btn btn-primary mb-3 px-10"><i class="fa fa-plus mr-2"></i>Tambah Departemen Baru</a>
-    </div>
-    <div>
-      @foreach ($departemens as $departemen)
-        <a href="{{ route('departemen.edit', $departemen->kode) }}" class="btn btn-secondary">{{ $departemen->nama }}</a>
-      @endforeach
-    </div>
-  </div>
 </div>
 @endsection

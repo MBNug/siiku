@@ -2,105 +2,46 @@
 
 @section('title', 'Edit Pejabat')
 
-{{-- @dd($renstradept); --}}
-
-@section('csslocal')
-
-@endsection
-
 @section('content')
-<div class="container">
-    <!-- Page Heading -->
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <div class="container mt-3 mb-2">
-                
-                <form action="{{ route('pejabat.update', $pejabat->kode)}}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label py-3">Departemen*</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control bg-light" name="departemen" id="departemen"  value="{{ old('departemen', $pejabat->departemen) }}" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label py-3">Jabatan*</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control bg-light" name="jabatan" id="jabatan"  value="{{ old('jabatan', $pejabat->jabatan) }}" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label py-3">Nama*</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" placeholder="Nama" value="{{ old('nama', $pejabat->nama) }}">
-                            @error('nama')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label py-3">NIP*</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control @error('nip') is-invalid @enderror" name="nip" placeholder="NIP" value="{{ old('nip', $pejabat->nip) }}">
-                            @error('nip')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label py-3">Tanda Tangan*</label>
-                        <div class="col-lg-10">
-                            <input type="file" accept=".png" class="form-control @error('tandatangan') is-invalid @enderror" name="tandatangan" placeholder="Tanda Tangan" value="{{ old('tandatangan', $pejabat->tandatangan) }}">
-                            @error('tandatangan')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="form-group py-3">
-                        <button type="submit" class="btn btn-success"><i class="fa fa-plus mr-2"></i> Simpan</button>
-                        <a href="{{ route('pejabat.index') }}" id="back" class="btn btn-light"><i class="fa fa-times mr-2"></i> Batal</a>
-                    </div>
-                </form>
-
+<div class="si-sheet" style="max-width: 720px;">
+    <div class="si-sheet-head">
+        <h2 class="si-sheet-title">Edit Data Pejabat ({{ $pejabat->kode }})</h2>
+        <a href="{{ route('pejabat.index') }}" class="btn btn-sm btn-si-outline">Kembali</a>
+    </div>
+    <div class="si-sheet-body">
+        <form action="{{ route('pejabat.update', $pejabat->kode) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="departemen" class="form-label small fw-semibold">Unit / Departemen</label>
+                    <input type="text" class="form-control bg-light" name="departemen" id="departemen" value="{{ old('departemen', $pejabat->departemen) }}" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="jabatan" class="form-label small fw-semibold">Jabatan</label>
+                    <input type="text" class="form-control bg-light" name="jabatan" id="jabatan" value="{{ old('jabatan', $pejabat->jabatan) }}" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="nama" class="form-label small fw-semibold">Nama Lengkap &amp; Gelar*</label>
+                    <input id="nama" type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" value="{{ old('nama', $pejabat->nama) }}" required>
+                    @error('nama')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="nip" class="form-label small fw-semibold">NIP*</label>
+                    <input id="nip" type="text" class="form-control si-mono @error('nip') is-invalid @enderror" name="nip" value="{{ old('nip', $pejabat->nip) }}" required>
+                    @error('nip')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="col-12">
+                    <label for="tandatangan" class="form-label small fw-semibold">Perbarui Tanda Tangan (opsional)</label>
+                    <input id="tandatangan" type="file" accept=".png,.jpg,.jpeg" class="form-control @error('tandatangan') is-invalid @enderror" name="tandatangan">
+                    @error('tandatangan')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
             </div>
-        </div>
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-si-primary"><i class="fa-solid fa-floppy-disk me-1"></i> Simpan Perubahan</button>
+                <a href="{{ route('pejabat.index') }}" class="btn btn-si-outline">Batal</a>
+            </div>
+        </form>
     </div>
 </div>
-@endsection
-
-@section('scriptlocal')
-<script>
-    
-    $('#departemen').change(function(){
-        // Empty the dropdown
-        $('#jabatan').find('option').not(':first').remove();
-        $dept = $(this).val();
-        if($dept == '00'){
-            var option = new Option('Dekan', '99');
-            $("#jabatan").append($(option));
-            var option = new Option('Wakil Dekan 1', '98');
-            $("#jabatan").append($(option));
-            var option = new Option('Wakil Dekan 2', '97');
-            $("#jabatan").append($(option));
-            var option = new Option('Wakil Dekan 3', '96');
-            $("#jabatan").append($(option));
-            var option = new Option('Wakil Dekan 4', '95');
-            $("#jabatan").append($(option));
-        }
-        else{
-            var option = new Option('Ketua Departemen', '01');
-            $("#jabatan").append($(option));
-        }
-    });
-</script>
-
-
 @endsection

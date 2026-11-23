@@ -1,144 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@yield('title')</title>
+    <title>@yield('title') — SI-IKU Fakultas</title>
 
-    <!-- FontAwesome -->
-    <script src="https://kit.fontawesome.com/0ba61acd0d.js" crossorigin="anonymous"></script>
-    
-    <!-- Bootstrap -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css">
-    
+    <link href="{{ asset('css/folio.css') }}" rel="stylesheet">
     @yield('csslocal')
-    
-    
-
 </head>
-
 <body>
-  <div class="main-container d-flex">
-    <div class="sidebar" id="side_nav">
-      <div class="header-box d-flex justify-content-between">
-        <a href="{{ route('renstra.dashboard') }}" class="d-flex align-items-center px-3 pt-3 pb-2 mb-3 text-decoration-none text-white">
-          <img class="bi me-2" width="30" height="24" src="https://pelajarinfo.id/wp-content/uploads/2021/06/Universitas-Diponegoro-Semarang-Logo.png" alt="Logo Undip">
-          <span class="fs-5 fw-semibold">SI-IKU</span>
-          <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="fa-solid fa-bars-staggered"></i></button>
-        </a>
-      </div>
+@php
+    $navTriwulan = ($triwulan->triwulan ?? null) ?: '1';
+    $deptCode = substr((string) $user->kode, 0, 2);
+    $roleLabel = match ((string) $user->level) {
+        '0' => 'Dekan',
+        '1' => 'Admin Fakultas',
+        default => 'Departemen',
+    };
+    $initials = collect(explode(' ', trim($user->name ?? 'User')))
+        ->filter()
+        ->take(2)
+        ->map(fn ($part) => strtoupper(substr($part, 0, 1)))
+        ->implode('');
+@endphp
 
-      <ul class="list-unstyled ps-0">
-        <li class="mb-1">
-          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#renstra-collapse" aria-expanded="{{ Request::is('renstra*') ? 'true' : 'false' }}">
-            Renstra
-          </button>
-          <div class="collapse {{ Request::is('renstra*') ? 'show' : '' }}" id="renstra-collapse">
-            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="{{ route('renstra.dashboard') }}" class="{{ Request::is('renstra/dashboard') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/dashboard') ? 
-                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
-              <li><a href="{{ $user->level != 2 ? route('renstra.target.index') : route('renstra.targetdepartemen', substr($user->kode, 0, 2))  }}" class="{{ Request::is('renstra/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/target') ? 
-                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
-              <li><a href="{{ $user->level != 2 ? route('renstra.realisasi.index') : route('renstra.realisasidepartemen', [substr($user->kode, 0, 2), $triwulan->triwulan] )}}" class="{{ Request::is('renstra/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('renstra/realisasi') ? 
-                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
-            </ul>
-          </div>
-        </li>
-        <li class="mb-1">
-          <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#ptnbh-collapse" aria-expanded="{{ Request::is('ptnbh/dashboard')||Request::is('ptnbh/target')||Request::is('ptnbh/realisasi') ? 'true' : 'false' }}">
-            PTN-BH
-          </button>
-          <div class="collapse {{ Request::is('ptnbh*') ? 'show' : '' }}" id="ptnbh-collapse">
-            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="{{ route('ptnbh.dashboard') }}" class="{{ Request::is('ptnbh/dashboard') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/dashboard') ? 
-                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Dashboard</a></li>
-              <li><a href="{{ $user->level != 2 ? route('ptnbh.target.index') : route('ptnbh.targetdepartemen', substr($user->kode, 0, 2))  }}" class="{{ Request::is('ptnbh/target') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/target') ? 
-                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Target</a></li>
-              <li><a href="{{ $user->level != 2 ? route('ptnbh.realisasi.index') : route('ptnbh.realisasidepartemen', [substr($user->kode, 0, 2), $triwulan->triwulan] )}}" class="{{ Request::is('ptnbh/realisasi') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('ptnbh/realisasi') ? 
-                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Realisasi</a></li>
-            </ul>
-          </div>
-        </li>
-        @if ($user->level == 1)
-          <li class="mb-1">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#config-collapse" aria-expanded="{{ Request::is('config/tahun') ? 'true' : 'false' }}">
-              Config
+<div class="si-rail-backdrop" id="railBackdrop"></div>
+
+<div class="si-shell">
+    <aside class="si-rail" id="sideNav" aria-label="Navigasi utama">
+        <div class="si-rail-brand">
+            <a href="{{ route('renstra.dashboard') }}" class="si-brand-link">
+                <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                    <rect x="2" y="2" width="28" height="28" rx="6" fill="#1D4ED8"/>
+                    <path d="M9 10H23M9 16H19M9 22H15" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>
+                    <circle cx="22" cy="21" r="3" fill="#10B981"/>
+                </svg>
+                <span>
+                    SI-IKU
+                    <span class="si-brand-sub">Tata Kelola Kinerja Fakultas</span>
+                </span>
+            </a>
+            <button type="button" class="btn btn-sm text-white d-lg-none" id="closeRailBtn" aria-label="Tutup menu">
+                <i class="fa-solid fa-xmark"></i>
             </button>
-            <div class="collapse {{ Request::is('config*') ? 'show' : '' }}" id="config-collapse">
-              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="{{ route('config.index') }}" class="{{ Request::is('config/tahun') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/tahun') ? 
-                'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Tahun</a></li>
-                <li><a href="{{ route('pejabat.index') }}" class="{{ Request::is('config/pejabat') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/pejabat') ? 
-                  'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Pejabat</a></li>
-                <li><a href="{{ route('departemen.index') }}" class="{{ Request::is('config/departemen') ? 'rounded' : 'link-dark rounded' }}" style="{{ Request::is('config/departemen') ? 
-                  'background-color: #fff; font-weight: 500; color: #000;' : ''}}">Departemen</a></li>
-              </ul>
-            </div>
-          </li>
-        @endif
-        
-      </ul>
-
-      <hr class="h-color mx-2">
-
-      <ul class="btn-toggle-nav list-unstyled fw-normal" style="margin-left: -10px;">
-        <li>
-          <a href="{{ url('logout') }}" class="text-decoration-none link-dark rounded"><i class="fa-solid fa-right-from-bracket px-2"></i>Logout</a>
-        </li>
-      </ul>
-
-    </div>
-    <div class="content">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-          <div class="d-flex justify-content-between d-md-none d-block">
-            <a class="navbar-brand" href="{{ route('renstra.dashboard') }}">SI-IKU</a>
-            <button class="btn px-1 py-0 open-btn"><i class="fa-solid fa-bars-staggered"></i></button>
-          </div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-            <ul class="navbar-nav mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ route('user.gantipassword') }}">
-                  <img class="img-profile rounded-circle" height="30" src="https://ui-avatars.com/api/?name={{ $user->name }}">
-                  <span class="ml-2 d-none d-lg-inline text-gray-600 small">{{ $user->name }}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
         </div>
-      </nav>
-      <!-- End of Navbar -->
-      <!-- Page Content -->
-      @yield('content')
+
+        <nav class="si-rail-nav">
+            <div>
+                <button class="si-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#renstra-collapse" aria-expanded="{{ Request::is('renstra*') ? 'true' : 'false' }}">
+                    <span>Track Renstra</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="collapse {{ Request::is('renstra*') ? 'show' : '' }}" id="renstra-collapse">
+                    <ul class="si-nav-list">
+                        <li>
+                            <a href="{{ route('renstra.dashboard') }}" class="si-nav-link {{ Request::is('renstra/dashboard*') || Request::is('/') ? 'is-active' : '' }}">
+                                <i class="fa-solid fa-chart-column fa-fw"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ $user->level != 2 ? route('renstra.target.index') : route('renstra.targetdepartemen', $deptCode) }}" class="si-nav-link {{ Request::is('renstra/target*') ? 'is-active' : '' }}">
+                                <i class="fa-solid fa-bullseye fa-fw"></i>
+                                <span>Target</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ $user->level != 2 ? route('renstra.realisasi.index') : route('renstra.realisasidepartemen', [$deptCode, $navTriwulan]) }}" class="si-nav-link {{ Request::is('renstra/*realisasi*') ? 'is-active' : '' }}">
+                                <i class="fa-solid fa-clipboard-check fa-fw"></i>
+                                <span>Realisasi</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <button class="si-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#ptnbh-collapse" aria-expanded="{{ Request::is('ptnbh*') ? 'true' : 'false' }}">
+                    <span>Track PTN-BH</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="collapse {{ Request::is('ptnbh*') ? 'show' : '' }}" id="ptnbh-collapse">
+                    <ul class="si-nav-list">
+                        <li>
+                            <a href="{{ route('ptnbh.dashboard') }}" class="si-nav-link {{ Request::is('ptnbh/dashboard*') ? 'is-active' : '' }}">
+                                <i class="fa-solid fa-chart-line fa-fw"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ $user->level != 2 ? route('ptnbh.target.index') : route('ptnbh.targetdepartemen', $deptCode) }}" class="si-nav-link {{ Request::is('ptnbh/target*') ? 'is-active' : '' }}">
+                                <i class="fa-solid fa-bullseye fa-fw"></i>
+                                <span>Target</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ $user->level != 2 ? route('ptnbh.realisasi.index') : route('ptnbh.realisasidepartemen', [$deptCode, $navTriwulan]) }}" class="si-nav-link {{ Request::is('ptnbh/*realisasi*') ? 'is-active' : '' }}">
+                                <i class="fa-solid fa-clipboard-check fa-fw"></i>
+                                <span>Realisasi</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            @if ($user->level == 1)
+                <div>
+                    <button class="si-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#config-collapse" aria-expanded="{{ Request::is('config*') ? 'true' : 'false' }}">
+                        <span>Konfigurasi</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="collapse {{ Request::is('config*') ? 'show' : '' }}" id="config-collapse">
+                        <ul class="si-nav-list">
+                            <li>
+                                <a href="{{ route('config.index') }}" class="si-nav-link {{ Request::is('config/tahun*') ? 'is-active' : '' }}">
+                                    <i class="fa-solid fa-calendar-check fa-fw"></i>
+                                    <span>Tahun &amp; Indikator</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('pejabat.index') }}" class="si-nav-link {{ Request::is('config/pejabat*') ? 'is-active' : '' }}">
+                                    <i class="fa-solid fa-user-tie fa-fw"></i>
+                                    <span>Pejabat</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('departemen.index') }}" class="si-nav-link {{ Request::is('config/departemen*') ? 'is-active' : '' }}">
+                                    <i class="fa-solid fa-building-columns fa-fw"></i>
+                                    <span>Departemen</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            @endif
+        </nav>
+
+        <div class="si-rail-footer">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="si-logout-btn">
+                    <i class="fa-solid fa-right-from-bracket fa-fw"></i>
+                    <span>Keluar</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <div class="si-main">
+        <header class="si-topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button type="button" class="btn btn-si-outline btn-sm d-lg-none" id="openRailBtn" aria-label="Buka menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <h1 class="si-page-title">@yield('title', 'Dashboard')</h1>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                @if (config('app.demo_mode'))
+                    <span class="si-pill si-pill-warn d-none d-sm-inline-flex">Mode Demo</span>
+                @endif
+                <a href="{{ route('user.gantipassword') }}" class="si-user-chip" title="Pengaturan akun &amp; password">
+                    <span class="si-avatar">{{ $initials ?: 'U' }}</span>
+                    <span class="d-none d-md-inline">{{ $user->name }}</span>
+                    <span class="si-role-badge d-none d-sm-inline">{{ $roleLabel }}</span>
+                </a>
+            </div>
+        </header>
+
+        @include('partials.rollover-ribbon')
+
+        <main class="si-workspace">
+            @yield('content')
+        </main>
     </div>
-  </div>
-  <!-- Bootstrap core JavaScript-->
-  <script src="{{ asset('assets/jquery.js') }}"></script>
-  <script src="{{ asset('assets/jquery-ui.js') }}"></script>
-  <script src="{{ asset('assets/bootstrap.js') }}"></script>
-  @include('sweetalert::alert')
+</div>
 
-  <!-- JS Sidebar Navbar-->
-  <script>
-    $(".sidebar ul li").on('click', function(){
-      $(".sidebar ul li.active").removeClass('active');
-      $(this).addClass('active');
-    });
-    $(".open-btn").on('click', function(){
-      $(".sidebar").addClass('active');
-      });
-    $(".close-btn").on('click', function(){
-      $(".sidebar").removeClass('active');
-    });
-  </script>
+<script src="{{ asset('assets/jquery.js') }}"></script>
+<script src="{{ asset('assets/jquery-ui.js') }}"></script>
+<script src="{{ asset('assets/bootstrap.js') }}"></script>
+@include('sweetalert::alert')
 
-  @yield('scriptlocal')
-    
+<script>
+(function () {
+    const rail = document.getElementById('sideNav');
+    const backdrop = document.getElementById('railBackdrop');
+    const openBtn = document.getElementById('openRailBtn');
+    const closeBtn = document.getElementById('closeRailBtn');
+
+    function setOpen(open) {
+        if (!rail || !backdrop) return;
+        rail.classList.toggle('is-open', open);
+        backdrop.classList.toggle('is-open', open);
+    }
+
+    if (openBtn) openBtn.addEventListener('click', () => setOpen(true));
+    if (closeBtn) closeBtn.addEventListener('click', () => setOpen(false));
+    if (backdrop) backdrop.addEventListener('click', () => setOpen(false));
+})();
+</script>
+
+@yield('scriptlocal')
 </body>
-
 </html>

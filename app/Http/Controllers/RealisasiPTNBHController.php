@@ -670,6 +670,7 @@ class RealisasiPTNBHController extends Controller
 
     public function downloadPDFRealisasi(Departemen $departemen, Triwulan $triwulan)
     {
+        $this->authorizeDepartmentAccess($departemen->kode);
         $pejabatDep = Pejabat::where('kode', 'like', $departemen->kode.'%')->first();
         $pejabatFak = Pejabat::where('kode', '=', '0099')->first();
         if($pejabatDep === null || $pejabatFak === null){
@@ -763,6 +764,7 @@ class RealisasiPTNBHController extends Controller
      */
     public function store($ptnbhdept, $triwulan, StoreRealisasiPTNBHRequest $request)
     {
+        $this->authorizeDepartmentAccess($ptnbhdept);
         $actConfig = DB::table('configs') -> where('status', '=', '1') -> first();
         $targets = DB::table('target_p_t_n_b_h_s') -> where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();
         foreach($targets as $t){
@@ -784,6 +786,11 @@ class RealisasiPTNBHController extends Controller
      */
     public function show(Departemen $departemen, Triwulan $triwulan,  $realisasi)
     {
+        $this->authorizeDepartmentAccess($departemen->kode);
+        $this->authorizeDepartmentAccess($realisasi);
+        if (substr((string) $realisasi, 0, 2) !== $departemen->kode) {
+            abort(404);
+        }
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1PTNBH::where('kode', '=', ''.$realisasi)->first();
         }
@@ -802,6 +809,9 @@ class RealisasiPTNBHController extends Controller
         elseif($triwulan->triwulan == '0'){
             $realisasi = RealisasiPTNBH::where('kode', '=', ''.$realisasi)->first();
 
+        }
+        if (!$realisasi) {
+            abort(404);
         }
         $files = 
         [
@@ -839,8 +849,11 @@ class RealisasiPTNBHController extends Controller
      */
     public function update(UpdateRealisasiPTNBHRequest $request, Departemen $departemen, Triwulan $triwulan, $realisasi)
     {
-        //
-        // dd($request);
+        $this->authorizeDepartmentAccess($departemen->kode);
+        $this->authorizeDepartmentAccess($realisasi);
+        if (substr((string) $realisasi, 0, 2) !== $departemen->kode) {
+            abort(404);
+        }
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1PTNBH::where('kode', '=', ''.$realisasi)->first();
         }
@@ -856,6 +869,9 @@ class RealisasiPTNBHController extends Controller
         elseif($triwulan->triwulan == '0'){
             $realisasi = RealisasiPTNBH::where('kode', '=', ''.$realisasi)->first();
         }
+        if (!$realisasi) {
+            abort(404);
+        }
 
         $validator= Validator::make($request->all(),[
             'nilai' => 'required',
@@ -863,16 +879,17 @@ class RealisasiPTNBHController extends Controller
 
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
         $triwulan = Triwulan::where('status', '=', '1')->first();
-        $temp_buktis = TempBuktiPTNBH::all();
+        $publicDisk = Storage::disk('public');
+        $temp_buktis = TempBuktiPTNBH::where('folder', 'like', $realisasi->kode.'-%')->get();
         if($validator->fails()){
             foreach($temp_buktis as $temp_bukti){
-                Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+                $publicDisk->deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
                 $temp_bukti->delete();
             }
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        Storage::deleteDirectory('uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode);
+        $publicDisk->deleteDirectory('uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode);
         $datarealisasi = 
         [
             'kode' => ''.$realisasi->kode,
@@ -900,10 +917,13 @@ class RealisasiPTNBHController extends Controller
         else{
             
             foreach($temp_buktis as $key => $temp_bukti){
-                Storage::copy('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder.'/'.$temp_bukti->file, 'uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file);
-                $path = 'uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file;
-                $datarealisasi['bukti'.($key + 1)] = $path;
-                Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+                $tmpPath = 'uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder.'/'.$temp_bukti->file;
+                $destPath = 'uploads/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$realisasi->kode.'/'.$temp_bukti->file;
+                if ($publicDisk->exists($tmpPath)) {
+                    $publicDisk->copy($tmpPath, $destPath);
+                }
+                $datarealisasi['bukti'.($key + 1)] = $destPath;
+                $publicDisk->deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
                 $temp_bukti->delete();
             }
         }
@@ -930,6 +950,9 @@ class RealisasiPTNBHController extends Controller
         }
         elseif($triwulan->triwulan == '0'){
             $realisasi = RealisasiPTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        if (!$realisasi) {
+            abort(404);
         }
 
         $request->validate([
@@ -976,6 +999,11 @@ class RealisasiPTNBHController extends Controller
     }
 
     public function form(Departemen $departemen,Triwulan $triwulan, $realisasi){
+        $this->authorizeDepartmentAccess($departemen->kode);
+        $this->authorizeDepartmentAccess($realisasi);
+        if (substr((string) $realisasi, 0, 2) !== $departemen->kode) {
+            abort(404);
+        }
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1PTNBH::where('kode', '=', ''.$realisasi)->first();
         }
@@ -990,6 +1018,9 @@ class RealisasiPTNBHController extends Controller
         }
         elseif($triwulan->triwulan == '0'){
             $realisasi = RealisasiPTNBH::where('kode', '=', ''.$realisasi)->first();
+        }
+        if (!$realisasi) {
+            abort(404);
         }
         // dd($realisasi);
         $files = 
@@ -1008,6 +1039,11 @@ class RealisasiPTNBHController extends Controller
     }
 
     public function tmpUpload(Request $request, Departemen $departemen, Triwulan $triwulan, $realisasi){
+        $this->authorizeDepartmentAccess($departemen->kode);
+        $this->authorizeDepartmentAccess($realisasi);
+        if (substr((string) $realisasi, 0, 2) !== $departemen->kode) {
+            abort(404);
+        }
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
         if($triwulan->triwulan == '1'){
             $realisasi = Triwulan1PTNBH::where('kode', '=', ''.$realisasi)->first();
@@ -1049,7 +1085,8 @@ class RealisasiPTNBHController extends Controller
         $triwulan = DB::table('triwulans') -> where('status', '=', '1') -> first();
         $temp_bukti = TempBuktiPTNBH::where('folder', request()->getContent())->first();
         if($temp_bukti){
-            Storage::deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
+            $this->authorizeDepartmentAccess($temp_bukti->folder);
+            Storage::disk('public')->deleteDirectory('uploads/tmp/'.$tahun->tahun.'/'.$triwulan->triwulan.'/'.$temp_bukti->folder);
             $temp_bukti->delete();
         }
         return response()->noContent();

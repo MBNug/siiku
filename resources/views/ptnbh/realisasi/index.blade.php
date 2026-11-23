@@ -1,23 +1,13 @@
-{{-- @dd($status); --}}
-
 @extends('layouts.admin')
 
-@section('title', ''.$title)
+@section('title', $title)
 
 @section('content')
-<div class="container">
-    <!-- Page Heading -->
-    <section class="content-header">
-        <div class="row">
-            <div class="col-lg-9">
-                <h1 class="h3 mb-4 text-primary">@yield('title')</h1>
-            </div>
-        </div>
-    </section>
-    @foreach ($departemens as $departemen)
-        <a href="{{ route('ptnbh.realisasidepartemen', [$departemen->kode, $triwulan->triwulan]) }}" class="btn btn-secondary">{{ $departemen->nama }}</a>
-    @endforeach
-</div>
+    @include('partials.dept-picker', [
+        'track' => 'ptnbh',
+        'mode' => 'realisasi',
+        'heading' => 'Realisasi PTN-BH per Departemen',
+        'subtitle' => 'Pilih departemen untuk memantau capaian triwulan, memeriksa dokumen bukti, atau mengakhiri triwulan.',
+        'actionLabel' => 'Lihat Realisasi PTN-BH',
+    ])
 @endsection
-
-{{-- {{ route('ptnbh.targetdepartemen', $departemen->kode) }} --}}

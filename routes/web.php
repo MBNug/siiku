@@ -39,7 +39,7 @@ Route::post('/_internal/demo-reset', [DemoResetController::class, 'reset'])->nam
 Route::controller(LoginController::class)->group(function(){
     Route::get('login','index')->name('login');
     Route::post('login/proses','proses');
-    Route::get('logout','logout');
+    Route::post('logout','logout')->name('logout');
 });
 
 
@@ -71,7 +71,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/renstra/realisasi/departemen/store/{kode}/{triwulan}', [RealisasiController::class, 'store'])->middleware('cekUserLogin:0,1')->name('renstra.realisasi.store');
     Route::get('/renstra/departemen/{departemen}/realisasi/{triwulan}/{realisasi}', [RealisasiController::class, 'form'])->name('renstra.realisasi.form');
     Route::put('/renstra/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/simpan', [RealisasiController::class, 'update'])->name('renstra.realisasi.simpan');
-    Route::put('/renstra/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/simpan2', [RealisasiController::class, 'update2'])->name('renstra.realisasi.simpan2');
+    Route::put('/renstra/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/simpan2', [RealisasiController::class, 'update2'])->middleware('cekUserLogin:0,1')->name('renstra.realisasi.simpan2');
     Route::post('/renstra/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/tmp-upload', [RealisasiController::class, 'tmpUpload'])->name('renstra.realisasi.tmpUpload');
     Route::delete('/renstra/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/tmp-delete', [RealisasiController::class, 'tmpDelete'])->name('renstra.realisasi.tmpDelete');
     Route::get('/renstra/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/show', [RealisasiController::class, 'show'])->name('renstra.realisasi.show');
@@ -103,7 +103,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('/ptnbh/realisasi/departemen/store/{kode}/{triwulan}', [RealisasiPTNBHController::class, 'store'])->middleware('cekUserLogin:0,1')->name('ptnbh.realisasi.store');
     Route::get('/ptnbh/departemen/{departemen}/realisasi/{triwulan}/{realisasi}', [RealisasiPTNBHController::class, 'form'])->name('ptnbh.realisasi.form');
     Route::put('/ptnbh/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/simpan', [RealisasiPTNBHController::class, 'update'])->name('ptnbh.realisasi.simpan');
-    Route::put('/ptnbh/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/simpan2', [RealisasiPTNBHController::class, 'update2'])->name('ptnbh.realisasi.simpan2');
+    Route::put('/ptnbh/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/simpan2', [RealisasiPTNBHController::class, 'update2'])->middleware('cekUserLogin:0,1')->name('ptnbh.realisasi.simpan2');
     Route::post('/ptnbh/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/tmp-upload', [RealisasiPTNBHController::class, 'tmpUpload'])->name('ptnbh.realisasi.tmpUpload');
     Route::delete('/ptnbh/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/tmp-delete', [RealisasiPTNBHController::class, 'tmpDelete'])->name('ptnbh.realisasi.tmpDelete');
     Route::get('/ptnbh/departemen/{departemen}/realisasi/{triwulan}/{realisasi}/show', [RealisasiPTNBHController::class, 'show'])->name('ptnbh.realisasi.show');

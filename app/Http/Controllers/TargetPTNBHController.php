@@ -97,6 +97,7 @@ class TargetPTNBHController extends Controller
     public function store($ptnbhdept, StoreTargetPTNBHRequest $request)
     {
         $tahun = DB::table('configs') -> where('status', '=', '1') -> first();
+        $this->authorizeDepartmentAccess($ptnbhdept);
         $indikatorlama = DB::table('indikator_p_t_n_b_h_s') -> where('kode', 'like', '%'.$tahun->tahun) -> get();
         // dd($indikatorlama);
         $jmlindikatorlama = count($indikatorlama);
@@ -139,6 +140,7 @@ class TargetPTNBHController extends Controller
      */
     public function edit($kode)
     {   
+        $this->authorizeDepartmentAccess($kode);
         $target = DB::table('target_p_t_n_b_h_s') -> where('kode', '=', $kode) -> first();
         if($target && ($target->status == 2 || $target->status == 3)){
             DB::table('target_p_t_n_b_h_s')->where('kode', $kode)->update(['status' => '4']);
@@ -158,6 +160,7 @@ class TargetPTNBHController extends Controller
      */
     public function update(UpdateTargetPTNBHRequest $request, $kode)
     {   
+        $this->authorizeDepartmentAccess($kode);
         $target = DB::table('target_p_t_n_b_h_s') -> where('kode', '=', $kode) -> first();
         // dd($target);
         if($target && ($target->status == 4 || $target->status == 0)){
@@ -245,6 +248,7 @@ class TargetPTNBHController extends Controller
 
     public function downloadPDFTarget(Departemen $departemen)
     {
+        $this->authorizeDepartmentAccess($departemen->kode);
         $data = TargetPTNBH::where('kode', 'like', $departemen->kode.'%')->get();
         //Gabung strategi 
         $combinedData = $data->groupBy('strategi')->map(function($group){
