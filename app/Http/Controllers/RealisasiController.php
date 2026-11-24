@@ -83,6 +83,10 @@ class RealisasiController extends Controller
                 return redirect()->back();
             }
             else{
+                $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
+                if (!$namadept) {
+                    abort(404);
+                }
                 if($triwulan->triwulan == '1'){
                     $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
                     $targets = DB::table('targets') -> where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();

@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class config extends Model
+class Config extends Model
 {
     use HasFactory;
+    protected $table = 'configs';
     protected $primaryKey = 'tahun';
     protected $fillable =['tahun', 'status', 'statusterakhir', 'triwulanterakhir'];
 }

@@ -52,6 +52,9 @@ class TargetPTNBHController extends Controller
             return redirect()->back();
         }else{
             $namadept = DB::table('departemens') -> where('kode', '=', $ptnbhdept)->first();
+            if (!$namadept) {
+                abort(404);
+            }
             $targets = TargetPTNBH::where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> paginate(10);
             $t= $namadept->nama." ".$actConfig->tahun;
             $title = 'Target Departemen '.$t;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\config;
+use App\Models\Config;
 use App\Models\Target;
 use App\Models\Pejabat;
 use App\Models\Strategi;
@@ -56,6 +56,9 @@ class TargetController extends Controller
             return redirect()->back();
         }else{
             $namadept = DB::table('departemens') -> where('kode', '=', $renstradept)->first();
+            if (!$namadept) {
+                abort(404);
+            }
             $targets = Target::where('kode', 'like', $renstradept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> paginate(10);
             $t= $namadept->nama." ".$actConfig->tahun;
             $title = 'Target Departemen '.$t;

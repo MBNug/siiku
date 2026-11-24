@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\config;
+use App\Models\Config;
 use App\Models\Triwulan;
 use App\Models\Indikator;
 use Illuminate\Http\Request;
@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\IndikatorPTNBHImport;
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Http\Requests\StoreconfigRequest;
-use App\Http\Requests\UpdateconfigRequest;
+use App\Http\Requests\StoreConfigRequest;
+use App\Http\Requests\UpdateConfigRequest;
 
 class ConfigController extends Controller
 {
@@ -285,7 +285,7 @@ class ConfigController extends Controller
      * @param  \App\Models\config  $config
      * @return \Illuminate\Http\Response
      */
-    public function show(config $config)
+    public function show(Config $config)
     {
         //
     }
@@ -293,10 +293,10 @@ class ConfigController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\config  $config
+     * @param  \App\Models\Config  $config
      * @return \Illuminate\Http\Response
      */
-    public function edit(config $config)
+    public function edit(Config $config)
     {
         //
     }
@@ -304,11 +304,11 @@ class ConfigController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateconfigRequest  $request
-     * @param  \App\Models\config  $config
+     * @param  \App\Http\Requests\UpdateConfigRequest  $request
+     * @param  \App\Models\Config  $config
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateconfigRequest $request, config $config)
+    public function update(UpdateConfigRequest $request, Config $config)
     {
         //
     }
@@ -316,10 +316,10 @@ class ConfigController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\config  $config
+     * @param  \App\Models\Config  $config
      * @return \Illuminate\Http\Response
      */
-    public function destroy(config $config)
+    public function destroy(Config $config)
     {
         //
     }

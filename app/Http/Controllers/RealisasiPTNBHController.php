@@ -74,6 +74,10 @@ class RealisasiPTNBHController extends Controller
                 return redirect()->back();
             }
             else{
+                $namadept = DB::table('departemens') -> where('kode', '=', $ptnbhdept)->first();
+                if (!$namadept) {
+                    abort(404);
+                }
                 if($triwulan->triwulan == '1'){
                     $namadept = DB::table('departemens') -> where('kode', '=', $ptnbhdept)->first();
                     $targets = DB::table('target_p_t_n_b_h_s') -> where('kode', 'like', $ptnbhdept.'%')-> where('kode', 'like', '%'.$actConfig->tahun) -> get();

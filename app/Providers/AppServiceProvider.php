@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\config as ActiveConfig;
+use App\Models\Config as ActiveConfig;
 use App\Models\Triwulan;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
