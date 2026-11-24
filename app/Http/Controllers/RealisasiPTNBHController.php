@@ -161,7 +161,10 @@ class RealisasiPTNBHController extends Controller
     }
 
     public function alertakhiriTriwulan(Departemen $departemen, Triwulan $triwulan){
-        alert()->error('Akhiri Triwulan '.$triwulan->triwulan.'!','Ini akan membuat triwulan 1 tidak akan bisa diubah lagi dan beralih ke triwulan 2 untuk semua departemen.')
+        $nextMsg = ((int) $triwulan->triwulan < 4)
+            ? 'beralih ke triwulan '.((int) $triwulan->triwulan + 1)
+            : 'menutup periode realisasi';
+        alert()->error('Akhiri Triwulan '.$triwulan->triwulan.'!', 'Ini akan membuat triwulan '.$triwulan->triwulan.' tidak dapat diubah lagi dan '.$nextMsg.' untuk semua departemen.')
         ->showCancelButton('Cancel', '#aaa')
         ->showConfirmButton(
             //ptnbh/realisasi/departemen/01/%7B%7B%20/ptnbh/realisasi/departemen/01/realisasi/1/akhiri%7D%7D

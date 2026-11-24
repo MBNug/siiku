@@ -22,9 +22,15 @@
                 Download PDF {{ $qStr === '0' ? 'Realisasi' : 'TW ' . $qStr }}
             </a>
             @if ($user->level != 2 && $qStr !== '0' && $activeTriStr === $qStr)
-                <a href="{{ route($routePrefix . '.realisasi.alertakhiritriwulan', [$deptKode, $triwulan->triwulan]) }}" class="btn btn-sm btn-outline-danger">
-                    <i class="fa-solid fa-lock me-1"></i> Akhiri Triwulan {{ $qStr }}
-                </a>
+                <form action="{{ route($routePrefix . '.realisasi.akhiritriwulan', [$deptKode, $triwulan->triwulan]) }}" method="POST" class="m-0 js-confirm-action"
+                      data-title="Akhiri Triwulan {{ $qStr }}?"
+                      data-text="Seluruh data Triwulan {{ $qStr }} untuk semua departemen akan dikunci dan periode berpindah ke tahap berikutnya."
+                      data-confirm="Ya, Akhiri Triwulan {{ $qStr }}">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                        <i class="fa-solid fa-lock me-1"></i> Akhiri Triwulan {{ $qStr }}
+                    </button>
+                </form>
             @endif
         </div>
     </div>

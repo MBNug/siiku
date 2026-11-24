@@ -176,6 +176,32 @@
         @include('partials.rollover-ribbon')
 
         <main class="si-workspace">
+            @if (session('status'))
+                <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                    <i class="fa-solid fa-circle-check me-2"></i>{{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                    <i class="fa-solid fa-circle-exclamation me-2"></i>{{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                    <strong><i class="fa-solid fa-triangle-exclamation me-2"></i>Periksa kembali input Anda:</strong>
+                    <ul class="mb-0 mt-1 ps-3">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+                </div>
+            @endif
+
             @yield('content')
         </main>
     </div>
@@ -184,6 +210,9 @@
 <script src="{{ asset('assets/jquery.js') }}"></script>
 <script src="{{ asset('assets/jquery-ui.js') }}"></script>
 <script src="{{ asset('assets/bootstrap.js') }}"></script>
+@if (!Session::has('alert.config') && !Session::has('alert.delete'))
+    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
+@endif
 @include('sweetalert::alert')
 
 <script>
@@ -202,6 +231,41 @@
     if (openBtn) openBtn.addEventListener('click', () => setOpen(true));
     if (closeBtn) closeBtn.addEventListener('click', () => setOpen(false));
     if (backdrop) backdrop.addEventListener('click', () => setOpen(false));
+
+    document.addEventListener('submit', function (e) {
+        const form = e.target.closest('.js-confirm-action');
+        if (!form || form.dataset.confirmed === '1') return;
+        e.preventDefault();
+
+        const title = form.dataset.title || 'Konfirmasi tindakan';
+        const text = form.dataset.text || 'Tindakan ini akan langsung diproses.';
+        const confirmText = form.dataset.confirm || 'Ya, lanjutkan';
+
+        if (typeof Swal === 'undefined') {
+            if (window.confirm(title + '\n\n' + text)) {
+                form.dataset.confirmed = '1';
+                form.submit();
+            }
+            return;
+        }
+
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#b91c1c',
+            cancelButtonColor: '#525e71',
+            confirmButtonText: confirmText,
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                form.dataset.confirmed = '1';
+                form.submit();
+            }
+        });
+    });
 })();
 </script>
 
