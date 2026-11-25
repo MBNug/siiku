@@ -26,26 +26,17 @@ class ConfigController extends Controller
      */
     public function index()
     {
-        $actConfig = DB::table('configs') -> where('status', '=', '1') -> get();
-        $actConfigTriwulan = DB::table('triwulans') -> where('status', '=', '1') -> get();
-        $triwulans = DB::table('triwulans') -> get();
+        $actConfig = DB::table('configs')->where('status', '=', '1')->get();
+        $actConfigTriwulan = DB::table('triwulans')->where('status', '=', '1')->get();
+        $triwulans = DB::table('triwulans')->get();
+        $triwulan = $actConfigTriwulan->first();
 
-        if ($actConfig===null){
-            $countAct = 0;
-        }
-        else{
-            $countAct = count($actConfig);
-        }
-        if ($actConfigTriwulan===null){
-            $countActTriwulan = 0;
-        }
-        else{
-            $countActTriwulan = count($actConfigTriwulan);
-        }
-        return view('config.tahun', compact('actConfig', 'countAct', 'actConfigTriwulan', 'countActTriwulan', 'triwulans'))->with([
-            'user'=> Auth::user()
-        ]);;
-        // 
+        $countAct = $actConfig->count();
+        $countActTriwulan = $actConfigTriwulan->count();
+
+        return view('config.tahun', compact('actConfig', 'countAct', 'actConfigTriwulan', 'countActTriwulan', 'triwulans', 'triwulan'))->with([
+            'user' => Auth::user()
+        ]);
     }
 
     /**
@@ -61,111 +52,96 @@ class ConfigController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreconfigRequest  $request
+     * @param  \App\Http\Requests\StoreConfigRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeTahun(StoreconfigRequest $request)
+    public function storeTahun(StoreConfigRequest $request)
     {
+        $validated = $request->validate([
+            'tahun' => 'required|digits:4|integer|between:2000,2100',
+        ]);
 
-        // $config = DB::table('configs') -> where('tahun', '=', $request->tahun) -> first();
-        $config =Config::find($request->tahun);
-        // dd($config);
+        $tahunInt = (int) $validated['tahun'];
+        $config = Config::firstOrCreate(
+            ['tahun' => $tahunInt],
+            ['status' => '0', 'statusterakhir' => '0', 'triwulanterakhir' => '0']
+        );
 
         $actConfig1 = Config::where('status', '=', '1')->first();
         $triwulan = Triwulan::where('status', '=', '1')->first();
-        $triwulan1 = Triwulan::where('triwulan', '=', '1')->first();
-        $triwulan0 = Triwulan::where('triwulan', '=', '0')->first();
-        // dd($actConfig===null);
-        // dd($actConfig);
-        $request->validate([
-            'tahun' => 'required',
-        ]);
+        $triwulan1 = Triwulan::firstOrCreate(['triwulan' => '1'], ['status' => '0']);
+        $triwulan0 = Triwulan::firstOrCreate(['triwulan' => '0'], ['status' => '0']);
+        $currentTwVal = $triwulan ? (string) $triwulan->triwulan : '1';
 
-
-        // kalo null semua tahun jadi 1 triwulan1 jadi 1
-        //kalo tahun null triwulan not null, tahun jadi 1, triwulan1 jadi 1
-        //kalo tahun not null triwulan not null.
-                 // kalo config = 2, tahun jadi 1+triwulan, triwulan 0 jadi 1. dan hanya bisa akses realisasi
-                 // kalo config = 1+triwulan, config jadi 1, triwulan N jadi 1 
-                 // kalo config 0 kasih warning tahun ini tidak ada data yang bisa dilihat dan ini akan mengubah tahun aktif yang sedang diisi.
-
-        if($actConfig1 === null){
-           
+        if ($actConfig1 === null) {
             $config->status = '1';
             $config->save();
+            DB::table('triwulans')->update(['status' => '0']);
             $triwulan1->status = '1';
             $triwulan1->save();
-            
-            
-            // dd($config);
 
             Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
             return redirect(route('config.index'));
         }
-        else{
-            if($config->status == '1'){
-                Alert::error('Gagal!', 'Pilih Tahun yang berbeda!');
-                return redirect(route('config.index'));
-            }
-            elseif($config->status =='0'){
-                $actConfig1->statusterakhir = $actConfig1->status;
-                $actConfig1->status = '3';
-                $actConfig1->triwulanterakhir = $triwulan->triwulan;
-                $actConfig1->save();
-                $config->status = '1';
-                $config->save();
-                if($triwulan->triwulan != '1'){
-                    $triwulan->status='0';
-                    $triwulan->save();
-                    $triwulan1->status='1';
-                    $triwulan1->save();
-                }
-                // dd($triwulan1);
-                Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
-                return redirect(route('config.index'));
-            }
-            elseif($config->status =='2'){
-                $actConfig1->status = '3';
-                $actConfig1->triwulanterakhir = $triwulan->triwulan;
-                $actConfig1->save();
-                $config->status = '1';
-                $config->statusterakhir = '2';
-                $config->save();
-                $triwulan->status = '0';
-                $triwulan->save();
-                $triwulan0->status = '1';
-                $triwulan0->save();
-                Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
-                return redirect(route('config.index'));
 
-            }
-            else{
-                $actConfig1->status = $actConfig1->statusterakhir;
-                $actConfig1->triwulanterakhir = $triwulan->triwulan;
-                $actConfig1->save();
-                $config->status = '1';
-                $config->statusterakhir = '3';
-                $config->save();
-                $triwulan->status = '0';
-                $triwulan->save();
-                $triwulanN = Triwulan::where('triwulan', '=', $config->triwulanterakhir)->first();
-                $triwulanN->status = '1';
-                $triwulanN->save();
-                // $actConfig2 =Config::find($actConfig1->tahun);
-                // $actConfig2->status = '0';
-                // $actConfig2->save();
-                // $config->status = '1';
-                // $config->save();
-                Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
-                return redirect(route('config.index'));
-            }
-            
+        if ((int) $actConfig1->tahun === $tahunInt || $config->status == '1') {
+            Alert::error('Gagal!', 'Pilih Tahun yang berbeda!');
+            return redirect(route('config.index'));
         }
-        
 
-        //
+        if ($config->status == '0') {
+            $actConfig1->statusterakhir = $actConfig1->status;
+            $actConfig1->status = '3';
+            $actConfig1->triwulanterakhir = $currentTwVal;
+            $actConfig1->save();
+
+            $config->status = '1';
+            $config->save();
+
+            DB::table('triwulans')->update(['status' => '0']);
+            $triwulan1->status = '1';
+            $triwulan1->save();
+
+            Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
+            return redirect(route('config.index'));
+        }
+
+        if ($config->status == '2') {
+            $actConfig1->status = '3';
+            $actConfig1->triwulanterakhir = $currentTwVal;
+            $actConfig1->save();
+
+            $config->status = '1';
+            $config->statusterakhir = '2';
+            $config->save();
+
+            DB::table('triwulans')->update(['status' => '0']);
+            $triwulan0->status = '1';
+            $triwulan0->save();
+
+            Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
+            return redirect(route('config.index'));
+        }
+
+        $actConfig1->status = $actConfig1->statusterakhir ?: '0';
+        $actConfig1->triwulanterakhir = $currentTwVal;
+        $actConfig1->save();
+
+        $targetTwKey = (string) ($config->triwulanterakhir ?? '1');
+        $config->status = '1';
+        $config->statusterakhir = '3';
+        $config->save();
+
+        DB::table('triwulans')->update(['status' => '0']);
+        $triwulanN = Triwulan::where('triwulan', '=', $targetTwKey)->first() ?? $triwulan1;
+        $triwulanN->status = '1';
+        $triwulanN->save();
+
+        Alert::success('Berhasil', 'Config Tahun berhasil diubah!');
+        return redirect(route('config.index'));
     }
-    public function storeTriwulan(StoreconfigRequest $request)
+
+    public function storeTriwulan(StoreConfigRequest $request)
     {
 
         // $config = DB::table('configs') -> where('tahun', '=', $request->tahun) -> first();

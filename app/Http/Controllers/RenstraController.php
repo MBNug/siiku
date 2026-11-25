@@ -274,11 +274,11 @@ class RenstraController extends Controller
                         $jmlbelumdiupdate = Triwulan4::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                     }else{
-                        $jmltidaktercapai = realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                        $jmltercapai = realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
-                        $jmlmelampauitarget = realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
-                        $jmlmenunggu = realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
-                        $jmlbelumdiupdate = realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
+                        $jmltidaktercapai = Realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                        $jmltercapai = Realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                        $jmlmelampauitarget = Realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                        $jmlmenunggu = Realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                        $jmlbelumdiupdate = Realisasi::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                     }                    
                 }else{

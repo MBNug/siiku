@@ -1,6 +1,20 @@
 @php
-    $ribbonYear = $actConfig->tahun ?? null;
-    $ribbonTw = (string) ($triwulan->triwulan ?? '0');
+    $ribbonConfigObj = ($actConfig ?? null) instanceof \Illuminate\Support\Collection
+        ? $actConfig->first()
+        : ($actConfig ?? null);
+    if ($ribbonConfigObj === null) {
+        $ribbonConfigObj = \Illuminate\Support\Facades\DB::table('configs')->where('status', '=', '1')->first();
+    }
+    $ribbonYear = is_object($ribbonConfigObj) ? ($ribbonConfigObj->tahun ?? null) : null;
+
+    $ribbonTriSource = $triwulan ?? ($actConfigTriwulan ?? null);
+    $ribbonTriObj = $ribbonTriSource instanceof \Illuminate\Support\Collection
+        ? $ribbonTriSource->first()
+        : $ribbonTriSource;
+    if ($ribbonTriObj === null) {
+        $ribbonTriObj = \Illuminate\Support\Facades\DB::table('triwulans')->where('status', '=', '1')->first();
+    }
+    $ribbonTw = is_object($ribbonTriObj) ? (string) ($ribbonTriObj->triwulan ?? '0') : '0';
     $isPtnbh = Request::is('ptnbh*');
     $currentTrack = $isPtnbh ? 'ptnbh' : 'renstra';
     $deptCode = substr((string) ($user->kode ?? '00'), 0, 2);

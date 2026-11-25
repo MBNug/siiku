@@ -275,11 +275,11 @@ class PtnBHController extends Controller
                         $jmlbelumdiupdate = Triwulan4PTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                     }else{
-                        $jmltidaktercapai = realisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
-                        $jmltercapai = realisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
-                        $jmlmelampauitarget = realisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
-                        $jmlmenunggu = realisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
-                        $jmlbelumdiupdate = realisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
+                        $jmltidaktercapai = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tidak Tercapai')->count();
+                        $jmltercapai = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Tercapai')->count();
+                        $jmlmelampauitarget = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Melampaui Target')->count();
+                        $jmlmenunggu = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->where('status', '=', 'Sedang Diproses')->count();
+                        $jmlbelumdiupdate = RealisasiPTNBH::where('kode', 'like', '%'.$actConfig->tahun)->where('kode', 'like', $kode.'%')->count();
                         $totalketercapaian = $jmltercapai + $jmlmelampauitarget;
                     }                    
                 }else{

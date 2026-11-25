@@ -10,5 +10,6 @@ class Config extends Model
     use HasFactory;
     protected $table = 'configs';
     protected $primaryKey = 'tahun';
-    protected $fillable =['tahun', 'status', 'statusterakhir', 'triwulanterakhir'];
+    public $incrementing = false;
+    protected $fillable = ['tahun', 'status', 'statusterakhir', 'triwulanterakhir'];
 }

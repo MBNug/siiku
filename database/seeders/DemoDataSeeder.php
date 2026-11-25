@@ -394,10 +394,7 @@ class DemoDataSeeder extends Seeder
         $this->chunkInsert($indikatorTable, $indikatorRows);
 
         $departments = ['01', '02', '03', '04', '05', '06'];
-        $q1Statuses = ['Melampaui Target', 'Tercapai', 'Tercapai', 'Tidak Tercapai', 'Tercapai'];
-        $q2Statuses = ['Melampaui Target', 'Tercapai', 'Tidak Tercapai', 'Sedang Diproses', 'Belum Diupdate'];
-        $q3Statuses = ['Tercapai', 'Melampaui Target', 'Tercapai', 'Tidak Tercapai', 'Tercapai'];
-        $q4Statuses = ['Melampaui Target', 'Tercapai', 'Tercapai', 'Melampaui Target', 'Tidak Tercapai'];
+        $trackSeed = ($indikatorTable === 'indikators') ? 0 : 11;
 
         $targetRows = [];
         $realisasiRows = [];
@@ -409,17 +406,16 @@ class DemoDataSeeder extends Seeder
         foreach ($departments as $dIdx => $deptKode) {
             foreach ($indicators as $iIdx => $ind) {
                 $kode = $deptKode . $ind['short'] . $year;
-                $targetVal = (int) round(((int) $ind['target']) * $factor);
+                $deptVariance = 0.92 + (($dIdx * 3 + $iIdx) % 5) * 0.04;
+                $targetVal = (int) round(((int) $ind['target']) * $factor * $deptVariance);
                 if ($targetVal < 1) {
                     $targetVal = 1;
                 }
 
-                $q1Status = $q1Statuses[($dIdx + $iIdx) % count($q1Statuses)];
-                $q2Status = $includeAllQuarters
-                    ? $q3Statuses[($dIdx + $iIdx) % count($q3Statuses)]
-                    : $q2Statuses[($dIdx + $iIdx) % count($q2Statuses)];
-                $q3Status = $q3Statuses[($dIdx + $iIdx + 1) % count($q3Statuses)];
-                $q4Status = $q4Statuses[($dIdx + $iIdx) % count($q4Statuses)];
+                $q1Status = $this->pickQuarterStatus($dIdx, $iIdx, 1, $trackSeed, true);
+                $q2Status = $this->pickQuarterStatus($dIdx, $iIdx, 2, $trackSeed, $includeAllQuarters);
+                $q3Status = $this->pickQuarterStatus($dIdx, $iIdx, 3, $trackSeed, true);
+                $q4Status = $this->pickQuarterStatus($dIdx, $iIdx, 4, $trackSeed, true);
 
                 $q1Val = $this->valueForStatus($targetVal, $q1Status);
                 $q2Val = $this->valueForStatus($targetVal, $q2Status);
@@ -510,6 +506,55 @@ class DemoDataSeeder extends Seeder
         foreach (array_chunk($rows, 100) as $chunk) {
             DB::table($table)->insert($chunk);
         }
+    }
+
+    private function pickQuarterStatus(int $dIdx, int $iIdx, int $quarter, int $trackSeed, bool $isClosedQuarter): string
+    {
+        // Distinct per-department achievement profiles so rows and charts never show uniform 1-1-1-1 or 3-3-3-3 counts
+        $closedProfiles = [
+            0 => [5, 11], // Dept 01: ~5 Melampaui, 6 Tercapai, 4 Tidak Tercapai
+            1 => [3, 9],  // Dept 02: ~3 Melampaui, 6 Tercapai, 6 Tidak Tercapai
+            2 => [6, 12], // Dept 03: ~6 Melampaui, 6 Tercapai, 3 Tidak Tercapai
+            3 => [2, 8],  // Dept 04: ~2 Melampaui, 6 Tercapai, 7 Tidak Tercapai
+            4 => [4, 10], // Dept 05: ~4 Melampaui, 6 Tercapai, 5 Tidak Tercapai
+            5 => [7, 13], // Dept 06: ~7 Melampaui, 6 Tercapai, 2 Tidak Tercapai
+        ];
+        $activeProfiles = [
+            0 => [5, 10, 12, 14], // Dept 01: 5 Melampaui, 5 Tercapai, 2 Tidak, 2 Diproses, 1 Belum
+            1 => [3, 8, 11, 13],  // Dept 02: 3 Melampaui, 5 Tercapai, 3 Tidak, 2 Diproses, 2 Belum
+            2 => [6, 11, 12, 14], // Dept 03: 6 Melampaui, 5 Tercapai, 1 Tidak, 2 Diproses, 1 Belum
+            3 => [2, 7, 11, 13],  // Dept 04: 2 Melampaui, 5 Tercapai, 4 Tidak, 2 Diproses, 2 Belum
+            4 => [4, 9, 11, 14],  // Dept 05: 4 Melampaui, 5 Tercapai, 2 Tidak, 3 Diproses, 1 Belum
+            5 => [7, 12, 13, 14], // Dept 06: 7 Melampaui, 5 Tercapai, 1 Tidak, 1 Diproses, 1 Belum
+        ];
+
+        $slot = ($iIdx * 7 + $quarter * 3 + $trackSeed + $dIdx * 2) % 15;
+
+        if ($isClosedQuarter) {
+            [$cutExceed, $cutMet] = $closedProfiles[$dIdx % 6];
+            if ($slot < $cutExceed) {
+                return 'Melampaui Target';
+            }
+            if ($slot < $cutMet) {
+                return 'Tercapai';
+            }
+            return 'Tidak Tercapai';
+        }
+
+        [$cutExceed, $cutMet, $cutMiss, $cutPending] = $activeProfiles[$dIdx % 6];
+        if ($slot < $cutExceed) {
+            return 'Melampaui Target';
+        }
+        if ($slot < $cutMet) {
+            return 'Tercapai';
+        }
+        if ($slot < $cutMiss) {
+            return 'Tidak Tercapai';
+        }
+        if ($slot < $cutPending) {
+            return 'Sedang Diproses';
+        }
+        return 'Belum Diupdate';
     }
 
     private function valueForStatus(int $target, string $status): ?string
